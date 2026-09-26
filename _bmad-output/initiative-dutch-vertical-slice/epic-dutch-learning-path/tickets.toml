@@ -1,0 +1,95 @@
+[[entry]]
+id = 1
+type = "story"
+title = "Trace one Dutch path across the app"
+description = "Make persisted language choice in Dutch Settings drive one real Dutch letter-drill lesson, one Dutch game run with localized instructions, one original licensed Dutch story run, and isolated per-profile lesson progress while existing English saves remain readable."
+verify = "Switch English to Dutch, finish the lesson, play and practice once, restart and return to English with existing English progress unchanged; focused locale and storage tests pass."
+covers = ["CAP-1", "CAP-2", "CAP-3", "CAP-4", "CAP-5", "CAP-6", "CAP-7"]
+after = []
+hitl = false
+risk = "high"
+unknown = "Choose the existing game with the simplest Dutch word path; restrict initial key guidance to letters until the physical layout is confirmed."
+
+[[entry]]
+id = 2
+type = "story"
+title = "Verify Dutch physical keyboard guidance"
+description = "Implement Netherlands QWERTY visual, finger, punctuation, shift, and accent guidance without changing the English keyboard, and verify mappings with a person on a physical keyboard."
+verify = "Human checks Netherlands QWERTY keys on a physical keyboard; automated mapping and widget tests pass for letters, punctuation, shift, and accents."
+covers = ["CAP-2", "CAP-8"]
+after = [1]
+hitl = true
+risk = "high"
+unknown = "Exact Netherlands QWERTY punctuation and dead-key output requires physical verification before acceptance."
+
+[[entry]]
+id = 3
+type = "story"
+title = "Complete Dutch introductory and themed lessons"
+description = "Extend the tracer lesson into two introductory lessons and one existing-theme lesson with explicit learned-key progression, Dutch vocabulary, and per-language unlock checks."
+verify = "All three lessons complete in order; automated checks reject unintroduced keys and progress leakage; a human reviews Dutch wording and age suitability."
+covers = ["CAP-3", "CAP-6", "CAP-8"]
+after = [2]
+hitl = true
+risk = "medium"
+unknown = "Natural words may not fit first-key sets; allow only purposeful drills until a valid Dutch word can be formed."
+
+[[entry]]
+id = 4
+type = "story"
+title = "Complete one Dutch word game"
+description = "Replace the tracer game's minimal words with fitting Dutch words and localize every reachable instruction, score, and end state while preserving English mechanics."
+verify = "The chosen game starts and ends with Dutch words and UI at its supported difficulties, and English game behavior still passes."
+covers = ["CAP-4", "CAP-7", "CAP-8"]
+after = [3]
+hitl = false
+risk = "medium"
+unknown = "Confirm the game choice and Dutch word-length distribution from the tracer run."
+
+[[entry]]
+id = 5
+type = "story"
+title = "Complete original Dutch story practice"
+description = "Expand the tracer story into one original child-friendly Dutch Free Practice story with difficulty metadata, progress and stats, and explicit GPL-3.0-compatible provenance."
+verify = "Selecting and finishing the Dutch story shows progress, WPM, and accuracy without English fallback; the story's origin and license are documented and language-reviewed."
+covers = ["CAP-5", "CAP-7", "CAP-8"]
+after = [4]
+hitl = true
+risk = "medium"
+unknown = "A human must review final Netherlands Dutch prose and record its origin before accepting the story."
+
+[[entry]]
+id = 6
+type = "story"
+title = "Localize remaining milestone screens"
+description = "Localize home, lesson list and results, progress feedback, game and story navigation, tooltips, and accessibility labels reachable on the Dutch path while English stays unchanged."
+verify = "A Dutch-language widget walkthrough of every milestone screen finds no unexplained English UI or clipped labels and the English walkthrough still works."
+covers = ["CAP-7", "CAP-8"]
+after = [5]
+hitl = false
+risk = "medium"
+unknown = "Screen review may reveal additional shared widget strings; keep full-app translation outside this milestone."
+
+[[entry]]
+id = 7
+type = "story"
+title = "Refactor sweep of recorded review findings"
+description = "Resolve recorded, nonfunctional maintainability findings from earlier Dutch-slice build reviews without moving unfinished features or missing tests out of their owning stories."
+verify = "Recorded cleanup findings are resolved or explicitly retained with reason; slice behavior and focused tests remain unchanged."
+covers = ["CAP-8"]
+after = [6]
+hitl = false
+risk = "low"
+unknown = "Exact cleanup is determined from the preceding stories' review records; no new scope is invented."
+
+[[entry]]
+id = 8
+type = "story"
+title = "Verify the complete Dutch route"
+description = "Add closing widget and integration checks for locale persistence, keyboard, lessons, game, story, accessibility, per-profile progress isolation, and unchanged English behavior."
+verify = "The full vertical route passes automated checks and the human Dutch-language and physical-keyboard gates; Flutter analyze and test pass."
+covers = ["CAP-1", "CAP-2", "CAP-3", "CAP-4", "CAP-5", "CAP-6", "CAP-7", "CAP-8"]
+after = [7]
+hitl = true
+risk = "medium"
+unknown = "Flutter SDK and physical keyboard access must be available for final acceptance."

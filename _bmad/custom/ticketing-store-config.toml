@@ -1,0 +1,27 @@
+description = "Tickets as markdown files in this repository."
+
+[tickets]
+store = "repo"
+root = "{output_folder}"
+access = "Read and write ticket files under root; no remote tracker is used."
+fields = "Risk and severity live in frontmatter; build status lives in the leaf plan."
+reference = "References use type — project-relative path, section."
+
+[tickets.types]
+initiative = "initiative"
+epic = "epic"
+story = "story"
+spike = "spike"
+bug = "bug"
+
+[tickets.status]
+backlog = "backlog"
+in-progress = "in-progress"
+review = "review"
+done = "done"
+dropped = "dropped"
+
+[verbs]
+setup = "Keep tickets inside the repository under root; no tracker account or git init needed."
+write = "Write ticket files and parent tickets.toml under root; track leaf state using tickets.py mark and the adjacent plan. Do not commit unless the user requests it."
+query = "Use tickets.py find, next, and status to inspect the repo-backed ticket tree."
