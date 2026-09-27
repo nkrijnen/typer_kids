@@ -121,7 +121,11 @@ class _HomeScreenState extends State<HomeScreen> {
               final screenW = constraints.maxWidth;
               final isWide = screenW > 700;
               final useGrid = screenW > 860;
-              final maxContentWidth = useGrid ? 900.0 : isWide ? 560.0 : screenW;
+              final maxContentWidth = useGrid
+                  ? 900.0
+                  : isWide
+                  ? 560.0
+                  : screenW;
 
               return Center(
                 child: SingleChildScrollView(
@@ -202,22 +206,30 @@ class _HomeScreenState extends State<HomeScreen> {
     String greeting;
     String emoji;
     if (progress.completedLessons == 0) {
-      greeting = dutch ? 'Klaar om te leren typen?' : 'Ready for a typing adventure?';
+      greeting = dutch
+          ? 'Klaar om te leren typen?'
+          : 'Ready for a typing adventure?';
       emoji = '🌟';
     } else if (progress.completionPercentage < 25) {
-      greeting = dutch ? 'Goed begonnen! Ga zo door!' : 'Great start! Keep going!';
+      greeting = dutch
+          ? 'Goed begonnen! Ga zo door!'
+          : 'Great start! Keep going!';
       emoji = '🚀';
     } else if (progress.completionPercentage < 50) {
       greeting = dutch ? 'Je doet het geweldig!' : 'You\'re doing amazing!';
       emoji = '🎉';
     } else if (progress.completionPercentage < 75) {
-      greeting = dutch ? 'Je bent al over de helft!' : 'More than halfway there!';
+      greeting = dutch
+          ? 'Je bent al over de helft!'
+          : 'More than halfway there!';
       emoji = '💪';
     } else if (progress.completionPercentage < 100) {
       greeting = dutch ? 'Bijna een typkampioen!' : 'Almost a typing master!';
       emoji = '👑';
     } else {
-      greeting = dutch ? 'Goed gedaan! Blijf oefenen!' : 'You did it! You\'re a pro!';
+      greeting = dutch
+          ? 'Goed gedaan! Blijf oefenen!'
+          : 'You did it! You\'re a pro!';
       emoji = '🏆';
     }
 
@@ -302,13 +314,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
-                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        label,
-                        style: GoogleFonts.fredoka(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w600,
+                      Flexible(
+                        child: Text(
+                          label,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.fredoka(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -344,7 +359,10 @@ class _HomeScreenState extends State<HomeScreen> {
         label: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(dutch ? 'Alle lessen' : 'All Lessons', style: GoogleFonts.fredoka(fontSize: 18)),
+            Text(
+              dutch ? 'Alle lessen' : 'All Lessons',
+              style: GoogleFonts.fredoka(fontSize: 18),
+            ),
             const SizedBox(width: 8),
             ShortcutBadge('L'),
           ],
@@ -371,27 +389,33 @@ class _HomeScreenState extends State<HomeScreen> {
       ActivityCard(
         emoji: '🎮',
         title: dutch ? 'Vallende woorden' : 'Typing Games',
-        subtitle: dutch ? 'Typ de woorden voordat ze vallen' : 'Have fun while you practice!',
+        subtitle: dutch
+            ? 'Typ de woorden voordat ze vallen'
+            : 'Have fun while you practice!',
         shortcut: 'G',
         color: AppColors.accent,
-        onTap: () => dutch ? context.push('/games/falling-words') : _openGames(),
+        onTap: () =>
+            dutch ? context.push('/games/falling-words') : _openGames(),
       ),
       ActivityCard(
         emoji: '📖',
         title: dutch ? 'Vrij oefenen' : 'Free Practice',
-        subtitle: dutch ? 'Typ een verhaal in je eigen tempo' : 'Type classic stories at your pace',
+        subtitle: dutch
+            ? 'Typ een verhaal in je eigen tempo'
+            : 'Type classic stories at your pace',
         shortcut: 'F',
         color: AppColors.secondary,
         onTap: () => _openSandbox(),
       ),
-      if (!dutch) ActivityCard(
-        emoji: '⏱️',
-        title: 'Typing Test',
-        subtitle: 'Test your speed with a time limit',
-        shortcut: 'T',
-        color: AppColors.primary,
-        onTap: () => _openTypingTest(),
-      ),
+      if (!dutch)
+        ActivityCard(
+          emoji: '⏱',
+          title: 'Typing Test',
+          subtitle: 'Test your speed with a time limit',
+          shortcut: 'T',
+          color: AppColors.primary,
+          onTap: () => _openTypingTest(),
+        ),
       if (!dutch && trickyKeys.isNotEmpty)
         ActivityCard(
           emoji: '🔧',
@@ -429,13 +453,12 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ],
           )
-        else
-          ...[
-            for (var i = 0; i < cards.length; i++) ...[
-              cards[i],
-              if (i < cards.length - 1) const SizedBox(height: 10),
-            ],
+        else ...[
+          for (var i = 0; i < cards.length; i++) ...[
+            cards[i],
+            if (i < cards.length - 1) const SizedBox(height: 10),
           ],
+        ],
       ],
     );
   }
@@ -478,8 +501,9 @@ class _HomeScreenState extends State<HomeScreen> {
             emoji: '🔥',
             label: dutch ? 'Reeks' : 'Streak',
             value: progress.currentStreak > 0
-              ? dutch ? '${progress.currentStreak} ${progress.currentStreak == 1 ? 'dag' : 'dagen'}'
-                : '${progress.currentStreak} day${progress.currentStreak == 1 ? '' : 's'}'
+                ? dutch
+                      ? '${progress.currentStreak} ${progress.currentStreak == 1 ? 'dag' : 'dagen'}'
+                      : '${progress.currentStreak} day${progress.currentStreak == 1 ? '' : 's'}'
                 : '--',
             color: AppColors.secondary,
           ),
@@ -522,8 +546,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildBottomButtons(BuildContext context) {
     final dutch = context.read<LanguageProvider>().isDutch;
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Wrap(
+      alignment: WrapAlignment.center,
+      spacing: 16,
       children: [
         TextButton.icon(
           onPressed: () => _switchProfile(),
@@ -547,7 +572,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        const SizedBox(width: 16),
         TextButton.icon(
           onPressed: () => _openSettings(),
           icon: const Icon(

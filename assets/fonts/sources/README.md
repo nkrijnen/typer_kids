@@ -10,6 +10,16 @@ Original variable TTFs and OFL license texts: `google/fonts`,
 | JetBrains Mono | `ofl/jetbrainsmono` | `JetBrainsMono[wght].ttf` | 400, 500, 600, 700 |
 | Roboto Mono | `ofl/robotomono` | `RobotoMono[wght].ttf` | 400, 500, 600, 700 |
 
+Flutter Web's 12 Noto Color Emoji and six Noto Sans Symbols 2 WOFF2 subsets are
+bundled under `fallback/` using the paths in Flutter's
+`font_fallback_data.dart`. They were retrieved from `fonts.gstatic.com` on
+2026-09-27 and use the bundled Noto OFL license. The custom web bootstrap points
+Flutter's fallback service at these local assets.
+
+`Nunito-Italic.ttf` is the canonical GoogleFonts w400 italic asset retrieved
+from `fonts.gstatic.com/s/a/df3c491d67e881e1b0c6265a7a8364f07e38d7a25893e9b2beac1439e1c2efd9.ttf`;
+its SHA-256 is the hash embedded in that URL.
+
 Each static TTF in the parent directory was instantiated with fonttools
 4.66.0 using `wght=<weight> --static` (Fredoka's width axis defaults to 100).
 Some sources lack STAT entries for every weight, so the optional

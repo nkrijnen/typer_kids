@@ -54,6 +54,9 @@ flutter:
     - assets/fonts/sources/nunito-OFL.txt
     - assets/fonts/sources/jetbrainsmono-OFL.txt
     - assets/fonts/sources/robotomono-OFL.txt
+    - assets/fonts/sources/notoemoji-OFL.txt
+    - assets/fonts/fallback/notocoloremoji/v32/
+    - assets/fonts/fallback/notosanssymbols2/v24/
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf

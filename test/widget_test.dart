@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -29,12 +30,6 @@ void main() {
   ) async {
     GoogleFonts.config.allowRuntimeFetching = false;
     final manifest = await AssetManifest.loadFromAssetBundle(rootBundle);
-    final faces = {
-      'Fredoka': [400, 500, 600, 700],
-      'Nunito': [400, 500, 600, 700, 800],
-      'JetBrainsMono': [400, 500, 600, 700],
-      'RobotoMono': [400, 500, 600, 700],
-    };
     const weightNames = {
       400: 'Regular',
       500: 'Medium',
@@ -42,50 +37,118 @@ void main() {
       700: 'Bold',
       800: 'ExtraBold',
     };
-    for (final entry in faces.entries) {
-      for (final weight in entry.value) {
-        final path = 'assets/fonts/${entry.key}-${weightNames[weight]}.ttf';
-        final diagnostic = '${entry.key} weight $weight at $path';
-        expect(manifest.listAssets(), contains(path), reason: diagnostic);
-        final bytes = await rootBundle.load(path);
-        expect(bytes.lengthInBytes, greaterThan(12), reason: diagnostic);
-        expect(bytes.getUint32(0), 0x00010000, reason: diagnostic);
-        final tableCount = bytes.getUint16(4);
-        expect(tableCount, greaterThan(0), reason: diagnostic);
+    Future<void> verifyTtfFace({
+      required String family,
+      required String filePrefix,
+      required int weight,
+      FontStyle fontStyle = FontStyle.normal,
+    }) async {
+      final styleName = fontStyle == FontStyle.italic
+          ? 'Italic'
+          : weightNames[weight]!;
+      final path = 'assets/fonts/$filePrefix-$styleName.ttf';
+      final diagnostic = '$family weight $weight $fontStyle at $path';
+      expect(manifest.listAssets(), contains(path), reason: diagnostic);
+      final bytes = await rootBundle.load(path);
+      expect(bytes.lengthInBytes, greaterThan(12), reason: diagnostic);
+      expect(bytes.getUint32(0), 0x00010000, reason: diagnostic);
+      final tableCount = bytes.getUint16(4);
+      expect(tableCount, greaterThan(0), reason: diagnostic);
+      expect(
+        bytes.lengthInBytes,
+        greaterThanOrEqualTo(12 + tableCount * 16),
+        reason: diagnostic,
+      );
+      var foundWeight = false;
+      for (var table = 0; table < tableCount; table++) {
+        final record = 12 + table * 16;
+        final offset = bytes.getUint32(record + 8);
+        final length = bytes.getUint32(record + 12);
         expect(
-          bytes.lengthInBytes,
-          greaterThanOrEqualTo(12 + tableCount * 16),
+          offset + length,
+          lessThanOrEqualTo(bytes.lengthInBytes),
           reason: diagnostic,
         );
-        var foundWeight = false;
-        for (var table = 0; table < tableCount; table++) {
-          final record = 12 + table * 16;
-          final offset = bytes.getUint32(record + 8);
-          final length = bytes.getUint32(record + 12);
-          expect(
-            offset + length,
-            lessThanOrEqualTo(bytes.lengthInBytes),
-            reason: diagnostic,
-          );
-          if (bytes.getUint32(record) == 0x4f532f32) {
-            expect(length, greaterThanOrEqualTo(6), reason: diagnostic);
-            expect(bytes.getUint16(offset + 4), weight, reason: diagnostic);
-            foundWeight = true;
-          }
+        if (bytes.getUint32(record) == 0x4f532f32) {
+          expect(length, greaterThanOrEqualTo(6), reason: diagnostic);
+          expect(bytes.getUint16(offset + 4), weight, reason: diagnostic);
+          foundWeight = true;
         }
-        expect(
-          foundWeight,
-          true,
-          reason: 'Missing OS/2 weight table for $diagnostic',
+      }
+      expect(
+        foundWeight,
+        true,
+        reason: 'Missing OS/2 weight table for $diagnostic',
+      );
+      GoogleFonts.getFont(
+        family,
+        fontWeight: FontWeight.values[weight ~/ 100 - 1],
+        fontStyle: fontStyle,
+      );
+    }
+
+    final faces = {
+      ('Fredoka', 'Fredoka'): [400, 500, 600, 700],
+      ('Nunito', 'Nunito'): [400, 500, 600, 700, 800],
+      ('JetBrains Mono', 'JetBrainsMono'): [400, 500, 600, 700],
+      ('Roboto Mono', 'RobotoMono'): [400, 500, 600, 700],
+    };
+    for (final entry in faces.entries) {
+      for (final weight in entry.value) {
+        await verifyTtfFace(
+          family: entry.key.$1,
+          filePrefix: entry.key.$2,
+          weight: weight,
         );
-        GoogleFonts.getFont(switch (entry.key) {
-          'JetBrainsMono' => 'JetBrains Mono',
-          'RobotoMono' => 'Roboto Mono',
-          _ => entry.key,
-        }, fontWeight: FontWeight.values[weight ~/ 100 - 1]);
       }
     }
+    await verifyTtfFace(
+      family: 'Nunito',
+      filePrefix: 'Nunito',
+      weight: 400,
+      fontStyle: FontStyle.italic,
+    );
+    final fallbackPaths = [
+      for (var subset = 0; subset < 12; subset++)
+          'assets/fonts/fallback/notocoloremoji/v32/'
+          'Yq6P-KqIXTD0t4D9z1ESnKM3-HpFabsE4tq3luCC7p-aXxcn.$subset.woff2',
+      ...const [
+        'I_uyMoGduATTei9eI8daxVHDyfisHr71-jrBWXPM4Q.woff2',
+        'I_uyMoGduATTei9eI8daxVHDyfisHr71-ujgfE71.woff2',
+        'I_uyMoGduATTei9eI8daxVHDyfisHr71-gTBWXPM4Q.woff2',
+        'I_uyMoGduATTei9eI8daxVHDyfisHr71-vrgfE71.woff2',
+        'I_uyMoGduATTei9eI8daxVHDyfisHr71-prgfE71.woff2',
+        'I_uyMoGduATTei9eI8daxVHDyfisHr71-pTgfA.woff2',
+      ].map(
+        (file) => 'assets/fonts/fallback/notosanssymbols2/v24/$file',
+      ),
+    ];
+    for (final path in fallbackPaths) {
+      final diagnostic = 'Flutter fallback font at $path';
+      expect(manifest.listAssets(), contains(path), reason: diagnostic);
+      final bytes = await rootBundle.load(path);
+      expect(bytes.lengthInBytes, greaterThan(48), reason: diagnostic);
+      expect(bytes.getUint32(0), 0x774f4632, reason: diagnostic);
+    }
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Column(
+          children: [
+            Text('Fredoka', style: GoogleFonts.fredoka()),
+            Text('Nunito', style: GoogleFonts.nunito()),
+            Text(
+              'Nunito Italic',
+              style: GoogleFonts.nunito(fontStyle: FontStyle.italic),
+            ),
+            Text('JetBrains Mono', style: GoogleFonts.jetBrainsMono()),
+            Text('Roboto Mono', style: GoogleFonts.robotoMono()),
+          ],
+        ),
+      ),
+    );
     await tester.runAsync(GoogleFonts.pendingFonts);
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
     expect(GoogleFonts.config.allowRuntimeFetching, false);
   });
 
@@ -254,7 +317,7 @@ void main() {
   testWidgets('Cold startup restores the Dutch home and lesson progress', (
     tester,
   ) async {
-    GoogleFonts.config.allowRuntimeFetching = false;
+    GoogleFonts.config.allowRuntimeFetching = true;
     SharedPreferences.setMockInitialValues({});
     final profile = ProfileProvider();
     await profile.init();
@@ -277,6 +340,22 @@ void main() {
 
     await startup.main();
     await tester.pumpAndSettle();
+    expect(GoogleFonts.config.allowRuntimeFetching, false);
+    final licensedFamilies = <String>{};
+    await for (final license in LicenseRegistry.licenses) {
+      licensedFamilies.addAll(license.packages);
+    }
+    expect(
+      licensedFamilies,
+      containsAll([
+        'Fredoka',
+        'Nunito',
+        'JetBrains Mono',
+        'Roboto Mono',
+        'Noto Color Emoji',
+        'Noto Sans Symbols 2',
+      ]),
+    );
     expect(tester.takeException(), isNull);
     expect(find.text('Leer typen met plezier! 🎮'), findsOneWidget);
     expect(find.text('1/1'), findsOneWidget);

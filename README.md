@@ -123,8 +123,11 @@ flutter pub get
 # Run on your current platform
 flutter run
 
-# Build a release
-flutter build windows   # or macos / linux / web
+# Build a native release
+flutter build windows   # or macos / linux
+
+# Build a self-contained web release (no Google-hosted font resources)
+flutter build web --no-web-resources-cdn
 ```
 
 ### Generate Assets

@@ -62,7 +62,11 @@ class _GameMenuScreenState extends State<GameMenuScreen> {
 
               final hPad = isWide ? 40.0 : 20.0;
               final vPad = isTall ? 32.0 : 16.0;
-              final maxW = useGrid ? 900.0 : isWide ? 620.0 : screenW;
+              final maxW = useGrid
+                  ? 900.0
+                  : isWide
+                  ? 620.0
+                  : screenW;
               final headerFontSize = isWide ? 36.0 : 28.0;
               final emojiSize = isTall ? 56.0 : 40.0;
               final sectionGap = isTall ? 32.0 : 18.0;
@@ -72,18 +76,16 @@ class _GameMenuScreenState extends State<GameMenuScreen> {
                 _GameCard(
                   emoji: '🏯',
                   title: 'Defend the Temple',
-                  description:
-                      'Stop the demons before they reach your temple!',
+                  description: 'Stop the demons before they reach your temple!',
                   shortcut: '1',
                   color: const Color(0xFF8B0000),
                   compact: !isTall,
                   onTap: () => context.push('/games/defend-temple'),
                 ),
                 _GameCard(
-                  emoji: '⬇️',
+                  emoji: '⬇',
                   title: 'Falling Words',
-                  description:
-                      'Type the words before they reach the bottom!',
+                  description: 'Type the words before they reach the bottom!',
                   shortcut: '2',
                   color: AppColors.primary,
                   compact: !isTall,
@@ -92,18 +94,16 @@ class _GameMenuScreenState extends State<GameMenuScreen> {
                 _GameCard(
                   emoji: '🫧',
                   title: 'Word Bubbles',
-                  description:
-                      'Pop the floating bubbles by typing the words!',
+                  description: 'Pop the floating bubbles by typing the words!',
                   shortcut: '3',
                   color: const Color(0xFF26C6DA),
                   compact: !isTall,
                   onTap: () => context.push('/games/word-bubbles'),
                 ),
                 _GameCard(
-                  emoji: '🏎️',
+                  emoji: '🏎',
                   title: 'Speed Chase',
-                  description:
-                      'Type words faster than the ghost racer!',
+                  description: 'Type words faster than the ghost racer!',
                   shortcut: '4',
                   color: const Color(0xFFE53935),
                   compact: !isTall,
@@ -112,8 +112,7 @@ class _GameMenuScreenState extends State<GameMenuScreen> {
                 _GameCard(
                   emoji: '🐹',
                   title: 'Key Critters',
-                  description:
-                      'Bonk the critters by pressing their keys!',
+                  description: 'Bonk the critters by pressing their keys!',
                   shortcut: '5',
                   color: const Color(0xFF43A047),
                   compact: !isTall,
@@ -122,8 +121,7 @@ class _GameMenuScreenState extends State<GameMenuScreen> {
                 _GameCard(
                   emoji: '🏃',
                   title: 'Story Sprint',
-                  description:
-                      'Type full sentences to sprint down the track!',
+                  description: 'Type full sentences to sprint down the track!',
                   shortcut: '6',
                   color: const Color(0xFFFB8C00),
                   compact: !isTall,

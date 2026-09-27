@@ -23,6 +23,8 @@ Future<void> main() async {
       ('Nunito', 'nunito'),
       ('JetBrains Mono', 'jetbrainsmono'),
       ('Roboto Mono', 'robotomono'),
+      ('Noto Color Emoji', 'notoemoji'),
+      ('Noto Sans Symbols 2', 'notoemoji'),
     ]) {
       yield LicenseEntryWithLineBreaks([
         family,
