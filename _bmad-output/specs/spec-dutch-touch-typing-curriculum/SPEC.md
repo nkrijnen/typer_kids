@@ -18,10 +18,10 @@ Dutch children aged 10-12 need a touch-typing progression grounded in finger pla
   - **success:** The outline contrasts key order, finger guidance, drill quality, cumulative review, and when real words become possible.
 - **CAP-2**
   - **intent:** A maintainer can follow a staged Dutch touch-typing plan for ages 10-12.
-  - **success:** Opening stages list new and prior keys, finger movement, practice type, and review checkpoints; the outline states how later keys should be ordered.
+  - **success:** The outline defines an ordered, cumulative progression from F/J landmarks through every letter key, with new and prior keys, finger movement, practice type, and review checkpoints for every stage.
 - **CAP-3**
-  - **intent:** A maintainer can prepare and check early Dutch exercises against the keys taught so far.
-  - **success:** Sample exercises distinguish purposeful key drills from Dutch words, and validation criteria reject unintroduced keys, empty or duplicate lessons, and premature punctuation.
+  - **intent:** A maintainer can prepare and check Dutch exercises for every stage against the keys taught so far.
+  - **success:** Stage examples distinguish purposeful key drills from Dutch words, and validation criteria reject unintroduced keys, empty or duplicate lessons, missing letters, and premature punctuation.
 
 ## Constraints
 
@@ -33,11 +33,11 @@ Dutch children aged 10-12 need a touch-typing progression grounded in finger pla
 ## Non-goals
 
 - Implementing or shipping the full Dutch course, changing the English packs, or expanding the existing Dutch vertical-slice milestone.
-- Proving learning outcomes or settling every later key position in this first version.
+- Proving learning outcomes or designing punctuation, shift, dead-key, or accent stages before their Netherlands-QWERTY mappings are established.
 
 ## Success signal
 
-A maintainer can take the outline, identify the next taught keys and valid exercises for each opening stage, and check that no sample asks a child to type an unintroduced key. The first version is ready to refine after actual use, without a human-review release gate.
+A maintainer can take the outline, follow the settled order from F/J through every letter, identify valid exercises for each stage, and check that no sample asks a child to type an unintroduced key. The first version is ready to refine after actual use, without a human-review release gate.
 
 ## Assumptions
 
@@ -45,4 +45,4 @@ A maintainer can take the outline, identify the next taught keys and valid exerc
 
 ## Open Questions
 
-- After the opening home-row and E/I stages, which key order best balances finger reach with the earliest useful Dutch vocabulary?
+- Which post-E/I order best balances Netherlands-QWERTY finger reach with the earliest useful Dutch vocabulary? Story 3 must answer this in the completed progression.

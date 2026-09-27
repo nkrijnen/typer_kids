@@ -26,13 +26,14 @@ unknown = "Exact Netherlands QWERTY punctuation and dead-key output requires phy
 id = 3
 type = "story"
 title = "Complete Dutch introductory and themed lessons"
-description = "Extend the tracer lesson into two introductory lessons and one existing-theme lesson with explicit learned-key progression, Dutch vocabulary, and per-language unlock checks."
-verify = "All three lessons complete in order; automated checks reject unintroduced keys and progress leakage; a human reviews Dutch wording and age suitability."
+description = "After standalone backlog story 3 is done, use its first-version Dutch curriculum to replace the tracer lesson with two introductory lessons and one existing-theme lesson with explicit learned-key progression, Dutch vocabulary, and per-language unlock checks, without expanding this milestone to the full course."
+verify = "The three milestone lessons map explicitly to an approved portion of the curriculum, respect its staged drill-before-words progression, complete in order, and pass automated checks for key introduction and progress isolation; a human reviews Dutch wording and age suitability."
 covers = ["CAP-3", "CAP-6", "CAP-8"]
 after = [2]
 hitl = true
 risk = "medium"
-unknown = "Natural words may not fit first-key sets; allow only purposeful drills until a valid Dutch word can be formed."
+unknown = "Map the completed curriculum into exactly three milestone lessons; natural words may not fit first-key sets, so allow only purposeful drills until a valid Dutch word can be formed."
+references = ["curriculum design — _bmad-output/backlog/story-design-dutch-touch-typing-curriculum.md, Description and Acceptance Criteria", "curriculum outline — _bmad-output/specs/spec-dutch-touch-typing-curriculum/curriculum-outline.md, First-version opening sequence"]
 
 [[entry]]
 id = 4

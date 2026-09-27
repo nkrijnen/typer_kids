@@ -21,11 +21,18 @@ All examples use lowercase letters and spaces. Review tasks reuse only keys taug
 | 5 | g h | f j d k s l a | Index fingers reach inward and return; `dag`, `had`, `hals` (Dutch words). | Mix new reaches with earlier words; check return to F/J. |
 | 6 | e i | f j d k s l a g h | Middle fingers reach upward and return; `de`, `die`, `ik`, `is` (Dutch words). | Mix common words with earlier key drills; avoid speed targets until accuracy is steady. |
 
-The first four stages deliberately postpone a right-pinky punctuation key; home-row letters do not require it. After stage 6, decide the next letters by physical finger reach, Dutch word usefulness, and which movements need revisiting. Rotate introduction, mixed retrieval, useful words, and a review checkpoint; avoid whole-alphabet drills and long repeated single-key runs as the only practice.
+The first four stages deliberately postpone a right-pinky punctuation key; home-row letters do not require it.
+
+## Complete progression required
+
+Story 3 extends the table after stage 6 until every letter key has been introduced exactly once. It settles the post-E/I order using physical finger reach, Dutch word usefulness, and movements that need revisiting. Every added stage records new and prior keys, finger movement, practice type, examples, and a review checkpoint. Rotate introduction, mixed retrieval, useful words, and review; avoid alphabetic ordering, whole-alphabet drills, and long repeated single-key runs as the only practice.
+
+This first version ends when all letters are covered. Punctuation, shift, dead keys, and accents remain outside the progression until their Netherlands-QWERTY mappings are established.
 
 ## Content checks for the first version
 
 - Every lesson records focus keys, previously taught keys, movement, exercise type, and difficulty; IDs and order are unique and stable.
+- Every letter key is introduced exactly once, and the cumulative prior-key set matches all preceding stages.
 - Every character in every sample is a taught letter, current focus letter, or space. Later punctuation or capitals require an explicit introduction and mapped keyboard behavior.
 - Words labelled Dutch are natural age-appropriate Netherlands Dutch, not English filler or pseudo-words; label otherwise useful key patterns as drills.
 - Early practice is short and cumulative, mixes hands and fingers, and includes review before advancing. Evaluate lesson quality from content and automated checks now; adjust from usage feedback later.

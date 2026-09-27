@@ -46,9 +46,12 @@ Produce a complete first-version lesson progression for Dutch children aged 10-1
 ## References
 
 - curriculum contract — _bmad-output/specs/spec-dutch-touch-typing-curriculum/SPEC.md, Capabilities and companion
+- milestone consumer — _bmad-output/initiative-dutch-vertical-slice/epic-dutch-learning-path/epic-dutch-learning-path.md, Done when and Notes
 
 ## Notes
 
 - Decision: user requested a first version without any human real-world review gate (2026-09-27).
 - Open question: settle the post-E/I letter order while completing the progression; use finger reach and useful Dutch words rather than alphabet order.
 - Risk: low; this story writes a reversible plan and content checks without changing the running course.
+- Consumer: Dutch learning-path story 1.3 uses this curriculum to replace the tracer lesson with exactly two introductory lessons and one themed lesson; the remaining curriculum stays outside that milestone.
+- Decision: the first version covers every letter key and settles the post-E/I order; punctuation, shift, dead keys, and accents remain deferred (2026-09-27).
