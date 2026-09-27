@@ -35,4 +35,5 @@ Only the first vertical slice. Full Dutch course and cross-platform release rema
 
 - Decision: one slice epic includes its own platform baseline, so there is no separate platform-baseline epic (2026-09-26).
 - Decision: target Netherlands QWERTY; physical punctuation/dead-key mappings require human verification (2026-09-26).
-- Blocker: user confirmed Flutter SDK is not installed; implementation verification needs an accessible SDK.
+- Baseline: user ran `flutter doctor` and `flutter pub get` successfully and `flutter test` passed all 37 existing tests (2026-09-27); no Dutch implementation is verified yet.
+- Environment: `flutter` is still absent from the agent sandbox terminal's PATH; resolve its executable location before build verification.

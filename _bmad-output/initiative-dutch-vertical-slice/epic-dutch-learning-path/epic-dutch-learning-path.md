@@ -36,6 +36,7 @@ Includes only reachable milestone UI, content, keyboard, and per-profile progres
 
 - Assumption: Falling Words is the candidate game; story 1 checks which existing game fits before committing (2026-09-26).
 - Decision: Netherlands QWERTY is the target; story 2 still requires physical verification of its punctuation and dead keys (2026-09-26).
-- Blocker: user confirmed Flutter SDK is not installed; install an SDK accessible to this workspace before implementation.
+- Baseline: user ran `flutter doctor` and `flutter pub get` successfully and `flutter test` passed all 37 existing tests (2026-09-27). The agent terminal still needs a path to `flutter` for its own checks.
+- Next session: start planned story 1.1, "Trace one Dutch path across the app", with `bmad-build`; check `flutter` access before implementing and keep the baseline green. No story has been built yet.
 - Decision: story 1 is the smallest real lesson/game/story path; stories 2-6 deepen it in one dependency lane to avoid shared-code collisions (2026-09-26).
 - Decision: only recorded review cleanup belongs in the refactor sweep; functional fixes and tests stay in their owning stories (2026-09-26).

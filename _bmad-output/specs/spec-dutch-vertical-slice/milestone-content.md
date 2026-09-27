@@ -21,6 +21,7 @@ Derived from [the roadmap](../../../specs/plan.md), especially section 25. This 
 
 ## Verification and deferrals
 
+- Baseline (user-reported, 2026-09-27): `flutter doctor` and `flutter pub get` succeeded; `flutter test` passed all 37 existing tests. This does not verify any Dutch feature. The agent sandbox terminal does not currently resolve `flutter` on PATH; check its executable path before a build.
 - Check content is nonempty, IDs unique and stable, no unexpected English, correct key availability per lesson, valid Unicode, and no unintended English fallback. Test letter-to-finger mapping, visible key guidance, punctuation, uppercase, shifted characters, and accented input for the chosen layout.
 - Test the Dutch route through settings, lessons, one game, one story, and profile progress; test English unchanged, profile switching, restart persistence, and language-switch isolation. Run existing `flutter analyze` and `flutter test` plus focused new tests. Human-review Dutch spelling and layout behavior on a real keyboard before release.
 - Later roadmap work: complete lesson progression and vocabulary corpus; all themes, stories, typing tests, Free Practice library, games, mascot text, badges, full UI and accessibility audit, content validator across the corpus, cross-platform testing, CI, documentation, and release. Keep this plan available at `specs/plan.md` for future specs; none are acceptance gates for this milestone except where explicitly named above.
