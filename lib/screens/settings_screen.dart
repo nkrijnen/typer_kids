@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../core/sound_manager.dart';
 import '../core/theme/app_colors.dart';
+import '../providers/language_provider.dart';
 import '../providers/profile_provider.dart';
 import '../providers/progress_provider.dart';
 
@@ -39,9 +40,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final progress = context.watch<ProgressProvider>();
     final profileProv = context.watch<ProfileProvider>();
     final activeProfile = profileProv.activeProfile;
+    final language = context.watch<LanguageProvider>();
+    final dutch = language.isDutch;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(title: Text(dutch ? 'Instellingen' : 'Settings')),
       body: KeyboardListener(
         focusNode: _focusNode,
         autofocus: true,
@@ -49,15 +52,33 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: ListView(
           padding: const EdgeInsets.all(24),
           children: [
+            _buildSectionHeader(dutch ? 'Taal' : 'Language'),
+            const SizedBox(height: 12),
+            SegmentedButton<String>(
+              segments: const [
+                ButtonSegment(value: 'en', label: Text('English')),
+                ButtonSegment(value: 'nl', label: Text('Nederlands')),
+              ],
+              selected: {language.language},
+              onSelectionChanged: (selection) {
+                final selected = selection.first;
+                language.select(selected);
+                context.read<ProgressProvider>().switchLanguage(selected);
+              },
+            ),
+            const SizedBox(height: 32),
             // Active profile
             if (activeProfile != null) ...[
-              _buildSectionHeader('Profile'),
+              _buildSectionHeader(dutch ? 'Profiel' : 'Profile'),
               const SizedBox(height: 12),
               _buildInfoCard(
                 context,
                 children: [
-                  _buildInfoRow('Name', activeProfile.name),
-                  _buildInfoRow('Avatar', activeProfile.emoji),
+                  _buildInfoRow(dutch ? 'Naam' : 'Name', activeProfile.name),
+                  _buildInfoRow(
+                    dutch ? 'Avatar' : 'Avatar',
+                    activeProfile.emoji,
+                  ),
                 ],
               ),
               const SizedBox(height: 12),
@@ -67,7 +88,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   onPressed: () => context.push('/profiles'),
                   icon: const Icon(Icons.people_rounded),
                   label: Text(
-                    'Switch Profile',
+                    dutch ? 'Ander profiel' : 'Switch Profile',
                     style: GoogleFonts.fredoka(fontSize: 16),
                   ),
                   style: OutlinedButton.styleFrom(
@@ -83,7 +104,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const SizedBox(height: 32),
             ],
             // Sound
-            _buildSectionHeader('Sound'),
+            _buildSectionHeader(dutch ? 'Geluid' : 'Sound'),
             const SizedBox(height: 12),
             _buildInfoCard(
               context,
@@ -96,7 +117,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         const Text('🔊', style: TextStyle(fontSize: 22)),
                         const SizedBox(width: 10),
                         Text(
-                          'Sound Effects',
+                          dutch ? 'Geluidseffecten' : 'Sound Effects',
                           style: GoogleFonts.nunito(
                             fontSize: 16,
                             color: AppColors.textSecondary,
@@ -121,24 +142,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
             const SizedBox(height: 32),
 
             // Stats overview
-            _buildSectionHeader('Your Progress'),
+            _buildSectionHeader(dutch ? 'Je voortgang' : 'Your Progress'),
             const SizedBox(height: 12),
             _buildInfoCard(
               context,
               children: [
                 _buildInfoRow(
-                  'Lessons Completed',
+                  dutch ? 'Lessen voltooid' : 'Lessons Completed',
                   '${progress.completedLessons}/${progress.totalLessons}',
                 ),
-                _buildInfoRow('Total Stars', '${progress.totalStars}'),
                 _buildInfoRow(
-                  'Average Accuracy',
+                  dutch ? 'Sterren' : 'Total Stars',
+                  '${progress.totalStars}',
+                ),
+                _buildInfoRow(
+                  dutch ? 'Gemiddelde nauwkeurigheid' : 'Average Accuracy',
                   progress.averageAccuracy > 0
                       ? '${progress.averageAccuracy.toStringAsFixed(1)}%'
                       : 'N/A',
                 ),
                 _buildInfoRow(
-                  'Average Speed',
+                  dutch ? 'Gemiddelde snelheid' : 'Average Speed',
                   progress.averageWpm > 0
                       ? '${progress.averageWpm.toStringAsFixed(0)} WPM'
                       : 'N/A',
@@ -148,7 +172,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             const SizedBox(height: 32),
 
             // Danger zone
-            _buildSectionHeader('Danger Zone'),
+            _buildSectionHeader(dutch ? 'Voortgang wissen' : 'Danger Zone'),
             const SizedBox(height: 12),
             SizedBox(
               width: double.infinity,
@@ -156,7 +180,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 onPressed: () => _showResetDialog(context),
                 icon: const Icon(Icons.delete_forever_rounded),
                 label: Text(
-                  'Reset All Progress',
+                  dutch ? 'Wis alle voortgang' : 'Reset All Progress',
                   style: GoogleFonts.fredoka(fontSize: 16),
                 ),
                 style: OutlinedButton.styleFrom(
@@ -172,14 +196,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
             const SizedBox(height: 40),
 
             // About
-            _buildSectionHeader('About'),
+            _buildSectionHeader(dutch ? 'Over' : 'About'),
             const SizedBox(height: 12),
             _buildInfoCard(
               context,
               children: [
                 _buildInfoRow('App', 'Typer Kids'),
-                _buildInfoRow('Version', '1.2.0'),
-                _buildInfoRow('Made with', '❤️ and Flutter'),
+                _buildInfoRow(dutch ? 'Versie' : 'Version', '1.2.0'),
+                _buildInfoRow(
+                  dutch ? 'Gemaakt met' : 'Made with',
+                  '❤️ and Flutter',
+                ),
               ],
             ),
           ],
@@ -247,6 +274,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _showResetDialog(BuildContext context) {
+    final dutch = context.read<LanguageProvider>().isDutch;
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -255,18 +283,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
           children: [
             const Text('⚠️', style: TextStyle(fontSize: 28)),
             const SizedBox(width: 8),
-            Text('Reset Progress?', style: GoogleFonts.fredoka(fontSize: 22)),
+            Text(
+              dutch ? 'Voortgang wissen?' : 'Reset Progress?',
+              style: GoogleFonts.fredoka(fontSize: 22),
+            ),
           ],
         ),
         content: Text(
-          'This will erase all your stars, scores, and lesson progress. This cannot be undone!',
+          dutch
+              ? 'Dit wist je sterren, scores en lesvoortgang. Dit kun je niet ongedaan maken!'
+              : 'This will erase all your stars, scores, and lesson progress. This cannot be undone!',
           style: GoogleFonts.nunito(fontSize: 16),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
             child: Text(
-              'Cancel',
+              dutch ? 'Annuleren' : 'Cancel',
               style: GoogleFonts.fredoka(color: AppColors.primary),
             ),
           ),
@@ -277,7 +310,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
-                    'Progress reset! Ready for a fresh start! 🌱',
+                    dutch
+                        ? 'Voortgang gewist! Klaar voor een nieuwe start! 🌱'
+                        : 'Progress reset! Ready for a fresh start! 🌱',
                     style: GoogleFonts.nunito(),
                   ),
                   backgroundColor: AppColors.primary,
@@ -289,7 +324,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               );
             },
             child: Text(
-              'Reset',
+              dutch ? 'Wissen' : 'Reset',
               style: GoogleFonts.fredoka(color: AppColors.incorrect),
             ),
           ),

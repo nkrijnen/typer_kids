@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../core/theme/app_colors.dart';
 import '../data/keyboard_data.dart';
+import '../data/lesson_curriculum_selector.dart';
 
 /// A visual on-screen keyboard that highlights active keys and shows
 /// color-coded finger zones to help kids learn proper finger placement.
@@ -183,7 +184,7 @@ class KeyboardWidget extends StatelessWidget {
       ),
       child: Center(
         child: Text(
-          'SPACE',
+          LessonCurriculum.isDutch ? 'SPATIE' : 'SPACE',
           style: GoogleFonts.robotoMono(
             fontSize: _fontSize * 0.85,
             fontWeight: FontWeight.w500,

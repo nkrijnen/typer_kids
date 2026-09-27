@@ -12,6 +12,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/sound_manager.dart';
 import '../../data/word_lists.dart';
 import '../../providers/progress_provider.dart';
+import '../../providers/language_provider.dart';
 import '../../widgets/quit_dialog.dart';
 import 'widgets/falling_words_models.dart';
 import 'widgets/falling_words_views.dart';
@@ -381,14 +382,15 @@ class _FallingWordsScreenState extends State<FallingWordsScreen>
 
   void _showQuitDialog() {
     _ticker.stop();
+    final dutch = context.read<LanguageProvider>().isDutch;
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (ctx) => QuitDialog(
-        title: 'Quit Game?',
-        message: 'Your current score will be lost.',
-        stayLabel: 'Resume',
-        quitLabel: 'Quit',
+        title: dutch ? 'Spel verlaten?' : 'Quit Game?',
+        message: dutch ? 'Je huidige score gaat verloren.' : 'Your current score will be lost.',
+        stayLabel: dutch ? 'Verder' : 'Resume',
+        quitLabel: dutch ? 'Verlaten' : 'Quit',
         stayBadge: 'Esc',
         quitBadge: 'Q',
         stayKey: LogicalKeyboardKey.keyR,
@@ -559,7 +561,7 @@ class _FallingWordsScreenState extends State<FallingWordsScreen>
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
-              '${_difficulty.emoji} ${_difficulty.label}',
+              '${_difficulty.emoji} ${context.read<LanguageProvider>().isDutch ? _difficulty.dutchLabel : _difficulty.label}',
               style: GoogleFonts.nunito(
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
@@ -609,7 +611,7 @@ class _FallingWordsScreenState extends State<FallingWordsScreen>
             if (_words.isEmpty)
               Center(
                 child: Text(
-                  'Get ready...',
+                  context.read<LanguageProvider>().isDutch ? 'Maak je klaar...' : 'Get ready...',
                   style: GoogleFonts.fredoka(
                     fontSize: 24,
                     color: AppColors.textSecondary.withValues(alpha: 0.4),
@@ -890,12 +892,12 @@ class _FallingWordsScreenState extends State<FallingWordsScreen>
           Expanded(
             child: Text(
               _flash == _FlashType.correct
-                  ? '✓ Nice!'
+                  ? (context.read<LanguageProvider>().isDutch ? '✓ Goed!' : '✓ Nice!')
                   : _flash == _FlashType.wrong
-                  ? '✗ No match'
+                  ? (context.read<LanguageProvider>().isDutch ? '✗ Geen woord' : '✗ No match')
                   : hasInput
                   ? _input
-                  : 'Start typing...',
+                  : (context.read<LanguageProvider>().isDutch ? 'Begin met typen...' : 'Start typing...'),
               style: GoogleFonts.fredoka(
                 fontSize: fontSize,
                 fontWeight: FontWeight.w500,
@@ -914,7 +916,7 @@ class _FallingWordsScreenState extends State<FallingWordsScreen>
           if (hasInput && _flash == null) ...[
             if (noMatch)
               Text(
-                'Space',
+                context.read<LanguageProvider>().isDutch ? 'Spatie' : 'Space',
                 style: GoogleFonts.robotoMono(
                   fontSize: 10,
                   fontWeight: FontWeight.w600,

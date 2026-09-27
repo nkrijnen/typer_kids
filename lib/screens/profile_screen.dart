@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../core/theme/app_colors.dart';
 import '../models/profile.dart';
 import '../providers/profile_provider.dart';
+import '../providers/language_provider.dart';
 import '../providers/progress_provider.dart';
 import '../widgets/profile/create_profile_dialog.dart';
 import '../widgets/profile/profile_card.dart';
@@ -70,6 +71,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _deleteProfile(Profile profile) async {
+    final dutch = context.read<LanguageProvider>().isDutch;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -80,28 +82,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(width: 8),
             Expanded(
               child: Text(
-                'Delete ${profile.name}?',
+                dutch
+                    ? '${profile.name} verwijderen?'
+                    : 'Delete ${profile.name}?',
                 style: GoogleFonts.fredoka(fontSize: 22),
               ),
             ),
           ],
         ),
         content: Text(
-          'All stars, scores, and lesson progress for this profile will be permanently deleted!',
+          dutch
+              ? 'Alle sterren, scores en lesvoortgang van dit profiel worden definitief verwijderd!'
+              : 'All stars, scores, and lesson progress for this profile will be permanently deleted!',
           style: GoogleFonts.nunito(fontSize: 16),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(false),
             child: Text(
-              'Cancel',
+              dutch ? 'Annuleren' : 'Cancel',
               style: GoogleFonts.fredoka(color: AppColors.primary),
             ),
           ),
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(true),
             child: Text(
-              'Delete',
+              dutch ? 'Verwijderen' : 'Delete',
               style: GoogleFonts.fredoka(color: AppColors.incorrect),
             ),
           ),
@@ -138,6 +144,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final profileProv = context.watch<ProfileProvider>();
     final profiles = profileProv.profiles;
+    final dutch = context.watch<LanguageProvider>().isDutch;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -157,7 +164,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     const Text('🐵', style: TextStyle(fontSize: 56)),
                     const SizedBox(height: 8),
                     Text(
-                      'Who\'s Typing?',
+                      dutch ? 'Wie gaat er typen?' : 'Who\'s Typing?',
                       style: GoogleFonts.fredoka(
                         fontSize: 36,
                         fontWeight: FontWeight.w700,
@@ -166,7 +173,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Choose your profile or create a new one',
+                      dutch
+                          ? 'Kies een profiel of maak er een aan'
+                          : 'Choose your profile or create a new one',
                       style: GoogleFonts.nunito(
                         fontSize: 16,
                         color: AppColors.textSecondary,
@@ -200,7 +209,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              'New Profile',
+                              dutch ? 'Nieuw profiel' : 'New Profile',
                               style: GoogleFonts.fredoka(fontSize: 20),
                             ),
                             const SizedBox(width: 8),
@@ -253,7 +262,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              'Back',
+                              dutch ? 'Terug' : 'Back',
                               style: GoogleFonts.fredoka(fontSize: 16),
                             ),
                             const SizedBox(width: 6),

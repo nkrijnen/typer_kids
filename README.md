@@ -2,6 +2,11 @@
 
 A fun, colorful typing tutor built with Flutter — designed to help kids learn touch typing through structured lessons and arcade-style games.
 
+The Dutch story "De jas in de boom" is original text written for this project
+and distributed under the repository's LICENSE. Dutch beginner keyboard guidance
+covers letters only; Netherlands QWERTY punctuation and dead keys still require
+physical keyboard verification.
+
 <p align="center">
   <img src="screenshots/home_screen.png" alt="Typer Kids Home Screen" width="600" />
 </p>

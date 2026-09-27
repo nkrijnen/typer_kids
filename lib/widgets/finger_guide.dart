@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import '../core/theme/app_colors.dart';
 import '../data/keyboard_data.dart';
+import '../providers/language_provider.dart';
 
 /// Shows which finger to use for the current key, with a visual hand diagram
 /// that highlights the correct finger above the keyboard.
@@ -18,7 +20,19 @@ class FingerGuide extends StatelessWidget {
     final finger = KeyboardData.keyToFinger[currentKey!.toLowerCase()];
     if (finger == null) return const SizedBox.shrink();
 
-    final fingerName = KeyboardData.fingerNameForKey(currentKey!);
+    final fingerName = context.watch<LanguageProvider>().isDutch
+        ? switch (finger) {
+            'left-pinky' => 'Linkerpink 🤙',
+            'left-ring' => 'Linkerringvinger 💍',
+            'left-middle' => 'Linkermiddelvinger ☝️',
+            'left-index' => 'Linkerwijsvinger 👆',
+            'right-index' => 'Rechterwijsvinger 👆',
+            'right-middle' => 'Rechtermiddelvinger ☝️',
+            'right-ring' => 'Rechterringvinger 💍',
+            'right-pinky' => 'Rechterpink 🤙',
+            _ => 'Duim 👍',
+          }
+        : KeyboardData.fingerNameForKey(currentKey!);
     final fingerColor = KeyboardData.fingerColor(finger);
     final isLeft = finger.startsWith('left');
     final isThumb = finger == 'thumb';
@@ -79,10 +93,7 @@ class _HandDiagram extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomPaint(
       size: const Size(90, 80),
-      painter: _HandPainter(
-        isLeft: isLeft,
-        activeFinger: activeFinger,
-      ),
+      painter: _HandPainter(isLeft: isLeft, activeFinger: activeFinger),
     );
   }
 }
@@ -177,7 +188,9 @@ class _HandPainter extends CustomPainter {
 
       // Finger border
       final borderPaint = Paint()
-        ..color = isActive ? color.withValues(alpha: 0.9) : const Color(0xFFD7A97A)
+        ..color = isActive
+            ? color.withValues(alpha: 0.9)
+            : const Color(0xFFD7A97A)
         ..style = PaintingStyle.stroke
         ..strokeWidth = isActive ? 2.0 : 1.2;
       canvas.drawRRect(rect, borderPaint);
@@ -209,17 +222,9 @@ class _HandPainter extends CustomPainter {
         fontWeight: FontWeight.w700,
       ),
     );
-    final tp = TextPainter(
-      text: labelSpan,
-      textDirection: TextDirection.ltr,
-    )..layout();
-    tp.paint(
-      canvas,
-      Offset(
-        (size.width - tp.width) / 2,
-        size.height * 0.70,
-      ),
-    );
+    final tp = TextPainter(text: labelSpan, textDirection: TextDirection.ltr)
+      ..layout();
+    tp.paint(canvas, Offset((size.width - tp.width) / 2, size.height * 0.70));
   }
 
   @override

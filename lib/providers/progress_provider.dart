@@ -19,11 +19,14 @@ class ProgressProvider extends ChangeNotifier {
   bool _isLoaded = false;
   String? _lastLessonId;
   String _profileId = '';
+  String _language = 'en';
 
   bool get isLoaded => _isLoaded;
 
   /// Key prefix for the current profile
   String get _prefix => 'profile_${_profileId}_';
+  String get _lessonPrefix => _language == 'nl' ? '${_prefix}nl_' : _prefix;
+  String get language => _language;
 
   /// The lesson the user should practice next (recommended flow)
   Lesson get recommendedLesson {
@@ -59,17 +62,18 @@ class ProgressProvider extends ChangeNotifier {
   /// Save which lesson the user last practiced
   Future<void> setLastLesson(String lessonId) async {
     _lastLessonId = lessonId;
-    await _prefs?.setString('${_prefix}last_lesson_id', lessonId);
+    await _prefs?.setString('${_lessonPrefix}last_lesson_id', lessonId);
   }
 
   /// Initialize and load saved progress for the given profile
-  Future<void> init({String profileId = ''}) async {
+  Future<void> init({String profileId = '', String language = 'en'}) async {
     _prefs = await SharedPreferences.getInstance();
+    _language = language == 'nl' ? 'nl' : 'en';
     _profileId = profileId;
     _progressMap.clear();
     _lastLessonId = null;
     _loadProgress();
-    _lastLessonId = _prefs?.getString('${_prefix}last_lesson_id');
+    _lastLessonId = _prefs?.getString('${_lessonPrefix}last_lesson_id');
     _isLoaded = true;
     notifyListeners();
   }
@@ -80,13 +84,24 @@ class ProgressProvider extends ChangeNotifier {
     _progressMap.clear();
     _lastLessonId = null;
     _loadProgress();
-    _lastLessonId = _prefs?.getString('${_prefix}last_lesson_id');
+    _lastLessonId = _prefs?.getString('${_lessonPrefix}last_lesson_id');
+    notifyListeners();
+  }
+
+  Future<void> switchLanguage(String language) async {
+    _language = language == 'nl' ? 'nl' : 'en';
+    _progressMap.clear();
+    _lastLessonId = null;
+    _loadProgress();
+    _lastLessonId = _prefs?.getString('${_lessonPrefix}last_lesson_id');
     notifyListeners();
   }
 
   void _loadProgress() {
     final keys =
-        _prefs?.getKeys().where((k) => k.startsWith('${_prefix}progress_')) ??
+        _prefs?.getKeys().where(
+          (k) => k.startsWith('${_lessonPrefix}progress_'),
+        ) ??
         [];
     for (final key in keys) {
       final json = _prefs?.getString(key);
@@ -103,7 +118,7 @@ class ProgressProvider extends ChangeNotifier {
 
   Future<void> _saveProgress(LessonProgress progress) async {
     await _prefs?.setString(
-      '${_prefix}progress_${progress.lessonId}',
+      '${_lessonPrefix}progress_${progress.lessonId}',
       progress.encode(),
     );
   }
@@ -115,7 +130,7 @@ class ProgressProvider extends ChangeNotifier {
 
   /// Record a completed exercise attempt
   Future<void> recordAttempt(Lesson lesson, TypingStats stats) async {
-    await _recordKeyErrors(stats.errorsByKey);
+    if (_language == 'en') await _recordKeyErrors(stats.errorsByKey);
     await _recordPracticeDay();
 
     if (lesson.id == PracticeGenerator.trickyKeysLessonId) {
@@ -162,8 +177,7 @@ class ProgressProvider extends ChangeNotifier {
 
   /// Consecutive days practiced, ending today (or yesterday if the kid
   /// hasn't practiced yet today, so the streak isn't shown as broken).
-  int get currentStreak =>
-      computeStreak(_practiceDays.toSet(), DateTime.now());
+  int get currentStreak => computeStreak(_practiceDays.toSet(), DateTime.now());
 
   @visibleForTesting
   static int computeStreak(Set<String> practicedDays, DateTime today) {
@@ -216,10 +230,11 @@ class ProgressProvider extends ChangeNotifier {
   /// The keys this kid misses most (most-missed first), for extra practice.
   /// Only keys with a few misses qualify — one slip isn't a pattern.
   List<String> get trickyKeys {
-    final entries = keyErrorCounts.entries
-        .where((e) => e.value >= PracticeGenerator.minErrorsToQualify)
-        .toList()
-      ..sort((a, b) => b.value.compareTo(a.value));
+    final entries =
+        keyErrorCounts.entries
+            .where((e) => e.value >= PracticeGenerator.minErrorsToQualify)
+            .toList()
+          ..sort((a, b) => b.value.compareTo(a.value));
     return entries
         .take(PracticeGenerator.maxFocusKeys)
         .map((e) => e.key)
@@ -229,6 +244,7 @@ class ProgressProvider extends ChangeNotifier {
   /// A dynamically generated lesson targeting the current tricky keys,
   /// or null if there aren't any yet.
   Lesson? get trickyKeysLesson {
+    if (_language == 'nl') return null;
     final keys = trickyKeys;
     if (keys.isEmpty) return null;
     return PracticeGenerator.buildTrickyKeysLesson(keys);
@@ -297,17 +313,19 @@ class ProgressProvider extends ChangeNotifier {
             ?.getKeys()
             .where(
               (k) =>
-                  k.startsWith('${_prefix}progress_') ||
-                  k.startsWith('${_prefix}highscore_'),
+                  k.startsWith('${_lessonPrefix}progress_') ||
+                  k.startsWith('${_lessonPrefix}highscore_'),
             )
             .toList() ??
         [];
     for (final key in keys) {
       await _prefs?.remove(key);
     }
-    await _prefs?.remove('${_prefix}last_lesson_id');
-    await _prefs?.remove('${_prefix}practice_days');
-    await _prefs?.remove('${_prefix}key_errors');
+    await _prefs?.remove('${_lessonPrefix}last_lesson_id');
+    if (_language == 'en') {
+      await _prefs?.remove('${_prefix}practice_days');
+      await _prefs?.remove('${_prefix}key_errors');
+    }
     notifyListeners();
   }
 
@@ -317,7 +335,7 @@ class ProgressProvider extends ChangeNotifier {
 
   /// Get the high score for a specific game.
   int getHighScore(String gameId) {
-    return _prefs?.getInt('${_prefix}highscore_$gameId') ?? 0;
+    return _prefs?.getInt('${_lessonPrefix}highscore_$gameId') ?? 0;
   }
 
   /// Record a score for a game. Returns true if it's a new high score.
@@ -325,7 +343,7 @@ class ProgressProvider extends ChangeNotifier {
     await _recordPracticeDay();
     final current = getHighScore(gameId);
     if (score > current) {
-      await _prefs?.setInt('${_prefix}highscore_$gameId', score);
+      await _prefs?.setInt('${_lessonPrefix}highscore_$gameId', score);
       notifyListeners();
       return true;
     }
@@ -337,7 +355,7 @@ class ProgressProvider extends ChangeNotifier {
   /// Get all high scores as a map of gameId → score.
   Map<String, int> get allHighScores {
     final result = <String, int>{};
-    final prefix = '${_prefix}highscore_';
+    final prefix = '${_lessonPrefix}highscore_';
     final keys = _prefs?.getKeys().where((k) => k.startsWith(prefix)) ?? [];
     for (final key in keys) {
       final gameId = key.substring(prefix.length);

@@ -1,4 +1,5 @@
 import '../models/lesson.dart';
+import 'dutch_curriculum.dart';
 import 'lesson_curriculum.dart' as classic;
 import 'lesson_curriculum_comprehensive.dart' as comprehensive;
 
@@ -20,7 +21,10 @@ class CurriculumConfig {
 class LessonCurriculum {
   LessonCurriculum._();
 
+  static bool isDutch = false;
+
   static List<Lesson> get allLessons =>
+      isDutch ? DutchCurriculum.allLessons :
       switch (CurriculumConfig.activeVariant) {
         CurriculumVariant.classic => classic.LessonCurriculum.allLessons,
         CurriculumVariant.comprehensive =>
@@ -28,6 +32,7 @@ class LessonCurriculum {
       };
 
   static List<LessonCategory> get categoryOrder =>
+      isDutch ? [LessonCategory.homeRow] :
       switch (CurriculumConfig.activeVariant) {
         CurriculumVariant.classic => classic.LessonCurriculum.categoryOrder,
         CurriculumVariant.comprehensive =>
@@ -35,6 +40,7 @@ class LessonCurriculum {
       };
 
   static List<Lesson> byCategory(LessonCategory category) =>
+      isDutch ? allLessons.where((lesson) => lesson.category == category).toList() :
       switch (CurriculumConfig.activeVariant) {
         CurriculumVariant.classic => classic.LessonCurriculum.byCategory(
           category,
@@ -46,13 +52,16 @@ class LessonCurriculum {
   static List<Lesson> byDifficulty(LessonDifficulty difficulty) =>
       allLessons.where((lesson) => lesson.difficulty == difficulty).toList();
 
-  static Lesson? byId(String id) => switch (CurriculumConfig.activeVariant) {
+  static Lesson? byId(String id) => isDutch
+      ? (allLessons.where((lesson) => lesson.id == id).firstOrNull)
+      : switch (CurriculumConfig.activeVariant) {
     CurriculumVariant.classic => classic.LessonCurriculum.byId(id),
     CurriculumVariant.comprehensive =>
       comprehensive.ComprehensiveLessonCurriculum.byId(id),
   };
 
   static Lesson? nextLesson(String currentLessonId) =>
+      isDutch ? null :
       switch (CurriculumConfig.activeVariant) {
         CurriculumVariant.classic => classic.LessonCurriculum.nextLesson(
           currentLessonId,

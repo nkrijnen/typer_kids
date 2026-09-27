@@ -5,6 +5,8 @@ import 'package:typer_kids/data/practice_generator.dart';
 import 'package:typer_kids/data/sentence_lists.dart';
 import 'package:typer_kids/data/story_content.dart';
 import 'package:typer_kids/data/word_lists.dart';
+import 'package:typer_kids/data/lesson_curriculum_selector.dart' as selected;
+import 'package:typer_kids/providers/language_provider.dart';
 import 'package:typer_kids/models/lesson.dart';
 import 'package:typer_kids/models/typing_stats.dart';
 import 'package:typer_kids/providers/progress_provider.dart';
@@ -12,6 +14,96 @@ import 'package:typer_kids/providers/typing_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
+  group('Dutch path storage and content', () {
+    tearDown(() => selected.LessonCurriculum.isDutch = false);
+
+    test(
+      'unknown language starts English, switch persists across profiles and restart',
+      () async {
+        SharedPreferences.setMockInitialValues({
+          LanguageProvider.prefsKey: 'unknown',
+        });
+        final language = LanguageProvider();
+        await language.init();
+        expect(language.language, 'en');
+        await language.select('nl');
+        final restarted = LanguageProvider();
+        await restarted.init();
+        expect(restarted.language, 'nl');
+        final progress = ProgressProvider();
+        await progress.init(profileId: 'second', language: restarted.language);
+        expect(progress.recommendedLesson.id, 'nl-home-letters');
+      },
+    );
+
+    test(
+      'English lesson save remains intact through Dutch completion, profile change and corruption',
+      () async {
+        SharedPreferences.setMockInitialValues({});
+        selected.LessonCurriculum.isDutch = false;
+        final progress = ProgressProvider();
+        await progress.init(profileId: 'one');
+        final english = ComprehensiveLessonCurriculum.allLessons.first;
+        final stats = TypingStats(
+          totalCharacters: 10,
+          correctCharacters: 10,
+          incorrectCharacters: 0,
+          elapsed: const Duration(seconds: 30),
+          completedAt: DateTime.now(),
+        );
+        await progress.recordAttempt(english, stats);
+        final prefs = await SharedPreferences.getInstance();
+        final englishSave = prefs.getString(
+          'profile_one_progress_${english.id}',
+        );
+        selected.LessonCurriculum.isDutch = true;
+        await progress.switchLanguage('nl');
+        final dutch = selected.LessonCurriculum.allLessons.single;
+        expect(progress.getProgress(dutch.id).completed, false);
+        await progress.recordAttempt(dutch, stats);
+        expect(progress.getProgress(dutch.id).completed, true);
+        await progress.switchProfile('two');
+        expect(progress.getProgress(dutch.id).completed, false);
+        await progress.switchProfile('one');
+        expect(progress.getProgress(dutch.id).completed, true);
+        await prefs.setString('profile_two_nl_progress_${dutch.id}', 'broken');
+        await progress.switchProfile('two');
+        expect(progress.getProgress(dutch.id).completed, false);
+        selected.LessonCurriculum.isDutch = false;
+        await progress.switchProfile('one');
+        await progress.switchLanguage('en');
+        expect(progress.getProgress(english.id).completed, true);
+        expect(selected.LessonCurriculum.byId(english.id), isNotNull);
+        expect(
+          prefs.getString('profile_one_progress_${english.id}'),
+          englishSave,
+        );
+      },
+    );
+
+    test(
+      'Dutch game and story use authored content and keep English scores',
+      () async {
+        SharedPreferences.setMockInitialValues({});
+        final progress = ProgressProvider();
+        await progress.init(profileId: 'one');
+        await progress.recordScore('falling_words', 200);
+        selected.LessonCurriculum.isDutch = true;
+        await progress.switchLanguage('nl');
+        for (final difficulty in ContentDifficulty.values) {
+          expect(WordLists.forDifficulty(difficulty), isNotEmpty);
+          expect(StoryContent.forDifficulty(difficulty), [StoryContent.dutch]);
+          expect(WordLists.forDifficulty(difficulty), isNot(contains('the')));
+        }
+        await progress.recordScore('falling_words', 30);
+        expect(progress.getHighScore('falling_words'), 30);
+        await progress.resetAll();
+        expect(progress.getHighScore('falling_words'), 0);
+        await progress.switchLanguage('en');
+        expect(progress.getHighScore('falling_words'), 200);
+      },
+    );
+  });
   group('ComprehensiveLessonCurriculum', () {
     test('all lessons have unique IDs and non-empty exercises', () {
       final lessons = ComprehensiveLessonCurriculum.allLessons;
@@ -26,8 +118,9 @@ void main() {
     });
 
     test('includes the new punctuation, fun theme, and story lessons', () {
-      final titles =
-          ComprehensiveLessonCurriculum.allLessons.map((l) => l.title).toSet();
+      final titles = ComprehensiveLessonCurriculum.allLessons
+          .map((l) => l.title)
+          .toSet();
       expect(titles, contains('Question Marks'));
       expect(titles, contains('Excited Lines'));
       expect(titles, contains('Apostrophes'));
@@ -143,9 +236,15 @@ void main() {
     });
 
     test('caps the focus keys at the maximum', () {
-      final lesson = PracticeGenerator.buildTrickyKeysLesson(
-        ['a', 'b', 'c', 'd', 'e', 'f', 'g'],
-      );
+      final lesson = PracticeGenerator.buildTrickyKeysLesson([
+        'a',
+        'b',
+        'c',
+        'd',
+        'e',
+        'f',
+        'g',
+      ]);
       expect(lesson.focusKeys.length, PracticeGenerator.maxFocusKeys);
     });
 

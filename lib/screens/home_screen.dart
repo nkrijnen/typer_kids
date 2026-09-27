@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../core/theme/app_colors.dart';
 import '../data/practice_generator.dart';
 import '../providers/profile_provider.dart';
+import '../providers/language_provider.dart';
 import '../providers/progress_provider.dart';
 import '../widgets/home/activity_card.dart';
 import '../widgets/home/badges_panel.dart';
@@ -33,6 +34,22 @@ class _HomeScreenState extends State<HomeScreen> {
   void _handleKeyEvent(KeyEvent event) {
     if (event is! KeyDownEvent) return;
     final key = event.logicalKey;
+    if (context.read<LanguageProvider>().isDutch) {
+      if (key == LogicalKeyboardKey.enter || key == LogicalKeyboardKey.space) {
+        _startRecommendedLesson();
+      } else if (key == LogicalKeyboardKey.keyL) {
+        _openLessonList();
+      } else if (key == LogicalKeyboardKey.keyS) {
+        _openSettings();
+      } else if (key == LogicalKeyboardKey.keyP) {
+        _switchProfile();
+      } else if (key == LogicalKeyboardKey.keyG) {
+        context.push('/games/falling-words');
+      } else if (key == LogicalKeyboardKey.keyF) {
+        _openSandbox();
+      }
+      return;
+    }
     if (key == LogicalKeyboardKey.enter || key == LogicalKeyboardKey.space) {
       _startRecommendedLesson();
     } else if (key == LogicalKeyboardKey.keyL) {
@@ -91,6 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final progress = context.watch<ProgressProvider>();
+    context.watch<LanguageProvider>();
 
     return Scaffold(
       body: KeyboardListener(
@@ -146,6 +164,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildHeader(BuildContext context) {
+    final dutch = context.read<LanguageProvider>().isDutch;
     return Column(
       children: [
         const Text('🐵', style: TextStyle(fontSize: 56)),
@@ -167,7 +186,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         const SizedBox(height: 2),
         Text(
-          'Learn to Type with Fun! 🎮',
+          dutch ? 'Leer typen met plezier! 🎮' : 'Learn to Type with Fun! 🎮',
           style: GoogleFonts.fredoka(
             fontSize: 18,
             fontWeight: FontWeight.w400,
@@ -179,25 +198,26 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildMascotGreeting(ProgressProvider progress) {
+    final dutch = context.read<LanguageProvider>().isDutch;
     String greeting;
     String emoji;
     if (progress.completedLessons == 0) {
-      greeting = 'Ready for a typing adventure?';
+      greeting = dutch ? 'Klaar om te leren typen?' : 'Ready for a typing adventure?';
       emoji = '🌟';
     } else if (progress.completionPercentage < 25) {
-      greeting = 'Great start! Keep going!';
+      greeting = dutch ? 'Goed begonnen! Ga zo door!' : 'Great start! Keep going!';
       emoji = '🚀';
     } else if (progress.completionPercentage < 50) {
-      greeting = 'You\'re doing amazing!';
+      greeting = dutch ? 'Je doet het geweldig!' : 'You\'re doing amazing!';
       emoji = '🎉';
     } else if (progress.completionPercentage < 75) {
-      greeting = 'More than halfway there!';
+      greeting = dutch ? 'Je bent al over de helft!' : 'More than halfway there!';
       emoji = '💪';
     } else if (progress.completionPercentage < 100) {
-      greeting = 'Almost a typing master!';
+      greeting = dutch ? 'Bijna een typkampioen!' : 'Almost a typing master!';
       emoji = '👑';
     } else {
-      greeting = 'You did it! You\'re a pro!';
+      greeting = dutch ? 'Goed gedaan! Blijf oefenen!' : 'You did it! You\'re a pro!';
       emoji = '🏆';
     }
 
@@ -235,6 +255,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildContinueButton(BuildContext context, ProgressProvider progress) {
+    final dutch = context.read<LanguageProvider>().isDutch;
     final recommended = progress.recommendedLesson;
     final hasStarted = progress.hasStarted;
     final allDone = progress.allCompleted;
@@ -243,15 +264,15 @@ class _HomeScreenState extends State<HomeScreen> {
     String sublabel;
     IconData icon;
     if (allDone) {
-      label = 'Practice Again';
+      label = dutch ? 'Letters oefenen' : 'Practice Again';
       sublabel = '${recommended.emoji} ${recommended.title}';
       icon = Icons.replay_rounded;
     } else if (hasStarted) {
-      label = 'Continue';
+      label = dutch ? 'Letters oefenen' : 'Continue';
       sublabel = '${recommended.emoji} ${recommended.title}';
       icon = Icons.play_arrow_rounded;
     } else {
-      label = 'Start Learning!';
+      label = dutch ? 'Letters oefenen' : 'Start Learning!';
       sublabel = '${recommended.emoji} ${recommended.title}';
       icon = Icons.play_arrow_rounded;
     }
@@ -313,6 +334,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildAllLessonsButton(BuildContext context) {
+    final dutch = context.read<LanguageProvider>().isDutch;
     return SizedBox(
       width: double.infinity,
       height: 52,
@@ -322,7 +344,7 @@ class _HomeScreenState extends State<HomeScreen> {
         label: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('All Lessons', style: GoogleFonts.fredoka(fontSize: 18)),
+            Text(dutch ? 'Alle lessen' : 'All Lessons', style: GoogleFonts.fredoka(fontSize: 18)),
             const SizedBox(width: 8),
             ShortcutBadge('L'),
           ],
@@ -343,25 +365,26 @@ class _HomeScreenState extends State<HomeScreen> {
     ProgressProvider progress, {
     bool useGrid = false,
   }) {
+    final dutch = context.read<LanguageProvider>().isDutch;
     final trickyKeys = progress.trickyKeys;
     final cards = [
       ActivityCard(
         emoji: '🎮',
-        title: 'Typing Games',
-        subtitle: 'Have fun while you practice!',
+        title: dutch ? 'Vallende woorden' : 'Typing Games',
+        subtitle: dutch ? 'Typ de woorden voordat ze vallen' : 'Have fun while you practice!',
         shortcut: 'G',
         color: AppColors.accent,
-        onTap: () => _openGames(),
+        onTap: () => dutch ? context.push('/games/falling-words') : _openGames(),
       ),
       ActivityCard(
         emoji: '📖',
-        title: 'Free Practice',
-        subtitle: 'Type classic stories at your pace',
+        title: dutch ? 'Vrij oefenen' : 'Free Practice',
+        subtitle: dutch ? 'Typ een verhaal in je eigen tempo' : 'Type classic stories at your pace',
         shortcut: 'F',
         color: AppColors.secondary,
         onTap: () => _openSandbox(),
       ),
-      ActivityCard(
+      if (!dutch) ActivityCard(
         emoji: '⏱️',
         title: 'Typing Test',
         subtitle: 'Test your speed with a time limit',
@@ -369,7 +392,7 @@ class _HomeScreenState extends State<HomeScreen> {
         color: AppColors.primary,
         onTap: () => _openTypingTest(),
       ),
-      if (trickyKeys.isNotEmpty)
+      if (!dutch && trickyKeys.isNotEmpty)
         ActivityCard(
           emoji: '🔧',
           title: 'Tricky Keys',
@@ -388,7 +411,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Padding(
           padding: const EdgeInsets.only(left: 4, bottom: 10),
           child: Text(
-            'More Activities',
+            dutch ? 'Meer activiteiten' : 'More Activities',
             style: GoogleFonts.fredoka(
               fontSize: 20,
               fontWeight: FontWeight.w600,
@@ -418,12 +441,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildStatsCards(BuildContext context, ProgressProvider progress) {
+    final dutch = context.read<LanguageProvider>().isDutch;
     return Row(
       children: [
         Expanded(
           child: StatCard(
             emoji: '⭐',
-            label: 'Stars',
+            label: dutch ? 'Sterren' : 'Stars',
             value: '${progress.totalStars}',
             color: AppColors.starFilled,
           ),
@@ -432,7 +456,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Expanded(
           child: StatCard(
             emoji: '📚',
-            label: 'Lessons',
+            label: dutch ? 'Lessen' : 'Lessons',
             value: '${progress.completedLessons}/${progress.totalLessons}',
             color: AppColors.primary,
           ),
@@ -441,7 +465,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Expanded(
           child: StatCard(
             emoji: '🎯',
-            label: 'Accuracy',
+            label: dutch ? 'Precisie' : 'Accuracy',
             value: progress.averageAccuracy > 0
                 ? '${progress.averageAccuracy.toStringAsFixed(0)}%'
                 : '--',
@@ -452,9 +476,10 @@ class _HomeScreenState extends State<HomeScreen> {
         Expanded(
           child: StatCard(
             emoji: '🔥',
-            label: 'Streak',
+            label: dutch ? 'Reeks' : 'Streak',
             value: progress.currentStreak > 0
-                ? '${progress.currentStreak} day${progress.currentStreak == 1 ? '' : 's'}'
+              ? dutch ? '${progress.currentStreak} ${progress.currentStreak == 1 ? 'dag' : 'dagen'}'
+                : '${progress.currentStreak} day${progress.currentStreak == 1 ? '' : 's'}'
                 : '--',
             color: AppColors.secondary,
           ),
@@ -496,6 +521,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildBottomButtons(BuildContext context) {
+    final dutch = context.read<LanguageProvider>().isDutch;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -510,7 +536,7 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Profiles',
+                dutch ? 'Profielen' : 'Profiles',
                 style: GoogleFonts.fredoka(
                   fontSize: 16,
                   color: AppColors.textSecondary,
@@ -533,7 +559,7 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Settings',
+                dutch ? 'Instellingen' : 'Settings',
                 style: GoogleFonts.fredoka(
                   fontSize: 16,
                   color: AppColors.textSecondary,

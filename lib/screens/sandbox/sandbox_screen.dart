@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../data/story_content.dart';
 import '../../data/word_lists.dart';
 import '../../providers/typing_provider.dart';
+import '../../providers/language_provider.dart';
 import '../../widgets/passage_typing_display.dart';
 import '../../widgets/quit_dialog.dart';
 import '../../widgets/stat_tiles.dart';
@@ -155,12 +157,15 @@ class _SandboxScreenState extends State<SandboxScreen> {
   void _showQuitDialog() {
     _timer?.cancel();
     final timerWasRunning = _startTime != null;
+    final dutch = context.read<LanguageProvider>().isDutch;
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (ctx) => QuitDialog(
-        title: 'Leave Practice?',
-        message: 'Your progress won\'t be saved.',
+        title: dutch ? 'Oefening verlaten?' : 'Leave Practice?',
+        message: dutch ? 'Je voortgang wordt niet opgeslagen.' : 'Your progress won\'t be saved.',
+        stayLabel: dutch ? 'Verder' : 'Stay',
+        quitLabel: dutch ? 'Verlaten' : 'Quit',
         onStay: () => Navigator.of(ctx).pop(),
         onQuit: () {
           Navigator.of(ctx).pop();
@@ -241,7 +246,7 @@ class _SandboxScreenState extends State<SandboxScreen> {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
-                  '${_difficulty.emoji} ${_difficulty.label}',
+                  '${_difficulty.emoji} ${context.read<LanguageProvider>().isDutch ? _difficulty.dutchLabel : _difficulty.label}',
                   style: GoogleFonts.nunito(
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
@@ -288,7 +293,7 @@ class _SandboxScreenState extends State<SandboxScreen> {
                     children: [
                       LiveStatItem(
                         icon: Icons.timer_outlined,
-                        label: 'Time',
+                        label: context.read<LanguageProvider>().isDutch ? 'Tijd' : 'Time',
                         value: '$minutes:$seconds',
                         color: AppColors.primary,
                         compact: true,
@@ -302,7 +307,7 @@ class _SandboxScreenState extends State<SandboxScreen> {
                       ),
                       LiveStatItem(
                         icon: Icons.gps_fixed_rounded,
-                        label: 'Accuracy',
+                        label: context.read<LanguageProvider>().isDutch ? 'Nauwkeurig' : 'Accuracy',
                         value: '${_accuracy.toStringAsFixed(0)}%',
                         color: _accuracy >= 90
                             ? AppColors.correct
@@ -313,7 +318,7 @@ class _SandboxScreenState extends State<SandboxScreen> {
                       ),
                       LiveStatItem(
                         icon: Icons.text_fields_rounded,
-                        label: 'Progress',
+                        label: context.read<LanguageProvider>().isDutch ? 'Voortgang' : 'Progress',
                         value:
                             '${(_cursor / _text.length * 100).toStringAsFixed(0)}%',
                         color: AppColors.accent,
@@ -387,7 +392,7 @@ class _SandboxScreenState extends State<SandboxScreen> {
                           ),
                           const SizedBox(width: 6),
                           Text(
-                            'Click here and start typing!',
+                            context.read<LanguageProvider>().isDutch ? 'Klik hier en begin met typen!' : 'Click here and start typing!',
                             style: GoogleFonts.fredoka(
                               fontSize: 14,
                               color: AppColors.secondary,

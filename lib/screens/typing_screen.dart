@@ -9,6 +9,7 @@ import '../core/theme/app_colors.dart';
 import '../data/practice_generator.dart';
 import '../models/lesson.dart';
 import '../providers/progress_provider.dart';
+import '../providers/language_provider.dart';
 import '../providers/typing_provider.dart';
 import '../widgets/finger_guide.dart';
 import '../widgets/keyboard_widget.dart';
@@ -149,6 +150,7 @@ class _TypingScreenState extends State<TypingScreen> {
   }
 
   Widget _buildIntroScreen() {
+    final dutch = context.read<LanguageProvider>().isDutch;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: KeyboardListener(
@@ -222,7 +224,7 @@ class _TypingScreenState extends State<TypingScreen> {
                   ],
                   const SizedBox(height: 32),
                   Text(
-                    '${widget.lesson.exercises.length} exercises',
+                    '${widget.lesson.exercises.length} ${dutch ? 'oefeningen' : 'exercises'}',
                     style: GoogleFonts.nunito(
                       fontSize: 14,
                       color: AppColors.textSecondary,
@@ -249,12 +251,15 @@ class _TypingScreenState extends State<TypingScreen> {
                             color: Colors.white,
                           ),
                           const SizedBox(width: 8),
-                          Text(
-                            "Let's Go!",
-                            style: GoogleFonts.fredoka(
-                              fontSize: 22,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
+                          Flexible(
+                            child: Text(
+                              dutch ? 'Begin!' : "Let's Go!",
+                              overflow: TextOverflow.ellipsis,
+                              style: GoogleFonts.fredoka(
+                                fontSize: 22,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                           const SizedBox(width: 6),
@@ -287,7 +292,7 @@ class _TypingScreenState extends State<TypingScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          'Go Back',
+                          dutch ? 'Terug' : 'Go Back',
                           style: GoogleFonts.nunito(
                             color: AppColors.textSecondary,
                           ),
@@ -494,7 +499,7 @@ class _TypingScreenState extends State<TypingScreen> {
         children: [
           LiveStatItem(
             icon: Icons.timer_outlined,
-            label: 'Time',
+            label: context.read<LanguageProvider>().isDutch ? 'Tijd' : 'Time',
             value: _formatDuration(_typingProvider.elapsed),
             color: AppColors.primary,
           ),
@@ -506,7 +511,7 @@ class _TypingScreenState extends State<TypingScreen> {
           ),
           LiveStatItem(
             icon: Icons.gps_fixed_rounded,
-            label: 'Accuracy',
+            label: context.read<LanguageProvider>().isDutch ? 'Nauwkeurig' : 'Accuracy',
             value: '${_typingProvider.liveAccuracy.toStringAsFixed(0)}%',
             color: _typingProvider.liveAccuracy >= 90
                 ? AppColors.correct
@@ -533,7 +538,7 @@ class _TypingScreenState extends State<TypingScreen> {
           const Icon(Icons.mouse_rounded, color: AppColors.secondary, size: 20),
           const SizedBox(width: 8),
           Text(
-            'Click here and start typing!',
+            context.read<LanguageProvider>().isDutch ? 'Klik hier en begin met typen!' : 'Click here and start typing!',
             style: GoogleFonts.fredoka(
               fontSize: 16,
               color: AppColors.secondary,
@@ -556,8 +561,10 @@ class _TypingScreenState extends State<TypingScreen> {
       context: context,
       barrierDismissible: false,
       builder: (dialogContext) => QuitDialog(
-        title: 'Leave Lesson?',
-        message: 'Your progress on this exercise will not be saved.',
+        title: context.read<LanguageProvider>().isDutch ? 'Les verlaten?' : 'Leave Lesson?',
+        message: context.read<LanguageProvider>().isDutch ? 'Je voortgang in deze oefening wordt niet opgeslagen.' : 'Your progress on this exercise will not be saved.',
+        stayLabel: context.read<LanguageProvider>().isDutch ? 'Verder' : 'Stay',
+        quitLabel: context.read<LanguageProvider>().isDutch ? 'Verlaten' : 'Quit',
         onStay: () => Navigator.of(dialogContext).pop(),
         onQuit: () {
           Navigator.of(dialogContext).pop();

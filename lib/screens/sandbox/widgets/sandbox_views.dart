@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../data/story_content.dart';
 import '../../../data/word_lists.dart';
+import '../../../providers/language_provider.dart';
 import '../../../widgets/difficulty_card.dart';
 import '../../../widgets/stat_tiles.dart';
 
@@ -41,17 +43,18 @@ class SandboxSetupView extends StatelessWidget {
     } else if (key == LogicalKeyboardKey.enter ||
         key == LogicalKeyboardKey.space) {
       onStart();
-    } else if (key == LogicalKeyboardKey.digit1) {
+    } else if (passages.length > 1 && key == LogicalKeyboardKey.digit1) {
       onDifficultyChanged(ContentDifficulty.easy);
-    } else if (key == LogicalKeyboardKey.digit2) {
+    } else if (passages.length > 1 && key == LogicalKeyboardKey.digit2) {
       onDifficultyChanged(ContentDifficulty.medium);
-    } else if (key == LogicalKeyboardKey.digit3) {
+    } else if (passages.length > 1 && key == LogicalKeyboardKey.digit3) {
       onDifficultyChanged(ContentDifficulty.hard);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final dutch = context.watch<LanguageProvider>().isDutch;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: KeyboardListener(
@@ -75,7 +78,7 @@ class SandboxSetupView extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              'Back',
+                              dutch ? 'Terug' : 'Back',
                               style: GoogleFonts.fredoka(fontSize: 16),
                             ),
                             const SizedBox(width: 6),
@@ -91,7 +94,7 @@ class SandboxSetupView extends StatelessWidget {
                     const Text('📖', style: TextStyle(fontSize: 56)),
                     const SizedBox(height: 8),
                     Text(
-                      'Free Practice',
+                      dutch ? 'Vrij oefenen' : 'Free Practice',
                       style: GoogleFonts.fredoka(
                         fontSize: 34,
                         fontWeight: FontWeight.w700,
@@ -100,7 +103,9 @@ class SandboxSetupView extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Type passages from classic stories at your own pace',
+                      dutch
+                          ? 'Typ het verhaal in je eigen tempo'
+                          : 'Type passages from classic stories at your own pace',
                       style: GoogleFonts.nunito(
                         fontSize: 16,
                         color: AppColors.textSecondary,
@@ -108,38 +113,40 @@ class SandboxSetupView extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 32),
-                    Text(
-                      'Choose Difficulty',
-                      style: GoogleFonts.fredoka(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
+                    if (passages.length > 1) ...[
+                      Text(
+                        'Choose Difficulty',
+                        style: GoogleFonts.fredoka(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textPrimary,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 14),
-                    Row(
-                      children: ContentDifficulty.values.map((d) {
-                        final selected = d == difficulty;
-                        return Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                              left: d.index == 0 ? 0 : 6,
-                              right: d.index == 2 ? 0 : 6,
+                      const SizedBox(height: 14),
+                      Row(
+                        children: ContentDifficulty.values.map((d) {
+                          final selected = d == difficulty;
+                          return Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                left: d.index == 0 ? 0 : 6,
+                                right: d.index == 2 ? 0 : 6,
+                              ),
+                              child: DifficultyCard(
+                                difficulty: d,
+                                index: d.index + 1,
+                                selected: selected,
+                                accentColor: AppColors.secondary,
+                                onTap: () => onDifficultyChanged(d),
+                              ),
                             ),
-                            child: DifficultyCard(
-                              difficulty: d,
-                              index: d.index + 1,
-                              selected: selected,
-                              accentColor: AppColors.secondary,
-                              onTap: () => onDifficultyChanged(d),
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
+                          );
+                        }).toList(),
+                      ),
+                    ],
                     const SizedBox(height: 24),
                     Text(
-                      'Pick a Story',
+                      dutch ? 'Verhaal' : 'Pick a Story',
                       style: GoogleFonts.fredoka(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
@@ -147,7 +154,13 @@ class SandboxSetupView extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    _buildStoryPicker(),
+                    if (passages.length == 1)
+                      Text(
+                        passages.single.title,
+                        style: GoogleFonts.fredoka(fontSize: 18),
+                      )
+                    else
+                      _buildStoryPicker(),
                     const SizedBox(height: 32),
                     SizedBox(
                       width: 240,
@@ -167,11 +180,14 @@ class SandboxSetupView extends StatelessWidget {
                           children: [
                             const Icon(Icons.play_arrow_rounded, size: 28),
                             const SizedBox(width: 8),
-                            Text(
-                              'Start',
-                              style: GoogleFonts.fredoka(
-                                fontSize: 22,
-                                fontWeight: FontWeight.w600,
+                            Flexible(
+                              child: Text(
+                                dutch ? 'Begin' : 'Start',
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.fredoka(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             ),
                             const SizedBox(width: 8),
@@ -245,6 +261,7 @@ class SandboxSetupView extends StatelessWidget {
     );
   }
 }
+
 /// Completion/results view for the sandbox — stars, stats, and actions.
 class SandboxDoneView extends StatelessWidget {
   final FocusNode focusNode;
@@ -284,6 +301,7 @@ class SandboxDoneView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dutch = context.watch<LanguageProvider>().isDutch;
     final minutes = elapsed.inMinutes.remainder(60).toString().padLeft(2, '0');
     final seconds = elapsed.inSeconds.remainder(60).toString().padLeft(2, '0');
 
@@ -317,7 +335,7 @@ class SandboxDoneView extends StatelessWidget {
                     const Text('🎉', style: TextStyle(fontSize: 56)),
                     const SizedBox(height: 8),
                     Text(
-                      'Well Done!',
+                      dutch ? 'Goed gedaan!' : 'Well Done!',
                       style: GoogleFonts.fredoka(
                         fontSize: 34,
                         fontWeight: FontWeight.w700,
@@ -360,7 +378,7 @@ class SandboxDoneView extends StatelessWidget {
                       children: [
                         EmojiStatTile(
                           emoji: '⏱️',
-                          label: 'Time',
+                          label: dutch ? 'Tijd' : 'Time',
                           value: '$minutes:$seconds',
                         ),
                         const SizedBox(width: 12),
@@ -376,13 +394,13 @@ class SandboxDoneView extends StatelessWidget {
                       children: [
                         EmojiStatTile(
                           emoji: '🎯',
-                          label: 'Accuracy',
+                          label: dutch ? 'Nauwkeurigheid' : 'Accuracy',
                           value: '${accuracy.toStringAsFixed(1)}%',
                         ),
                         const SizedBox(width: 12),
                         EmojiStatTile(
                           emoji: '✅',
-                          label: 'Correct',
+                          label: dutch ? 'Goed' : 'Correct',
                           value: '$correctCount',
                         ),
                       ],
@@ -392,13 +410,13 @@ class SandboxDoneView extends StatelessWidget {
                       children: [
                         EmojiStatTile(
                           emoji: '❌',
-                          label: 'Errors',
+                          label: dutch ? 'Fouten' : 'Errors',
                           value: '$incorrectCount',
                         ),
                         const SizedBox(width: 12),
                         EmojiStatTile(
                           emoji: '🔤',
-                          label: 'Total',
+                          label: dutch ? 'Totaal' : 'Total',
                           value: '$totalTyped',
                         ),
                       ],
@@ -423,7 +441,7 @@ class SandboxDoneView extends StatelessWidget {
                             const Icon(Icons.refresh_rounded, size: 24),
                             const SizedBox(width: 8),
                             Text(
-                              'Try Another',
+                              dutch ? 'Opnieuw' : 'Try Another',
                               style: GoogleFonts.fredoka(fontSize: 20),
                             ),
                             const SizedBox(width: 8),
@@ -440,7 +458,7 @@ class SandboxDoneView extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            'Back',
+                            dutch ? 'Terug' : 'Back',
                             style: GoogleFonts.fredoka(fontSize: 16),
                           ),
                           const SizedBox(width: 6),

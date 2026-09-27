@@ -8,6 +8,7 @@ import '../core/theme/app_colors.dart';
 import '../data/lesson_curriculum_selector.dart';
 import '../models/lesson.dart';
 import '../providers/progress_provider.dart';
+import '../providers/language_provider.dart';
 import '../widgets/star_rating.dart';
 
 /// Screen showing all available lessons grouped by category
@@ -38,7 +39,7 @@ class _LessonListScreenState extends State<LessonListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Choose a Lesson'),
+        title: Text(context.watch<LanguageProvider>().isDutch ? 'Kies een les' : 'Choose a Lesson'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_rounded),
           onPressed: () => context.pop(),
@@ -116,7 +117,7 @@ class _CategorySection extends StatelessWidget {
               Text(category.emoji, style: const TextStyle(fontSize: 24)),
               const SizedBox(width: 8),
               Text(
-                category.displayName,
+                context.watch<LanguageProvider>().isDutch ? 'Thuisrij' : category.displayName,
                 style: GoogleFonts.fredoka(
                   fontSize: 22,
                   fontWeight: FontWeight.w600,

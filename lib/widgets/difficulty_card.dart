@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../core/theme/app_colors.dart';
 import '../data/word_lists.dart';
+import '../data/lesson_curriculum_selector.dart';
 
 /// Selectable difficulty option shown on game/test/sandbox menu screens,
 /// with the number-key shortcut badge underneath.
@@ -72,7 +73,7 @@ class DifficultyCard extends StatelessWidget {
             Text(difficulty.emoji, style: TextStyle(fontSize: emojiSize)),
             SizedBox(height: compact ? 2 : 4),
             Text(
-              difficulty.label,
+              LessonCurriculum.isDutch ? difficulty.dutchLabel : difficulty.label,
               style: GoogleFonts.fredoka(
                 fontSize: labelSize,
                 fontWeight: FontWeight.w600,
@@ -86,7 +87,7 @@ class DifficultyCard extends StatelessWidget {
             if (!compact) ...[
               const SizedBox(height: 2),
               Text(
-                difficulty.description,
+                LessonCurriculum.isDutch ? difficulty.dutchDescription : difficulty.description,
                 style: GoogleFonts.nunito(
                   fontSize: descSize,
                   color: dark ? Colors.white38 : AppColors.textSecondary,

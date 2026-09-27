@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'lesson_curriculum_selector.dart';
+
 /// Difficulty levels shared across games, sandbox, and typing tests.
 enum ContentDifficulty {
   easy('Easy', '🌱', 'Short, simple words'),
@@ -10,11 +12,25 @@ enum ContentDifficulty {
   final String label;
   final String emoji;
   final String description;
+  String get dutchLabel => switch (this) {
+    ContentDifficulty.easy => 'Makkelijk',
+    ContentDifficulty.medium => 'Gemiddeld',
+    ContentDifficulty.hard => 'Moeilijk',
+  };
+  String get dutchDescription => switch (this) {
+    ContentDifficulty.easy => 'Korte woorden',
+    ContentDifficulty.medium => 'Gewone woorden',
+    ContentDifficulty.hard => 'Lange woorden',
+  };
 }
 
 /// Word pools for typing games, organized by difficulty.
 class WordLists {
   WordLists._();
+
+  static const dutchEasy = ['jas', 'dak', 'zon', 'vis', 'kat', 'tas', 'bal', 'bos'];
+  static const dutchMedium = ['appel', 'fiets', 'water', 'vogel', 'bloem', 'stoel'];
+  static const dutchHard = ['vlinder', 'speeltuin', 'regenboog', 'boekenkast'];
 
   static const List<String> easy = [
     'the',
@@ -918,7 +934,12 @@ class WordLists {
     'zucchini',
   ];
 
-  static List<String> forDifficulty(ContentDifficulty d) => switch (d) {
+  static List<String> forDifficulty(ContentDifficulty d) =>
+      LessonCurriculum.isDutch ? switch (d) {
+        ContentDifficulty.easy => dutchEasy,
+        ContentDifficulty.medium => dutchMedium,
+        ContentDifficulty.hard => dutchHard,
+      } : switch (d) {
     ContentDifficulty.easy => easy,
     ContentDifficulty.medium => medium,
     ContentDifficulty.hard => hard,

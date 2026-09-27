@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../data/badges.dart';
+import '../../providers/language_provider.dart';
 import '../../providers/progress_provider.dart';
 
 /// "My Badges" panel on the home screen showing earned achievement badges.
@@ -14,6 +16,7 @@ class BadgesPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dutch = context.watch<LanguageProvider>().isDutch;
     final earned = Badges.earned(progress);
     if (earned.isEmpty) return const SizedBox.shrink();
 
@@ -31,7 +34,7 @@ class BadgesPanel extends StatelessWidget {
           Row(
             children: [
               Text(
-                'My Badges',
+                dutch ? 'Mijn badges' : 'My Badges',
                 style: GoogleFonts.fredoka(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -68,8 +71,23 @@ class _BadgeChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dutch = context.watch<LanguageProvider>().isDutch;
+    final dutchNames = {
+      'first_lesson': 'Eerste stappen',
+      'lessons_10': 'Boekenwurm',
+      'lessons_50': 'Opstijgen',
+      'lessons_100': 'Kampioen',
+      'stars_50': 'Sterrenvanger',
+      'stars_200': 'Superster',
+      'streak_3': 'Goed bezig',
+      'streak_7': 'Niet te stoppen',
+      'gamer': 'Speler',
+      'arcade_master': 'Spelmeester',
+      'accuracy_ace': 'Typkampioen',
+    };
+    final name = dutch ? dutchNames[badge.id]! : badge.title;
     return Tooltip(
-      message: '${badge.title} — ${badge.description}',
+      message: dutch ? name : '${badge.title} — ${badge.description}',
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
@@ -82,7 +100,7 @@ class _BadgeChip extends StatelessWidget {
             Text(badge.emoji, style: const TextStyle(fontSize: 18)),
             const SizedBox(width: 6),
             Text(
-              badge.title,
+              name,
               style: GoogleFonts.nunito(
                 fontSize: 13,
                 fontWeight: FontWeight.w700,

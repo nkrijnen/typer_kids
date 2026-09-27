@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../models/profile.dart';
+import '../../providers/language_provider.dart';
 import '../../providers/profile_provider.dart';
 
 /// Dialog for creating a new profile (name + avatar picker).
@@ -41,10 +42,11 @@ class _CreateProfileDialogState extends State<CreateProfileDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final dutch = context.watch<LanguageProvider>().isDutch;
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       title: Text(
-        'New Profile',
+        dutch ? 'Nieuw profiel' : 'New Profile',
         style: GoogleFonts.fredoka(
           fontSize: 26,
           fontWeight: FontWeight.w600,
@@ -58,7 +60,7 @@ class _CreateProfileDialogState extends State<CreateProfileDialog> {
           children: [
             // Name input
             Text(
-              'Your name',
+              dutch ? 'Je naam' : 'Your name',
               style: GoogleFonts.nunito(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
@@ -72,7 +74,7 @@ class _CreateProfileDialogState extends State<CreateProfileDialog> {
               textCapitalization: TextCapitalization.words,
               style: GoogleFonts.fredoka(fontSize: 18),
               decoration: InputDecoration(
-                hintText: 'e.g. Alex',
+                hintText: dutch ? 'bijv. Noor' : 'e.g. Alex',
                 hintStyle: GoogleFonts.nunito(color: Colors.grey.shade400),
                 filled: true,
                 fillColor: AppColors.surfaceVariant,
@@ -90,7 +92,7 @@ class _CreateProfileDialogState extends State<CreateProfileDialog> {
             const SizedBox(height: 20),
             // Avatar picker
             Text(
-              'Choose your avatar',
+              dutch ? 'Kies je avatar' : 'Choose your avatar',
               style: GoogleFonts.nunito(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
@@ -135,7 +137,7 @@ class _CreateProfileDialogState extends State<CreateProfileDialog> {
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
           child: Text(
-            'Cancel',
+            dutch ? 'Annuleren' : 'Cancel',
             style: GoogleFonts.fredoka(color: AppColors.textSecondary),
           ),
         ),
@@ -149,7 +151,9 @@ class _CreateProfileDialogState extends State<CreateProfileDialog> {
             ),
           ),
           child: Text(
-            _isCreating ? 'Creating...' : 'Create',
+            _isCreating
+                ? (dutch ? 'Bezig...' : 'Creating...')
+                : (dutch ? 'Aanmaken' : 'Create'),
             style: GoogleFonts.fredoka(fontSize: 16),
           ),
         ),

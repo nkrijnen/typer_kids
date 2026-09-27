@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../models/profile.dart';
+import '../../providers/language_provider.dart';
 
 /// Selectable profile row on the profile picker screen, with the number-key
 /// shortcut badge and an optional delete button.
@@ -24,6 +26,7 @@ class ProfileCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dutch = context.watch<LanguageProvider>().isDutch;
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Material(
@@ -85,7 +88,7 @@ class ProfileCard extends StatelessWidget {
                       ),
                       if (isActive)
                         Text(
-                          'Currently active',
+                          dutch ? 'Nu actief' : 'Currently active',
                           style: GoogleFonts.nunito(
                             fontSize: 13,
                             color: AppColors.primary,
@@ -104,7 +107,7 @@ class ProfileCard extends StatelessWidget {
                       color: Colors.grey.shade400,
                       size: 22,
                     ),
-                    tooltip: 'Delete profile',
+                    tooltip: dutch ? 'Profiel verwijderen' : 'Delete profile',
                   ),
                 // Shortcut badge
                 if (index <= 9)

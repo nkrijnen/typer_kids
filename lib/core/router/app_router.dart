@@ -7,6 +7,7 @@ import '../../data/practice_generator.dart';
 import '../../models/lesson.dart';
 import '../../models/typing_stats.dart';
 import '../../providers/profile_provider.dart';
+import '../../providers/language_provider.dart';
 import '../../providers/progress_provider.dart';
 import '../../screens/games/defend_temple_screen.dart';
 import '../../screens/games/falling_words_screen.dart';
@@ -47,7 +48,8 @@ class AppRouter {
   static Lesson? _resolveLesson(BuildContext context, String lessonId) {
     final lesson = LessonCurriculum.byId(lessonId);
     if (lesson != null) return lesson;
-    if (lessonId == PracticeGenerator.trickyKeysLessonId) {
+    if (!Provider.of<LanguageProvider>(context, listen: false).isDutch &&
+      lessonId == PracticeGenerator.trickyKeysLessonId) {
       return Provider.of<ProgressProvider>(
         context,
         listen: false,
@@ -64,9 +66,16 @@ class AppRouter {
       final profileProv = Provider.of<ProfileProvider>(context, listen: false);
       final hasActive = profileProv.hasActiveProfile;
       final onProfilePage = state.matchedLocation == '/profiles';
+      final dutch = Provider.of<LanguageProvider>(context, listen: false).isDutch;
 
       // If no active profile and not already on profile page, redirect there
       if (!hasActive && !onProfilePage) return '/profiles';
+      if (dutch && (state.matchedLocation == '/games' ||
+          (state.matchedLocation.startsWith('/games/') &&
+            state.matchedLocation != '/games/falling-words') ||
+          state.matchedLocation == '/test')) {
+        return '/';
+      }
       // If has active profile and on profile page, go home
       // (only on initial nav, not user-initiated)
       return null;

@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import '../core/theme/app_colors.dart';
 import '../data/lesson_curriculum_selector.dart';
 import '../models/lesson.dart';
 import '../models/typing_stats.dart';
+import '../providers/language_provider.dart';
 import '../widgets/shortcut_badge.dart';
 import '../widgets/star_rating.dart';
 
@@ -241,7 +243,9 @@ class _ResultsScreenState extends State<ResultsScreen>
   }
 
   Widget _buildTitle() {
-    final title = switch (widget.stats.starRating) {
+    final title = context.read<LanguageProvider>().isDutch
+        ? 'Goed gedaan!'
+        : switch (widget.stats.starRating) {
       5 => 'PERFECT!',
       4 => 'AWESOME!',
       3 => 'GREAT JOB!',
@@ -261,7 +265,9 @@ class _ResultsScreenState extends State<ResultsScreen>
 
   Widget _buildEncouragement() {
     return Text(
-      widget.stats.encouragementMessage,
+        context.read<LanguageProvider>().isDutch
+          ? 'Blijf oefenen, je wordt steeds beter!'
+          : widget.stats.encouragementMessage,
       style: GoogleFonts.nunito(fontSize: 18, color: AppColors.textSecondary),
       textAlign: TextAlign.center,
     );
@@ -274,7 +280,9 @@ class _ResultsScreenState extends State<ResultsScreen>
   Widget _buildPassBanner() {
     final passed = _passed!;
     final color = passed ? AppColors.correct : AppColors.warning;
-    final message = passed
+    final message = context.read<LanguageProvider>().isDutch
+      ? (passed ? 'Les gehaald! Goed gedaan!' : 'Haal ${widget.lesson.passingAccuracy}% nauwkeurigheid en probeer het opnieuw!')
+      : passed
         ? 'Lesson passed! The next one is unlocked. 🎈'
         : 'Reach ${widget.lesson.passingAccuracy}% accuracy to pass — try again!';
 
@@ -327,7 +335,7 @@ class _ResultsScreenState extends State<ResultsScreen>
               Expanded(
                 child: _ResultStat(
                   emoji: '🎯',
-                  label: 'Accuracy',
+                  label: context.read<LanguageProvider>().isDutch ? 'Nauwkeurigheid' : 'Accuracy',
                   value: '${widget.stats.accuracy.toStringAsFixed(1)}%',
                   color: widget.stats.accuracy >= 90
                       ? AppColors.correct
@@ -340,7 +348,7 @@ class _ResultsScreenState extends State<ResultsScreen>
               Expanded(
                 child: _ResultStat(
                   emoji: '⚡',
-                  label: 'Speed',
+                  label: context.read<LanguageProvider>().isDutch ? 'Snelheid' : 'Speed',
                   value: '${widget.stats.wpm.toStringAsFixed(0)} WPM',
                   color: AppColors.secondary,
                 ),
@@ -353,7 +361,7 @@ class _ResultsScreenState extends State<ResultsScreen>
               Expanded(
                 child: _ResultStat(
                   emoji: '⏱️',
-                  label: 'Time',
+                  label: context.read<LanguageProvider>().isDutch ? 'Tijd' : 'Time',
                   value: _formatDuration(widget.stats.elapsed),
                   color: AppColors.primary,
                 ),
@@ -362,7 +370,7 @@ class _ResultsScreenState extends State<ResultsScreen>
               Expanded(
                 child: _ResultStat(
                   emoji: '✅',
-                  label: 'Correct',
+                  label: context.read<LanguageProvider>().isDutch ? 'Goed' : 'Correct',
                   value:
                       '${widget.stats.correctCharacters}/${widget.stats.totalCharacters}',
                   color: AppColors.correct,
@@ -432,7 +440,7 @@ class _ResultsScreenState extends State<ResultsScreen>
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Try Again',
+                  context.read<LanguageProvider>().isDutch ? 'Opnieuw' : 'Try Again',
                   style: GoogleFonts.fredoka(fontSize: 20, color: Colors.white),
                 ),
                 const SizedBox(width: 8),
@@ -460,7 +468,7 @@ class _ResultsScreenState extends State<ResultsScreen>
             label: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Back', style: GoogleFonts.fredoka(fontSize: 20)),
+                Text(context.read<LanguageProvider>().isDutch ? 'Terug' : 'Back', style: GoogleFonts.fredoka(fontSize: 20)),
                 const SizedBox(width: 8),
                 ShortcutBadge('Esc'),
               ],

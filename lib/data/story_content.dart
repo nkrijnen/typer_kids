@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'word_lists.dart';
+import 'lesson_curriculum_selector.dart';
 
 /// A single passage of text for sandbox / typing test modes.
 class StoryPassage {
@@ -22,6 +23,14 @@ class StoryPassage {
 /// Hard: complex sentences, advanced vocabulary, full punctuation.
 class StoryContent {
   StoryContent._();
+
+  static const dutch = StoryPassage(
+    title: 'De jas in de boom',
+    source: 'Origineel verhaal van Typer Kids',
+    text: 'Sam ziet een jas in de boom. De wind waait hard. '
+        'Sam pakt een stok. De jas valt op het gras. '
+        'Daar komt Noor aan. Het is haar jas! Samen lopen ze naar huis.',
+  );
 
   // ── Easy passages ───────────────────────────────────────────────────────
 
@@ -584,7 +593,8 @@ class StoryContent {
     ),
   ];
 
-  static List<StoryPassage> forDifficulty(ContentDifficulty d) => switch (d) {
+  static List<StoryPassage> forDifficulty(ContentDifficulty d) =>
+      LessonCurriculum.isDutch ? [dutch] : switch (d) {
     ContentDifficulty.easy => easy,
     ContentDifficulty.medium => medium,
     ContentDifficulty.hard => hard,
