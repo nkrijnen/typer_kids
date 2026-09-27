@@ -3,7 +3,7 @@ title: 'Trace one Dutch path across the app'
 type: 'feature'
 ticket: '1'
 created: '2026-09-27'
-status: 'in-review'
+status: done
 route: 'full'
 route_source: 'auto'
 baseline_revision: '30c5f1b046badd4a2af58049734287374aca25ac'
