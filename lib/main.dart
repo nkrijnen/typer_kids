@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,6 +16,19 @@ import 'providers/progress_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  GoogleFonts.config.allowRuntimeFetching = false;
+  LicenseRegistry.addLicense(() async* {
+    for (final (family, file) in [
+      ('Fredoka', 'fredoka'),
+      ('Nunito', 'nunito'),
+      ('JetBrains Mono', 'jetbrainsmono'),
+      ('Roboto Mono', 'robotomono'),
+    ]) {
+      yield LicenseEntryWithLineBreaks([
+        family,
+      ], await rootBundle.loadString('assets/fonts/sources/$file-OFL.txt'));
+    }
+  });
 
   // Ensure imperative API calls (push, pushReplacement) update the browser URL
   GoRouter.optionURLReflectsImperativeAPIs = true;

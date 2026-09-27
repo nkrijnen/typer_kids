@@ -24,6 +24,153 @@ import 'package:typer_kids/data/lesson_curriculum.dart';
 import 'package:typer_kids/models/lesson.dart';
 
 void main() {
+  testWidgets('Every bundled font face is present and readable offline', (
+    tester,
+  ) async {
+    GoogleFonts.config.allowRuntimeFetching = false;
+    final manifest = await AssetManifest.loadFromAssetBundle(rootBundle);
+    final faces = {
+      'Fredoka': [400, 500, 600, 700],
+      'Nunito': [400, 500, 600, 700, 800],
+      'JetBrainsMono': [400, 500, 600, 700],
+      'RobotoMono': [400, 500, 600, 700],
+    };
+    const weightNames = {
+      400: 'Regular',
+      500: 'Medium',
+      600: 'SemiBold',
+      700: 'Bold',
+      800: 'ExtraBold',
+    };
+    for (final entry in faces.entries) {
+      for (final weight in entry.value) {
+        final path = 'assets/fonts/${entry.key}-${weightNames[weight]}.ttf';
+        final diagnostic = '${entry.key} weight $weight at $path';
+        expect(manifest.listAssets(), contains(path), reason: diagnostic);
+        final bytes = await rootBundle.load(path);
+        expect(bytes.lengthInBytes, greaterThan(12), reason: diagnostic);
+        expect(bytes.getUint32(0), 0x00010000, reason: diagnostic);
+        final tableCount = bytes.getUint16(4);
+        expect(tableCount, greaterThan(0), reason: diagnostic);
+        expect(
+          bytes.lengthInBytes,
+          greaterThanOrEqualTo(12 + tableCount * 16),
+          reason: diagnostic,
+        );
+        var foundWeight = false;
+        for (var table = 0; table < tableCount; table++) {
+          final record = 12 + table * 16;
+          final offset = bytes.getUint32(record + 8);
+          final length = bytes.getUint32(record + 12);
+          expect(
+            offset + length,
+            lessThanOrEqualTo(bytes.lengthInBytes),
+            reason: diagnostic,
+          );
+          if (bytes.getUint32(record) == 0x4f532f32) {
+            expect(length, greaterThanOrEqualTo(6), reason: diagnostic);
+            expect(bytes.getUint16(offset + 4), weight, reason: diagnostic);
+            foundWeight = true;
+          }
+        }
+        expect(
+          foundWeight,
+          true,
+          reason: 'Missing OS/2 weight table for $diagnostic',
+        );
+        GoogleFonts.getFont(switch (entry.key) {
+          'JetBrainsMono' => 'JetBrains Mono',
+          'RobotoMono' => 'Roboto Mono',
+          _ => entry.key,
+        }, fontWeight: FontWeight.values[weight ~/ 100 - 1]);
+      }
+    }
+    await tester.runAsync(GoogleFonts.pendingFonts);
+    expect(GoogleFonts.config.allowRuntimeFetching, false);
+  });
+
+  for (final languageCode in ['en', 'nl']) {
+    for (final viewport in [const Size(390, 844), const Size(1280, 900)]) {
+      testWidgets('Offline $languageCode screens at $viewport', (tester) async {
+        GoogleFonts.config.allowRuntimeFetching = false;
+        tester.view.devicePixelRatio = 1;
+        tester.view.physicalSize = viewport;
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+          selected.LessonCurriculum.isDutch = false;
+        });
+        SharedPreferences.setMockInitialValues({});
+        final profile = ProfileProvider();
+        await profile.init();
+        final child = await profile.createProfile(name: 'Noor', emoji: '🌱');
+        final language = LanguageProvider();
+        await language.init();
+        await language.select(languageCode);
+        final progress = ProgressProvider();
+        await progress.init(profileId: child.id, language: languageCode);
+        await tester.pumpWidget(
+          startup.TyperKidsApp(
+            profileProvider: profile,
+            progressProvider: progress,
+            languageProvider: language,
+          ),
+        );
+        await tester.pumpAndSettle();
+        await tester.runAsync(GoogleFonts.pendingFonts);
+        await tester.pumpAndSettle();
+        expect(
+          tester.takeException(),
+          isNull,
+          reason: '$languageCode home at $viewport',
+        );
+        expect(find.text('Typer Kids'), findsOneWidget);
+        expect(
+          tester.widget<Text>(find.text('Typer Kids')).style?.fontFamily,
+          'Fredoka_700',
+        );
+
+        await tester.ensureVisible(find.byType(ActionChip));
+        await tester.tap(find.byType(ActionChip));
+        await tester.pumpAndSettle();
+        await tester.runAsync(GoogleFonts.pendingFonts);
+        await tester.pumpAndSettle();
+        expect(
+          tester.takeException(),
+          isNull,
+          reason: '$languageCode profile at $viewport',
+        );
+        expect(find.byType(ProfileCard), findsOneWidget);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pumpAndSettle();
+        await tester.ensureVisible(
+          find.text(
+            languageCode == 'nl' ? 'Letters oefenen' : 'Start Learning!',
+          ),
+        );
+        await tester.tap(
+          find.text(
+            languageCode == 'nl' ? 'Letters oefenen' : 'Start Learning!',
+          ),
+        );
+        await tester.pumpAndSettle();
+        await tester.runAsync(GoogleFonts.pendingFonts);
+        await tester.pumpAndSettle();
+        expect(
+          tester.takeException(),
+          isNull,
+          reason: '$languageCode lesson at $viewport',
+        );
+        expect(
+          find.text(languageCode == 'nl' ? 'Begin!' : "Let's Go!"),
+          findsOneWidget,
+        );
+        await tester.pumpWidget(const MaterialApp(home: SizedBox()));
+      });
+    }
+  }
+
   testWidgets(
     'Settings switches to Dutch and a completed lesson persists on restart',
     (tester) async {

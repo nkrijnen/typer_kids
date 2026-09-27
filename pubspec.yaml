@@ -49,6 +49,11 @@ flutter:
   assets:
     - assets/sounds/
     - assets/app_icon.png
+    - assets/fonts/
+    - assets/fonts/sources/fredoka-OFL.txt
+    - assets/fonts/sources/nunito-OFL.txt
+    - assets/fonts/sources/jetbrainsmono-OFL.txt
+    - assets/fonts/sources/robotomono-OFL.txt
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf
