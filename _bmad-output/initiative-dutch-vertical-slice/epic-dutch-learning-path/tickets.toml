@@ -33,7 +33,7 @@ after = [2]
 hitl = true
 risk = "medium"
 unknown = "Map the completed curriculum into exactly three milestone lessons; natural words may not fit first-key sets, so allow only purposeful drills until a valid Dutch word can be formed."
-references = ["curriculum design — _bmad-output/backlog/story-design-dutch-touch-typing-curriculum.md, Description and Acceptance Criteria", "curriculum outline — _bmad-output/specs/spec-dutch-touch-typing-curriculum/curriculum-outline.md, First-version opening sequence"]
+references = ["curriculum design — _bmad-output/backlog/story-design-dutch-touch-typing-curriculum.md, Description and Acceptance Criteria", "curriculum outline — _bmad-output/specs/spec-dutch-touch-typing-curriculum/curriculum-outline.md, First-version letter-key progression"]
 
 [[entry]]
 id = 4

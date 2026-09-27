@@ -3,7 +3,7 @@ title: 'Complete the first-version Dutch touch-typing curriculum design'
 type: 'feature'
 ticket: '3'
 created: '2026-09-27'
-status: 'built'
+status: done
 baseline_revision: '33f224baaac530577addf8b61f1e5254522c7eae'
 route: 'full'
 route_source: 'auto'

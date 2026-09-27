@@ -33,7 +33,7 @@ Includes only reachable milestone UI, content, keyboard, and per-profile progres
 - parent — _bmad-output/initiative-dutch-vertical-slice/initiative-dutch-vertical-slice.md, Done when
 - curriculum design — _bmad-output/backlog/story-design-dutch-touch-typing-curriculum.md, Description and Acceptance Criteria
 - curriculum spec — _bmad-output/specs/spec-dutch-touch-typing-curriculum/SPEC.md, Capabilities and companion
-- curriculum outline — _bmad-output/specs/spec-dutch-touch-typing-curriculum/curriculum-outline.md, First-version opening sequence
+- curriculum outline — _bmad-output/specs/spec-dutch-touch-typing-curriculum/curriculum-outline.md, First-version letter-key progression
 - spec — _bmad-output/specs/spec-dutch-vertical-slice/SPEC.md, Capabilities and companion
 
 ## Notes
@@ -46,4 +46,4 @@ Includes only reachable milestone UI, content, keyboard, and per-profile progres
 - Decision: story 1 is the smallest real lesson/game/story path; stories 2-6 deepen it in one dependency lane to avoid shared-code collisions (2026-09-26).
 - Decision: only recorded review cleanup belongs in the refactor sweep; functional fixes and tests stay in their owning stories (2026-09-26).
 - Decision: standalone backlog story 3 owns the complete first-version Dutch curriculum design; story 1.3 consumes only the three milestone lessons from its result, while the full course remains outside this epic (2026-09-27).
-- Manual start gate: story 1.3 must not start until standalone backlog story 3 is done and its curriculum outline is final; the ticket tool cannot enforce prerequisites across the backlog and initiative trees.
+- Satisfied external gate: standalone backlog story 3 is done and its curriculum outline is final (2026-09-27). Story 1.3 remains sequenced after story 1.2 through its in-epic prerequisite.
