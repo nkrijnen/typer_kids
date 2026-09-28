@@ -228,6 +228,40 @@ void main() {
     selected.LessonCurriculum.isDutch = false;
   });
 
+  testWidgets(
+    'Dutch lesson list shows the localized Letters category in stage order',
+    (tester) async {
+      GoogleFonts.config.allowRuntimeFetching = false;
+      SharedPreferences.setMockInitialValues({});
+      final profile = ProfileProvider();
+      await profile.init();
+      final child = await profile.createProfile(name: 'Noor', emoji: '🌱');
+      final language = LanguageProvider();
+      await language.init();
+      await language.select('nl');
+      final progress = ProgressProvider();
+      await progress.init(profileId: child.id, language: 'nl');
+      await tester.pumpWidget(
+        startup.TyperKidsApp(
+          profileProvider: profile,
+          progressProvider: progress,
+          languageProvider: language,
+        ),
+      );
+      await tester.pumpAndSettle();
+      GoRouter.of(tester.element(find.text('Typer Kids'))).go('/lessons');
+      await tester.pumpAndSettle();
+      expect(find.text('Letters'), findsOneWidget);
+      expect(find.text('Thuisrij'), findsNothing);
+      final titles = DutchCurriculum.allLessons.map((l) => l.title).toList();
+      for (final title in titles) {
+        expect(find.text(title), findsOneWidget);
+      }
+      await tester.pumpWidget(const MaterialApp(home: SizedBox()));
+      selected.LessonCurriculum.isDutch = false;
+    },
+  );
+
   test('Dutch ISO mappings differ from English and reject unknown keys', () {
     expect(KeyboardData.dutchBaseKey('!'), '1');
     expect(KeyboardData.dutchBaseKey('?'), '/');

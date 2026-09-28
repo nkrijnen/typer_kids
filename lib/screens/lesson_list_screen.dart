@@ -117,7 +117,9 @@ class _CategorySection extends StatelessWidget {
               Text(category.emoji, style: const TextStyle(fontSize: 24)),
               const SizedBox(width: 8),
               Text(
-                context.watch<LanguageProvider>().isDutch ? 'Thuisrij' : category.displayName,
+                context.watch<LanguageProvider>().isDutch
+                    ? 'Letters'
+                    : category.displayName,
                 style: GoogleFonts.fredoka(
                   fontSize: 22,
                   fontWeight: FontWeight.w600,
