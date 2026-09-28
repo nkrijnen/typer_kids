@@ -58,12 +58,20 @@ void main() {
         );
         selected.LessonCurriculum.isDutch = true;
         await progress.switchLanguage('nl');
-        final dutch = selected.LessonCurriculum.allLessons.single;
+        final dutch = selected.LessonCurriculum.allLessons.first;
         expect(progress.getProgress(dutch.id).completed, false);
+        expect(progress.isLessonUnlocked(dutch.id), true);
+        expect(progress.isLessonUnlocked('nl-home-words'), false);
         await progress.recordAttempt(dutch, stats);
         expect(progress.getProgress(dutch.id).completed, true);
+        expect(progress.isLessonUnlocked('nl-home-words'), true);
+        expect(progress.isLessonUnlocked('nl-home-house'), false);
+        expect(progress.recommendedLesson.id, 'nl-home-words');
+        await progress.recordAttempt(selected.LessonCurriculum.allLessons[1], stats);
+        expect(progress.isLessonUnlocked('nl-home-house'), true);
         await progress.switchProfile('two');
         expect(progress.getProgress(dutch.id).completed, false);
+        expect(progress.isLessonUnlocked('nl-home-words'), false);
         await progress.switchProfile('one');
         expect(progress.getProgress(dutch.id).completed, true);
         await prefs.setString('profile_two_nl_progress_${dutch.id}', 'broken');
@@ -91,10 +99,20 @@ void main() {
         selected.LessonCurriculum.isDutch = true;
         await progress.switchLanguage('nl');
         for (final difficulty in ContentDifficulty.values) {
-          expect(WordLists.forDifficulty(difficulty), isNotEmpty);
+          final words = WordLists.forDifficulty(difficulty);
+          expect(words.length, greaterThanOrEqualTo(12));
+          expect(words.toSet(), hasLength(words.length));
+          expect(words.every((word) => RegExp(r'^[a-z]+$').hasMatch(word)), true);
+          expect(words.every((word) => switch (difficulty) {
+            ContentDifficulty.easy => word.length <= 3,
+            ContentDifficulty.medium => word.length >= 4 && word.length <= 6,
+            ContentDifficulty.hard => word.length >= 7,
+          }), true);
           expect(StoryContent.forDifficulty(difficulty), [StoryContent.dutch]);
-          expect(WordLists.forDifficulty(difficulty), isNot(contains('the')));
+          expect(words, isNot(contains('the')));
         }
+        expect(StoryContent.dutch.difficulty, ContentDifficulty.easy);
+        expect(StoryContent.dutch.text.length, greaterThan(250));
         await progress.recordScore('falling_words', 30);
         expect(progress.getHighScore('falling_words'), 30);
         await progress.resetAll();

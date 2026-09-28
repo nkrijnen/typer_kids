@@ -54,7 +54,7 @@ context: []
 - [x] 1.2: keyboard data and guidance widgets -- add referenced Netherlands QWERTY mappings for letters, punctuation, shift and introduced accents, with focused mapping/widget tests; commit when green.
 - [x] 1.3: Dutch curriculum, lesson progression and tests -- replace the tracer with two introductory and one themed lesson mapped to the approved outline; validate keys, Dutch text, ordering and isolated unlocks; commit when green.
 - [x] 1.4: word lists, Falling Words views and tests -- supply age-appropriate Dutch words at supported difficulties and translate reachable menu, score and end states; commit when green.
-- [ ] 1.5: story content, Free Practice views, provenance and tests -- finish one original Dutch story with difficulty metadata, progress, WPM and accuracy; commit when green.
+- [x] 1.5: story content, Free Practice views, provenance and tests -- finish one original Dutch story with difficulty metadata, progress, WPM and accuracy; commit when green.
 - [ ] 1.6: reachable screens, dialogs, tooltips, semantics and tests -- remove English UI from the milestone path while preserving English; commit when green.
 - [ ] 1.7: recorded review findings -- perform only justified nonfunctional cleanup, regression test and commit separately.
 - [ ] 1.8: closing widget/integration tests -- exercise the full Dutch route, restart, profile/locale isolation, accessibility and English regressions; run full analysis/tests, record evidence and commit.
@@ -70,6 +70,7 @@ context: []
 - 1.2: KBDNE mapping and Dutch-only guidance use the existing English keyboard as a separate unchanged path; focused keyboard/widget tests and the full Flutter suite pass.
 - 1.3: The three lessons cover approved stages 1-5 in order; locked-route and completion tests pass, with English progress left untouched.
 - 1.4: Expanded the Dutch pools for every Falling Words difficulty; the tracer already localized its menu and end state, and game-over scoring tests pass.
+- 1.5: Expanded the original easy-level story, retained Free Practice's localized completion/stats path, and reconciled README provenance and review wording.
 
 ## Plan Change Log
 
