@@ -159,13 +159,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   dutch ? 'Gemiddelde nauwkeurigheid' : 'Average Accuracy',
                   progress.averageAccuracy > 0
                       ? '${progress.averageAccuracy.toStringAsFixed(1)}%'
-                      : 'N/A',
+                      : dutch ? 'Nog niet' : 'N/A',
                 ),
                 _buildInfoRow(
                   dutch ? 'Gemiddelde snelheid' : 'Average Speed',
                   progress.averageWpm > 0
                       ? '${progress.averageWpm.toStringAsFixed(0)} WPM'
-                      : 'N/A',
+                      : dutch ? 'Nog niet' : 'N/A',
                 ),
               ],
             ),
@@ -205,7 +205,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 _buildInfoRow(dutch ? 'Versie' : 'Version', '1.2.0'),
                 _buildInfoRow(
                   dutch ? 'Gemaakt met' : 'Made with',
-                  '❤️ and Flutter',
+                  dutch ? '❤️ en Flutter' : '❤️ and Flutter',
                 ),
               ],
             ),

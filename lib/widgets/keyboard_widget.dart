@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../core/theme/app_colors.dart';
 import '../data/keyboard_data.dart';
-import '../data/lesson_curriculum_selector.dart';
 import 'package:provider/provider.dart';
 import '../providers/language_provider.dart';
 
@@ -91,7 +90,7 @@ class KeyboardWidget extends StatelessWidget {
             ),
           SizedBox(height: _gap),
           // Space bar
-          _buildSpaceBar(),
+          _buildSpaceBar(isDutch),
         ],
       ),
     );
@@ -105,8 +104,8 @@ class KeyboardWidget extends StatelessWidget {
   }
 
   Widget _buildShiftKey() {
-    final active = activeKey != null &&
-        KeyboardData.dutchNeedsShift(activeKey!);
+    final active =
+        activeKey != null && KeyboardData.dutchNeedsShift(activeKey!);
     return Container(
       width: keySize,
       height: keySize,
@@ -117,10 +116,13 @@ class KeyboardWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(_borderRadius),
         border: Border.all(color: active ? AppColors.secondary : Colors.grey),
       ),
-      child: Text('⇧', style: TextStyle(
-        fontSize: _fontSize,
-        color: active ? Colors.white : AppColors.textPrimary,
-      )),
+      child: Text(
+        '⇧',
+        style: TextStyle(
+          fontSize: _fontSize,
+          color: active ? Colors.white : AppColors.textPrimary,
+        ),
+      ),
     );
   }
 
@@ -129,7 +131,8 @@ class KeyboardWidget extends StatelessWidget {
         activeKey != null &&
         (isDutch
                 ? KeyboardData.dutchBaseKey(activeKey!)
-                : KeyboardData.baseKey(activeKey!)) == key.toLowerCase();
+                : KeyboardData.baseKey(activeKey!)) ==
+            key.toLowerCase();
     final isCorrect = correctKeys.contains(key.toLowerCase());
     final isIncorrect = incorrectKeys.contains(key.toLowerCase());
     final isHomeRow = KeyboardData.homeRowKeys.contains(key.toLowerCase());
@@ -142,58 +145,65 @@ class KeyboardWidget extends StatelessWidget {
     } else if (isIncorrect) {
       bgColor = AppColors.incorrect.withValues(alpha: 0.7);
     } else if (showFingerColors) {
-        bgColor = (isDutch
-            ? KeyboardData.dutchColorForKey(key)
-            : KeyboardData.colorForKey(key))
-          .withValues(alpha: 0.4);
+      bgColor =
+          (isDutch
+                  ? KeyboardData.dutchColorForKey(key)
+                  : KeyboardData.colorForKey(key))
+              .withValues(alpha: 0.4);
     } else {
       bgColor = Colors.white;
     }
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 150),
-      width: keySize,
-      height: keySize,
-      margin: EdgeInsets.all(_gap),
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(_borderRadius),
-        border: Border.all(
-          color: isActive
-              ? AppColors.secondary
-              : isHomeRow
-              ? AppColors.primaryDark.withValues(alpha: 0.5)
-              : Colors.grey.shade400,
-          width: isActive
-              ? 2.5
-              : isHomeRow
-              ? 2
-              : 1,
+    return Semantics(
+      label: isDutch && isActive
+          ? 'Volgende toets: ${key.toUpperCase()}'
+          : null,
+      excludeSemantics: isDutch && isActive,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        width: keySize,
+        height: keySize,
+        margin: EdgeInsets.all(_gap),
+        decoration: BoxDecoration(
+          color: bgColor,
+          borderRadius: BorderRadius.circular(_borderRadius),
+          border: Border.all(
+            color: isActive
+                ? AppColors.secondary
+                : isHomeRow
+                ? AppColors.primaryDark.withValues(alpha: 0.5)
+                : Colors.grey.shade400,
+            width: isActive
+                ? 2.5
+                : isHomeRow
+                ? 2
+                : 1,
+          ),
+          boxShadow: isActive
+              ? [
+                  BoxShadow(
+                    color: AppColors.secondary.withValues(alpha: 0.4),
+                    blurRadius: 8,
+                    spreadRadius: 1,
+                  ),
+                ]
+              : null,
         ),
-        boxShadow: isActive
-            ? [
-                BoxShadow(
-                  color: AppColors.secondary.withValues(alpha: 0.4),
-                  blurRadius: 8,
-                  spreadRadius: 1,
-                ),
-              ]
-            : null,
-      ),
-      child: Center(
-        child: Text(
-          isDutch ? key.toUpperCase() : KeyboardData.displayLabel(key),
-          style: GoogleFonts.robotoMono(
-            fontSize: _fontSize,
-            fontWeight: isActive ? FontWeight.bold : FontWeight.w500,
-            color: isActive ? Colors.white : AppColors.textPrimary,
+        child: Center(
+          child: Text(
+            isDutch ? key.toUpperCase() : KeyboardData.displayLabel(key),
+            style: GoogleFonts.robotoMono(
+              fontSize: _fontSize,
+              fontWeight: isActive ? FontWeight.bold : FontWeight.w500,
+              color: isActive ? Colors.white : AppColors.textPrimary,
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildSpaceBar() {
+  Widget _buildSpaceBar(bool isDutch) {
     final isActive = activeKey == ' ';
     return AnimatedContainer(
       duration: const Duration(milliseconds: 150),
@@ -223,7 +233,7 @@ class KeyboardWidget extends StatelessWidget {
       ),
       child: Center(
         child: Text(
-          LessonCurriculum.isDutch ? 'SPATIE' : 'SPACE',
+          isDutch ? 'SPATIE' : 'SPACE',
           style: GoogleFonts.robotoMono(
             fontSize: _fontSize * 0.85,
             fontWeight: FontWeight.w500,
