@@ -94,7 +94,7 @@ void main() {
 
     test('milestone lessons stage the approved home-row keys and words', () {
       final lessons = DutchCurriculum.allLessons;
-      expect(lessons, hasLength(12));
+      expect(lessons, hasLength(16));
       expect(lessons.map((lesson) => lesson.id), [
         'nl-letter-01',
         'nl-letter-02',
@@ -108,21 +108,15 @@ void main() {
         'nl-letter-10',
         'nl-letter-11',
         'nl-letter-12',
+        'nl-letter-13',
+        'nl-letter-14',
+        'nl-letter-15',
+        'nl-letter-16',
       ]);
-      expect(lessons.map((lesson) => lesson.orderIndex), [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-      ]);
+      expect(
+        lessons.map((lesson) => lesson.orderIndex),
+        List.generate(16, (i) => i),
+      );
       final taught = <String>{};
       for (final lesson in lessons) {
         taught.addAll(lesson.focusKeys);
@@ -150,31 +144,13 @@ void main() {
       expect(lessons[10].exercises, contains('fv fb vf bf'));
       expect(lessons[10].exercises, contains('vis vijf boom brief'));
       expect(lessons[11].exercises, contains('pen poes appel soep'));
-      final lastFocusKeys = {
-        'f',
-        'j',
-        'd',
-        'k',
-        's',
-        'l',
-        'a',
-        'g',
-        'h',
-        'e',
-        'i',
-        'r',
-        'u',
-        't',
-        'n',
-        'o',
-        'w',
-        'm',
-        'c',
-        'v',
-        'b',
-        'p',
-      };
-      expect(lessons.last.focusKeys.toSet(), lastFocusKeys);
+      expect(lessons[12].exercises, contains('zon zes zee zout'));
+      expect(lessons[13].exercises, contains('sx xs sax'));
+      expect(lessons[13].exercises, contains('taxi extra mix'));
+      expect(lessons[14].exercises, contains('aq qa'));
+      expect(lessons[14].exercises, contains('quiz aqua'));
+      expect(lessons[15].exercises, contains('yoga baby pony'));
+      expect(lessons.last.focusKeys.toSet(), _alphabet.split('').toSet());
     });
 
     test('aggregates actionable errors for malformed stage data', () {

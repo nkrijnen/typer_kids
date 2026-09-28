@@ -553,7 +553,7 @@ void main() {
       final loaded = ProgressProvider();
       await loaded.init(profileId: child.id, language: restarted.language);
       expect(loaded.getProgress('nl-letter-01').completed, true);
-      expect(loaded.completedLessons, 12);
+      expect(loaded.completedLessons, 16);
       await tester.pumpWidget(const MaterialApp(home: SizedBox()));
       selected.LessonCurriculum.isDutch = false;
     },
@@ -602,7 +602,7 @@ void main() {
     );
     expect(tester.takeException(), isNull);
     expect(find.text('Leer typen met plezier! 🎮'), findsOneWidget);
-    expect(find.text('1/12'), findsOneWidget);
+    expect(find.text('1/16'), findsOneWidget);
     expect(find.text('🐵'), findsOneWidget);
     expect(find.text('Mijn badges'), findsOneWidget);
     await tester.pumpWidget(const MaterialApp(home: SizedBox()));
