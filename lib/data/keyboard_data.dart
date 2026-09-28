@@ -30,29 +30,80 @@ class KeyboardData {
   ];
 
   static const Map<String, String> _dutchShifted = {
-    '!': '1', '"': '2', '#': '3', r'$': '4', '%': '5',
-    '&': '6', '_': '7', '(': '8', ')': '9', "'": '0',
-    '?': '/', '~': '°', '^': '¨', '|': '*', '>': '<',
-    '±': '+', '`': '´', '[': ']', ';': ',', ':': '.', '=': '-',
+    '!': '1',
+    '"': '2',
+    '#': '3',
+    r'$': '4',
+    '%': '5',
+    '&': '6',
+    '_': '7',
+    '(': '8',
+    ')': '9',
+    "'": '0',
+    '?': '/',
+    '~': '°',
+    '^': '¨',
+    '|': '*',
+    '>': '<',
+    '±': '+',
+    '`': '´',
+    '[': ']',
+    ';': ',',
+    ':': '.',
+    '=': '-',
   };
 
   static const Map<String, String> _dutchAccents = {
-    'á': '´', 'é': '´', 'í': '´', 'ó': '´', 'ú': '´', 'ý': '´',
-    'à': '´', 'è': '´', 'ì': '´', 'ò': '´', 'ù': '´',
-    'ä': '¨', 'ë': '¨', 'ï': '¨', 'ö': '¨', 'ü': '¨', 'ÿ': '¨',
-    'â': '¨', 'ê': '¨', 'î': '¨', 'ô': '¨', 'û': '¨',
+    'á': '´',
+    'é': '´',
+    'í': '´',
+    'ó': '´',
+    'ú': '´',
+    'ý': '´',
+    'à': '´',
+    'è': '´',
+    'ì': '´',
+    'ò': '´',
+    'ù': '´',
+    'ä': '¨',
+    'ë': '¨',
+    'ï': '¨',
+    'ö': '¨',
+    'ü': '¨',
+    'ÿ': '¨',
+    'â': '¨',
+    'ê': '¨',
+    'î': '¨',
+    'ô': '¨',
+    'û': '¨',
   };
 
   static const _dutchShiftedAccents = {
-    'à', 'è', 'ì', 'ò', 'ù',
-    'â', 'ê', 'î', 'ô', 'û',
+    'à',
+    'è',
+    'ì',
+    'ò',
+    'ù',
+    'â',
+    'ê',
+    'î',
+    'ô',
+    'û',
   };
 
   static const Map<String, String> _dutchPunctuationFingers = {
-    '@': 'left-pinky', '/': 'right-pinky', '°': 'right-pinky',
-    '¨': 'right-pinky', '*': 'right-pinky', '<': 'right-pinky',
-    '+': 'right-pinky', '´': 'right-pinky', ']': 'left-pinky',
-    ',': 'right-middle', '.': 'right-ring', '-': 'right-pinky',
+    '@': 'left-pinky',
+    '/': 'right-pinky',
+    '°': 'right-pinky',
+    '¨': 'right-pinky',
+    '*': 'right-pinky',
+    '<': 'right-pinky',
+    '+': 'right-pinky',
+    '´': 'right-pinky',
+    ']': 'left-pinky',
+    ',': 'right-middle',
+    '.': 'right-ring',
+    '-': 'right-pinky',
   };
 
   static String? dutchBaseKey(String character) {
@@ -69,11 +120,31 @@ class KeyboardData {
     return _dutchPunctuationFingers[base] ?? keyToFinger[base];
   }
 
+  static bool dutchIsAccent(String character) =>
+      _dutchAccents.containsKey(character.toLowerCase());
+
+  static bool dutchDeadKeyNeedsShift(String character) =>
+      _dutchShiftedAccents.contains(character.toLowerCase());
+
+  static String? dutchAccentLetter(String character) {
+    final letter = switch (character.toLowerCase()) {
+      'á' || 'à' || 'ä' || 'â' => 'a',
+      'é' || 'è' || 'ë' || 'ê' => 'e',
+      'í' || 'ì' || 'ï' || 'î' => 'i',
+      'ó' || 'ò' || 'ö' || 'ô' => 'o',
+      'ú' || 'ù' || 'ü' || 'û' => 'u',
+      'ý' || 'ÿ' => 'y',
+      _ => null,
+    };
+    return character == character.toLowerCase()
+        ? letter
+        : letter?.toUpperCase();
+  }
+
   static bool dutchNeedsShift(String character) =>
       _dutchShifted.containsKey(character) ||
       _dutchShiftedAccents.contains(character.toLowerCase()) ||
-      (character != character.toLowerCase() &&
-          dutchBaseKey(character) != null);
+      (character != character.toLowerCase() && dutchBaseKey(character) != null);
 
   /// Which finger types each key (finger name)
   static const Map<String, String> keyToFinger = {
@@ -139,8 +210,7 @@ class KeyboardData {
   };
 
   /// The physical key to highlight for a character (e.g. '?' lives on '/')
-  static String baseKey(String key) =>
-      _shiftedToBase[key] ?? key.toLowerCase();
+  static String baseKey(String key) => _shiftedToBase[key] ?? key.toLowerCase();
 
   /// Get the color for a specific key
   static Color colorForKey(String key) {

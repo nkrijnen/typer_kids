@@ -3,13 +3,13 @@ title: 'Complete Dutch vertical slice'
 type: 'feature'
 ticket: ''
 created: '2026-09-28'
-status: 'in-progress'
+status: 'built'
 route: 'full'
 route_source: 'auto'
 baseline_revision: '32e3ab801915d7252cf578d1bfb7413376308770'
-review: ''
-review_source: ''
-lenses_ran: []
+review: 'thorough'
+review_source: 'auto'
+lenses_ran: ['blind-hunter', 'edge-case-hunter', 'verification-gap', 'intent-alignment']
 review_loop_iteration: 0
 context: []
 ---
@@ -57,7 +57,7 @@ context: []
 - [x] 1.5: story content, Free Practice views, provenance and tests -- finish one original Dutch story with difficulty metadata, progress, WPM and accuracy; commit when green.
 - [x] 1.6: reachable screens, dialogs, tooltips, semantics and tests -- remove English UI from the milestone path while preserving English; commit when green.
 - [x] 1.7: recorded review findings -- perform only justified nonfunctional cleanup, regression test and commit separately.
-- [ ] 1.8: closing widget/integration tests -- exercise the full Dutch route, restart, profile/locale isolation, accessibility and English regressions; run full analysis/tests, record evidence and commit.
+- [x] 1.8: closing widget/integration tests -- exercise the full Dutch route, restart, profile/locale isolation, accessibility and English regressions; run full analysis/tests, record evidence and commit.
 
 **Acceptance Criteria:**
 - Given documented Netherlands QWERTY mappings, when a Dutch child types the taught letters and introduced punctuation, then visible key and finger guidance match the mapping without changing English guidance.
@@ -73,10 +73,33 @@ context: []
 - 1.5: Expanded the original easy-level story, retained Free Practice's localized completion/stats path, and reconciled README provenance and review wording.
 - 1.6: Corrected reachable Settings fallback text, live keyboard and difficulty labels, and Dutch semantics for the active key and game difficulty; the `/test` route remains intentionally unavailable in Dutch.
 - 1.7: The completed tracer plan's review log records functional patches and test gaps, already owned by 1.1-1.6 or 1.8, but no deferred nonfunctional maintainability findings. No refactor is warranted; analysis and 61 tests remain green.
+- 1.8: A connected widget route finishes Falling Words and the original story, returns to a saved English lesson and checks progress after restart. Review repairs cover narrow home/typing layouts, the approved animals theme, two-step accents, opposite-hand Shift and accessible difficulty details. `flutter analyze` is clean and all 64 tests pass; macOS hot restart succeeded.
 
 ## Plan Change Log
 
 ## Review Triage Log
+
+Review 1: blind-hunter, edge-case-hunter, verification-gap and intent-alignment; all findings checked against their owning caller and the reachable Dutch route.
+- blind/320px keyboard: medium, patch; home all-lessons badge caused the observed 15px overflow; the home stats and Dutch keyboard also adapt at 320px, with a route test.
+- blind/both Shift keys: medium, patch; both were selected for one shifted key, now only the opposite hand lights up.
+- blind/accent sequence: medium, patch; guidance now identifies dead key, base letter and the Shift step for each.
+- blind/active semantics: medium, patch; punctuation and accents now announce the target character and required action.
+- blind/difficulty semantics: medium, patch; the replacement label includes difficulty description and number shortcut.
+- blind/theme: medium, patch; `In huis` was not an existing theme and used generic words; lesson 3 now uses the existing animals theme and taught-key animal words.
+- blind/input-level punctuation and accent: false; no milestone lesson introduces those characters, and physical input verification was explicitly removed. Mapping and rendered guidance are verified instead.
+- blind/story WPM: medium, patch; completion now tests a positive measured WPM, not just its label.
+- blind/English return route: medium, patch; the combined test reopens an active-curriculum English lesson after switching back.
+- edge/320px overflow: medium, patch; independently confirmed at the Dutch home all-lessons row and covered at 320px.
+- edge/Shift side: medium, patch; independent report of the same two-active-Shift defect.
+- edge/accent dead key: medium, patch; independent report of missing second-step guidance.
+- edge/story difficulty: false; the Dutch one-story setup hides difficulty options and shortcuts, leaving `easy` as the only reachable selection.
+- verification/medium-hard game: medium, patch; tests now select each difficulty through the game and check its spawned pool.
+- verification/punctuation widget: medium, patch; semicolon now tests the Dutch comma key and left Shift on the rendered keyboard.
+- verification/320px overflow: medium, patch; independent report of the confirmed narrow-home overflow.
+- verification/Shift side: medium, patch; independent report of both Shift keys selected.
+- intent/milestone reading: false; the complete route and all eight capability checks are covered after review repairs.
+- intent/closure reading: medium, patch; the closing 1.8 test and ticket/parent reconciliation belong in this final commit.
+- intent/process reading: false; the unified diff alone cannot show sequencing, but commits `f033d4e`, `06677dd`, `c5b4f54`, `c2b9e2b`, `4a5e4f3` and `3ee79ab` record it. Physical review is expressly not an acceptance gate.
 
 ## Verification
 

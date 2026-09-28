@@ -14,6 +14,7 @@ import 'package:typer_kids/data/dutch_curriculum.dart';
 import 'package:typer_kids/data/keyboard_data.dart';
 import 'package:typer_kids/widgets/keyboard_widget.dart';
 import 'package:typer_kids/widgets/finger_guide.dart';
+import 'package:typer_kids/widgets/stat_tiles.dart';
 import 'package:typer_kids/data/story_content.dart';
 import 'package:typer_kids/data/word_lists.dart';
 import 'package:typer_kids/data/lesson_curriculum_selector.dart' as selected;
@@ -29,26 +30,58 @@ import 'package:typer_kids/data/lesson_curriculum.dart';
 import 'package:typer_kids/models/lesson.dart';
 
 void main() {
-  testWidgets('Dutch keyboard and finger guide show dead key and Shift', (tester) async {
+  testWidgets('Dutch keyboard and finger guide show dead key and Shift', (
+    tester,
+  ) async {
     GoogleFonts.config.allowRuntimeFetching = false;
     SharedPreferences.setMockInitialValues({});
     final language = LanguageProvider();
     await language.init();
     await language.select('nl');
-    await tester.pumpWidget(ChangeNotifierProvider.value(
-      value: language,
-      child: const MaterialApp(home: Scaffold(body: Column(children: [
-        KeyboardWidget(activeKey: 'É', keySize: 26),
-        FingerGuide(currentKey: 'É'),
-      ]))),
-    ));
+    await tester.pumpWidget(
+      ChangeNotifierProvider.value(
+        value: language,
+        child: const MaterialApp(
+          home: Scaffold(
+            body: Column(
+              children: [
+                KeyboardWidget(activeKey: 'É', keySize: 26),
+                FingerGuide(currentKey: 'É'),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
     await tester.pump();
     expect(find.text('´'), findsOneWidget);
     expect(find.text('⇧'), findsNWidgets(2));
     expect(find.text('SPATIE'), findsOneWidget);
     final semantics = tester.ensureSemantics();
-    expect(find.bySemanticsLabel('Volgende toets: ´'), findsOneWidget);
-    expect(find.textContaining('Shift links'), findsOneWidget);
+    expect(
+      find.bySemanticsLabel('Dode toets: ´ voor É; daarna E'),
+      findsOneWidget,
+    );
+    expect(find.bySemanticsLabel('Daarna: E'), findsOneWidget);
+    expect(find.textContaining('Shift rechts + E'), findsOneWidget);
+    expect(
+      tester
+          .getSemantics(find.bySemanticsLabel('Rechter Shift'))
+          .getSemanticsData()
+          .flagsCollection
+          .isSelected
+          .toBoolOrNull(),
+      isTrue,
+    );
+    expect(
+      tester
+          .getSemantics(find.bySemanticsLabel('Linker Shift'))
+          .getSemanticsData()
+          .flagsCollection
+          .isSelected
+          .toBoolOrNull(),
+      isFalse,
+    );
     expect(tester.takeException(), isNull);
     await language.select('en');
     await tester.pump();
@@ -58,10 +91,55 @@ void main() {
     selected.LessonCurriculum.isDutch = false;
   });
 
-  testWidgets('Dutch lesson keyboard fits a narrow typing viewport', (tester) async {
+  testWidgets('Dutch punctuation highlights the mapped key and left Shift', (
+    tester,
+  ) async {
+    GoogleFonts.config.allowRuntimeFetching = false;
+    SharedPreferences.setMockInitialValues({});
+    final language = LanguageProvider();
+    await language.init();
+    await language.select('nl');
+    final semantics = tester.ensureSemantics();
+    await tester.pumpWidget(
+      ChangeNotifierProvider.value(
+        value: language,
+        child: const MaterialApp(
+          home: Scaffold(body: KeyboardWidget(activeKey: ';', keySize: 26)),
+        ),
+      ),
+    );
+    expect(
+      find.bySemanticsLabel('Volgende toets: , voor ; met Shift'),
+      findsOneWidget,
+    );
+    expect(
+      tester
+          .getSemantics(find.bySemanticsLabel('Linker Shift'))
+          .getSemanticsData()
+          .flagsCollection
+          .isSelected
+          .toBoolOrNull(),
+      isTrue,
+    );
+    expect(
+      tester
+          .getSemantics(find.bySemanticsLabel('Rechter Shift'))
+          .getSemanticsData()
+          .flagsCollection
+          .isSelected
+          .toBoolOrNull(),
+      isFalse,
+    );
+    semantics.dispose();
+    selected.LessonCurriculum.isDutch = false;
+  });
+
+  testWidgets('Dutch lesson keyboard fits a narrow typing viewport', (
+    tester,
+  ) async {
     GoogleFonts.config.allowRuntimeFetching = false;
     tester.view.devicePixelRatio = 1;
-    tester.view.physicalSize = const Size(390, 844);
+    tester.view.physicalSize = const Size(320, 700);
     addTearDown(() {
       tester.view.resetPhysicalSize();
       tester.view.resetDevicePixelRatio();
@@ -76,23 +154,29 @@ void main() {
     await language.select('nl');
     final progress = ProgressProvider();
     await progress.init(profileId: child.id, language: 'nl');
-    await tester.pumpWidget(startup.TyperKidsApp(
-      profileProvider: profile,
-      progressProvider: progress,
-      languageProvider: language,
-    ));
+    await tester.pumpWidget(
+      startup.TyperKidsApp(
+        profileProvider: profile,
+        progressProvider: progress,
+        languageProvider: language,
+      ),
+    );
     await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull, reason: 'Dutch home');
     await tester.ensureVisible(find.text('Letters oefenen'));
     await tester.tap(find.text('Letters oefenen'));
     await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull, reason: 'Dutch lesson intro');
     await tester.tap(find.text('Begin!'));
     await tester.pumpAndSettle();
     expect(find.byType(KeyboardWidget), findsOneWidget);
-    expect(tester.takeException(), isNull);
+    expect(tester.takeException(), isNull, reason: 'Dutch typing');
     await tester.pumpWidget(const MaterialApp(home: SizedBox()));
   });
 
-  testWidgets('Dutch locked lesson URL opens only after prior lessons', (tester) async {
+  testWidgets('Dutch locked lesson URL opens only after prior lessons', (
+    tester,
+  ) async {
     GoogleFonts.config.allowRuntimeFetching = false;
     SharedPreferences.setMockInitialValues({});
     final profile = ProfileProvider();
@@ -103,13 +187,17 @@ void main() {
     await language.select('nl');
     final progress = ProgressProvider();
     await progress.init(profileId: child.id, language: 'nl');
-    await tester.pumpWidget(startup.TyperKidsApp(
-      profileProvider: profile,
-      progressProvider: progress,
-      languageProvider: language,
-    ));
+    await tester.pumpWidget(
+      startup.TyperKidsApp(
+        profileProvider: profile,
+        progressProvider: progress,
+        languageProvider: language,
+      ),
+    );
     await tester.pumpAndSettle();
-    GoRouter.of(tester.element(find.text('Typer Kids'))).go('/lesson/nl-home-house');
+    GoRouter.of(
+      tester.element(find.text('Typer Kids')),
+    ).go('/lesson/nl-home-house');
     await tester.pumpAndSettle();
     expect(find.text('Begin!'), findsNothing);
     final stats = TypingStats(
@@ -242,8 +330,8 @@ void main() {
     );
     final fallbackPaths = [
       for (var subset = 0; subset < 12; subset++)
-          'assets/fonts/fallback/notocoloremoji/v32/'
-          'Yq6P-KqIXTD0t4D9z1ESnKM3-HpFabsE4tq3luCC7p-aXxcn.$subset.woff2',
+        'assets/fonts/fallback/notocoloremoji/v32/'
+            'Yq6P-KqIXTD0t4D9z1ESnKM3-HpFabsE4tq3luCC7p-aXxcn.$subset.woff2',
       ...const [
         'I_uyMoGduATTei9eI8daxVHDyfisHr71-jrBWXPM4Q.woff2',
         'I_uyMoGduATTei9eI8daxVHDyfisHr71-ujgfE71.woff2',
@@ -251,9 +339,7 @@ void main() {
         'I_uyMoGduATTei9eI8daxVHDyfisHr71-vrgfE71.woff2',
         'I_uyMoGduATTei9eI8daxVHDyfisHr71-prgfE71.woff2',
         'I_uyMoGduATTei9eI8daxVHDyfisHr71-pTgfA.woff2',
-      ].map(
-        (file) => 'assets/fonts/fallback/notosanssymbols2/v24/$file',
-      ),
+      ].map((file) => 'assets/fonts/fallback/notosanssymbols2/v24/$file'),
     ];
     for (final path in fallbackPaths) {
       final diagnostic = 'Flutter fallback font at $path';
@@ -547,16 +633,28 @@ void main() {
     await tester.pump();
     expect(tester.takeException(), isNull);
     expect(find.text('De jas in de boom'), findsOneWidget);
-    for (final character in StoryContent.dutch.text.split('')) {
+    expect(find.text('Voortgang'), findsOneWidget);
+    for (final (index, character)
+        in StoryContent.dutch.text.split('').indexed) {
       await tester.sendKeyEvent(
         character == ' ' ? LogicalKeyboardKey.space : LogicalKeyboardKey.keyA,
         character: character,
       );
       await tester.pump();
+      if (index == 0) await tester.pump(const Duration(seconds: 2));
     }
     expect(find.text('Goed gedaan!'), findsOneWidget);
     expect(find.text('100.0%'), findsOneWidget);
     expect(find.text('Nauwkeurigheid'), findsOneWidget);
+    expect(find.text('WPM'), findsOneWidget);
+    final wpmTile = find.ancestor(
+      of: find.text('WPM'),
+      matching: find.byType(EmojiStatTile),
+    );
+    expect(
+      double.parse(tester.widget<EmojiStatTile>(wpmTile).value),
+      greaterThan(0),
+    );
     await tester.pumpWidget(const MaterialApp(home: SizedBox()));
     selected.LessonCurriculum.isDutch = false;
   });
@@ -580,7 +678,10 @@ void main() {
       ),
     );
     final semantics = tester.ensureSemantics();
-    expect(find.bySemanticsLabel('Makkelijk niveau'), findsOneWidget);
+    expect(
+      find.bySemanticsLabel('Makkelijk niveau. Korte woorden. Toets 1'),
+      findsOneWidget,
+    );
     await tester.tap(find.text('Start spel'));
     await tester.pump();
     expect(tester.takeException(), isNull);
@@ -615,6 +716,149 @@ void main() {
     semantics.dispose();
     selected.LessonCurriculum.isDutch = false;
   });
+  testWidgets('Dutch Falling Words uses medium and hard selections', (
+    tester,
+  ) async {
+    GoogleFonts.config.allowRuntimeFetching = false;
+    SharedPreferences.setMockInitialValues({});
+    final language = LanguageProvider();
+    await language.init();
+    await language.select('nl');
+    final progress = ProgressProvider();
+    await progress.init(profileId: 'game-child', language: 'nl');
+    for (final difficulty in [
+      ContentDifficulty.medium,
+      ContentDifficulty.hard,
+    ]) {
+      await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider.value(value: language),
+            ChangeNotifierProvider.value(value: progress),
+          ],
+          child: const MaterialApp(home: FallingWordsScreen()),
+        ),
+      );
+      await tester.tap(find.text(difficulty.dutchLabel));
+      await tester.tap(find.text('Start spel'));
+      await tester.pump();
+      for (var frame = 0; frame < 20; frame++) {
+        await tester.pump(const Duration(milliseconds: 100));
+      }
+      final words = WordLists.forDifficulty(difficulty);
+      expect(
+        tester
+            .widgetList<Text>(find.byType(Text))
+            .map((text) => text.data)
+            .any((text) => words.contains(text)),
+        isTrue,
+      );
+      await tester.pumpWidget(const MaterialApp(home: SizedBox()));
+      await tester.pump(const Duration(milliseconds: 600));
+    }
+    selected.LessonCurriculum.isDutch = false;
+  });
+  testWidgets('Dutch game and story route returns to saved English progress', (
+    tester,
+  ) async {
+    GoogleFonts.config.allowRuntimeFetching = false;
+    SharedPreferences.setMockInitialValues({});
+    addTearDown(() => selected.LessonCurriculum.isDutch = false);
+    final profile = ProfileProvider();
+    await profile.init();
+    final child = await profile.createProfile(name: 'Noor', emoji: '🌱');
+    final language = LanguageProvider();
+    await language.init();
+    final progress = ProgressProvider();
+    await progress.init(profileId: child.id);
+    final english = selected.LessonCurriculum.allLessons.first;
+    await progress.recordAttempt(
+      english,
+      TypingStats(
+        totalCharacters: 10,
+        correctCharacters: 10,
+        incorrectCharacters: 0,
+        elapsed: const Duration(seconds: 30),
+        completedAt: DateTime(2026, 9, 28),
+      ),
+    );
+    await language.select('nl');
+    await progress.switchLanguage('nl');
+    await tester.pumpWidget(
+      startup.TyperKidsApp(
+        profileProvider: profile,
+        progressProvider: progress,
+        languageProvider: language,
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Vallende woorden'));
+    await tester.tap(find.text('Vallende woorden'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Start spel'));
+    await tester.pump();
+    for (var frame = 0; frame < 20; frame++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+    final word = tester
+        .widgetList<Text>(find.byType(Text))
+        .map((text) => text.data)
+        .firstWhere((text) => WordLists.dutchEasy.contains(text));
+    for (final character in word!.split('')) {
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyA, character: character);
+      await tester.pump();
+    }
+    for (
+      var frame = 0;
+      frame < 4000 && find.byType(FallingWordsGameOver).evaluate().isEmpty;
+      frame++
+    ) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+    expect(find.text('Spel afgelopen!'), findsOneWidget);
+    expect(progress.getHighScore('falling_words'), word.length * 10);
+    final router = GoRouter.of(
+      tester.element(find.byType(FallingWordsGameOver)),
+    );
+    router.go('/');
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Vrij oefenen'));
+    await tester.tap(find.text('Vrij oefenen'));
+    await tester.pumpAndSettle();
+    expect(find.text('De jas in de boom'), findsOneWidget);
+    await tester.tap(find.text('Begin'));
+    await tester.pump();
+    for (final character in StoryContent.dutch.text.split('')) {
+      await tester.sendKeyEvent(
+        character == ' ' ? LogicalKeyboardKey.space : LogicalKeyboardKey.keyA,
+        character: character,
+      );
+      await tester.pump();
+    }
+    expect(find.text('Goed gedaan!'), findsOneWidget);
+    expect(find.text('Nauwkeurigheid'), findsOneWidget);
+    expect(find.text('100.0%'), findsOneWidget);
+    router.go('/settings');
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('English'));
+    await tester.pumpAndSettle();
+    expect(language.isDutch, isFalse);
+    expect(progress.getProgress(english.id).completed, isTrue);
+    router.go('/lesson/${english.id}');
+    await tester.pumpAndSettle();
+    expect(find.text("Let's Go!"), findsOneWidget);
+    final restarted = LanguageProvider();
+    await restarted.init();
+    expect(restarted.language, 'en');
+    final loaded = ProgressProvider();
+    await loaded.init(profileId: child.id, language: restarted.language);
+    expect(loaded.getProgress(english.id).completed, isTrue);
+    await loaded.switchLanguage('nl');
+    expect(loaded.getProgress(english.id).completed, isFalse);
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const MaterialApp(home: SizedBox()));
+  });
+
   group('TypingStats', () {
     test('calculates accuracy correctly', () {
       final stats = TypingStats(

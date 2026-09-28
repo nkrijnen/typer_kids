@@ -4,7 +4,7 @@ title: "Dutch learning path works end to end"
 parent: initiative-dutch-vertical-slice
 covers: [CAP-1, CAP-2, CAP-3, CAP-4, CAP-5, CAP-6, CAP-7, CAP-8]
 risk: high
-status: in-progress
+status: done
 ---
 
 # Dutch learning path works end to end
@@ -48,3 +48,4 @@ Includes only reachable milestone UI, content, keyboard, and per-profile progres
 - Decision: standalone backlog story 3 owns the complete first-version Dutch curriculum design; story 1.3 consumes only the three milestone lessons from its result, while the full course remains outside this epic (2026-09-27).
 - Satisfied external gate: standalone backlog story 3 is done and its curriculum outline is final (2026-09-27). Story 1.3 remains sequenced after story 1.2 through its in-epic prerequisite.
 - Decision: accept the seven remaining stories in dependency order using automated verification; no human review checkpoint blocks their completion. Assume documented Netherlands QWERTY mappings, keep original-content provenance and all regression checks, and review Dutch language after the initiative before release. No physical-keyboard review is required (2026-09-28).
+- Completed: stories 1.2-1.8 passed the automated locale, keyboard, curriculum, content and route checks; clean `flutter analyze` and 64 passing tests. Human Dutch-language review follows before release (2026-09-28).

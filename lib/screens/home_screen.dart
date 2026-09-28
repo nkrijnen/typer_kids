@@ -363,8 +363,10 @@ class _HomeScreenState extends State<HomeScreen> {
               dutch ? 'Alle lessen' : 'All Lessons',
               style: GoogleFonts.fredoka(fontSize: 18),
             ),
-            const SizedBox(width: 8),
-            ShortcutBadge('L'),
+            if (MediaQuery.sizeOf(context).width >= 360) ...[
+              const SizedBox(width: 8),
+              ShortcutBadge('L'),
+            ],
           ],
         ),
         style: OutlinedButton.styleFrom(
@@ -465,50 +467,55 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildStatsCards(BuildContext context, ProgressProvider progress) {
     final dutch = context.read<LanguageProvider>().isDutch;
-    return Row(
+    final cards = [
+      StatCard(
+        emoji: '⭐',
+        label: dutch ? 'Sterren' : 'Stars',
+        value: '${progress.totalStars}',
+        color: AppColors.starFilled,
+      ),
+      StatCard(
+        emoji: '📚',
+        label: dutch ? 'Lessen' : 'Lessons',
+        value: '${progress.completedLessons}/${progress.totalLessons}',
+        color: AppColors.primary,
+      ),
+      StatCard(
+        emoji: '🎯',
+        label: dutch ? 'Precisie' : 'Accuracy',
+        value: progress.averageAccuracy > 0
+            ? '${progress.averageAccuracy.toStringAsFixed(0)}%'
+            : '--',
+        color: AppColors.accent,
+      ),
+      StatCard(
+        emoji: '🔥',
+        label: dutch ? 'Reeks' : 'Streak',
+        value: progress.currentStreak > 0
+            ? dutch
+                  ? '${progress.currentStreak} ${progress.currentStreak == 1 ? 'dag' : 'dagen'}'
+                  : '${progress.currentStreak} day${progress.currentStreak == 1 ? '' : 's'}'
+            : '--',
+        color: AppColors.secondary,
+      ),
+    ];
+
+    Widget row(int start, int end) => Row(
       children: [
-        Expanded(
-          child: StatCard(
-            emoji: '⭐',
-            label: dutch ? 'Sterren' : 'Stars',
-            value: '${progress.totalStars}',
-            color: AppColors.starFilled,
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: StatCard(
-            emoji: '📚',
-            label: dutch ? 'Lessen' : 'Lessons',
-            value: '${progress.completedLessons}/${progress.totalLessons}',
-            color: AppColors.primary,
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: StatCard(
-            emoji: '🎯',
-            label: dutch ? 'Precisie' : 'Accuracy',
-            value: progress.averageAccuracy > 0
-                ? '${progress.averageAccuracy.toStringAsFixed(0)}%'
-                : '--',
-            color: AppColors.accent,
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: StatCard(
-            emoji: '🔥',
-            label: dutch ? 'Reeks' : 'Streak',
-            value: progress.currentStreak > 0
-                ? dutch
-                      ? '${progress.currentStreak} ${progress.currentStreak == 1 ? 'dag' : 'dagen'}'
-                      : '${progress.currentStreak} day${progress.currentStreak == 1 ? '' : 's'}'
-                : '--',
-            color: AppColors.secondary,
-          ),
-        ),
+        for (var index = start; index < end; index++) ...[
+          if (index > start) const SizedBox(width: 10),
+          Expanded(child: cards[index]),
+        ],
       ],
+    );
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth >= 340) return row(0, 4);
+        return Column(
+          children: [row(0, 2), const SizedBox(height: 10), row(2, 4)],
+        );
+      },
     );
   }
 

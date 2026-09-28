@@ -97,7 +97,9 @@ void main() {
       expect(lessons, hasLength(3));
       expect(lessons.map((lesson) => lesson.orderIndex), [0, 1, 2]);
       expect(lessons.map((lesson) => lesson.focusKeys), [
-        ['f', 'j', 'd', 'k'], ['s', 'l', 'a'], ['g', 'h'],
+        ['f', 'j', 'd', 'k'],
+        ['s', 'l', 'a'],
+        ['g', 'h'],
       ]);
       final taught = <String>{};
       for (final lesson in lessons) {
@@ -112,7 +114,8 @@ void main() {
       }
       expect(lessons[0].exercises, contains('ff jj fj jf'));
       expect(lessons[1].exercises, contains('jas als das kaas'));
-      expect(lessons[2].exercises, contains('dag had hals'));
+      expect(lessons[2].title, 'Dieren');
+      expect(lessons[2].exercises, contains('haas das slak'));
     });
 
     test('aggregates actionable errors for malformed stage data', () {

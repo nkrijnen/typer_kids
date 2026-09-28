@@ -402,11 +402,11 @@ class _TypingScreenState extends State<TypingScreen> {
                 // The keyboard is ~14.5 keys wide (13 keys + padding + offsets)
                 // Calculate key size to fill available width with some margin
                 final dutchKeyboard = context.read<LanguageProvider>().isDutch;
-                final keyboardWidthKeys = dutchKeyboard ? 17.0 : 15.0;
+                final keyboardWidthKeys = dutchKeyboard ? 20.0 : 15.0;
                 final horizontalPad = maxW > 800 ? 32.0 : 16.0;
                 final availableWidth = maxW - horizontalPad * 2;
                 final keySizeFromWidth = (availableWidth / keyboardWidthKeys)
-                    .clamp(dutchKeyboard ? 20.0 : 28.0, 64.0);
+                    .clamp(dutchKeyboard ? 12.0 : 28.0, 64.0);
 
                 // Also constrain by height: keyboard ~6 keys tall, plus stats + display + guides
                 final keySizeFromHeight = ((maxH * 0.38) / 6).clamp(28.0, 64.0);
@@ -512,7 +512,9 @@ class _TypingScreenState extends State<TypingScreen> {
           ),
           LiveStatItem(
             icon: Icons.gps_fixed_rounded,
-            label: context.read<LanguageProvider>().isDutch ? 'Nauwkeurig' : 'Accuracy',
+            label: context.read<LanguageProvider>().isDutch
+                ? 'Nauwkeurig'
+                : 'Accuracy',
             value: '${_typingProvider.liveAccuracy.toStringAsFixed(0)}%',
             color: _typingProvider.liveAccuracy >= 90
                 ? AppColors.correct
@@ -539,7 +541,9 @@ class _TypingScreenState extends State<TypingScreen> {
           const Icon(Icons.mouse_rounded, color: AppColors.secondary, size: 20),
           const SizedBox(width: 8),
           Text(
-            context.read<LanguageProvider>().isDutch ? 'Klik hier en begin met typen!' : 'Click here and start typing!',
+            context.read<LanguageProvider>().isDutch
+                ? 'Klik hier en begin met typen!'
+                : 'Click here and start typing!',
             style: GoogleFonts.fredoka(
               fontSize: 16,
               color: AppColors.secondary,
@@ -562,10 +566,16 @@ class _TypingScreenState extends State<TypingScreen> {
       context: context,
       barrierDismissible: false,
       builder: (dialogContext) => QuitDialog(
-        title: context.read<LanguageProvider>().isDutch ? 'Les verlaten?' : 'Leave Lesson?',
-        message: context.read<LanguageProvider>().isDutch ? 'Je voortgang in deze oefening wordt niet opgeslagen.' : 'Your progress on this exercise will not be saved.',
+        title: context.read<LanguageProvider>().isDutch
+            ? 'Les verlaten?'
+            : 'Leave Lesson?',
+        message: context.read<LanguageProvider>().isDutch
+            ? 'Je voortgang in deze oefening wordt niet opgeslagen.'
+            : 'Your progress on this exercise will not be saved.',
         stayLabel: context.read<LanguageProvider>().isDutch ? 'Verder' : 'Stay',
-        quitLabel: context.read<LanguageProvider>().isDutch ? 'Verlaten' : 'Quit',
+        quitLabel: context.read<LanguageProvider>().isDutch
+            ? 'Verlaten'
+            : 'Quit',
         onStay: () => Navigator.of(dialogContext).pop(),
         onQuit: () {
           Navigator.of(dialogContext).pop();

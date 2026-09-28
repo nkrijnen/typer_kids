@@ -42,8 +42,8 @@ class DifficultyCard extends StatelessWidget {
 
     return Semantics(
       label: isDutch
-          ? '${difficulty.dutchLabel} niveau'
-          : '${difficulty.label} difficulty',
+          ? '${difficulty.dutchLabel} niveau. ${difficulty.dutchDescription}. Toets $index'
+          : '${difficulty.label} difficulty. ${difficulty.description}. Key $index',
       button: true,
       selected: selected,
       onTap: onTap,

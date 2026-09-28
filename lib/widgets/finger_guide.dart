@@ -19,8 +19,8 @@ class FingerGuide extends StatelessWidget {
 
     final isDutch = context.watch<LanguageProvider>().isDutch;
     final finger = isDutch
-      ? KeyboardData.dutchFinger(currentKey!)
-      : KeyboardData.keyToFinger[currentKey!.toLowerCase()];
+        ? KeyboardData.dutchFinger(currentKey!)
+        : KeyboardData.keyToFinger[currentKey!.toLowerCase()];
     if (finger == null) return const SizedBox.shrink();
 
     final fingerName = isDutch
@@ -39,6 +39,23 @@ class FingerGuide extends StatelessWidget {
     final fingerColor = KeyboardData.fingerColor(finger);
     final isLeft = finger.startsWith('left');
     final isThumb = finger == 'thumb';
+    final isAccent = isDutch && KeyboardData.dutchIsAccent(currentKey!);
+    final deadShift =
+        isAccent && KeyboardData.dutchDeadKeyNeedsShift(currentKey!);
+    final letterFinger = isAccent
+        ? KeyboardData.keyToFinger[KeyboardData.dutchAccentLetter(
+            currentKey!,
+          )?.toLowerCase()]
+        : null;
+    final letterShift = isAccent && currentKey != currentKey!.toLowerCase();
+    final label = isAccent
+        ? '$fingerName: ${deadShift ? 'Shift ${isLeft ? 'rechts' : 'links'} + ' : ''}'
+              '${KeyboardData.dutchBaseKey(currentKey!)} → '
+              '${letterShift ? 'Shift ${letterFinger?.startsWith('left') == true ? 'rechts' : 'links'} + ' : ''}'
+              '${KeyboardData.dutchAccentLetter(currentKey!)}'
+        : isDutch && KeyboardData.dutchNeedsShift(currentKey!)
+        ? '$fingerName + Shift ${isLeft ? 'rechts' : 'links'}'
+        : fingerName;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -71,9 +88,7 @@ class FingerGuide extends StatelessWidget {
             border: Border.all(color: fingerColor.withValues(alpha: 0.5)),
           ),
           child: Text(
-            isDutch && KeyboardData.dutchNeedsShift(currentKey!)
-              ? '$fingerName + Shift ${isLeft ? 'rechts' : 'links'}'
-              : fingerName,
+            label,
             style: GoogleFonts.fredoka(
               fontSize: 14,
               fontWeight: FontWeight.w500,

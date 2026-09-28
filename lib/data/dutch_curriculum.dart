@@ -13,7 +13,8 @@ class DutchCurriculum {
       orderIndex: 0,
       focusKeys: ['f', 'j', 'd', 'k'],
       exercises: ['ff jj fj jf', 'fd jk df kj'],
-      funTip: 'Voel de streepjes op f en j. Dit zijn letteroefeningen, geen woorden.',
+      funTip:
+          'Voel de streepjes op f en j. Dit zijn letteroefeningen, geen woorden.',
       emoji: '⌨️',
     ),
     Lesson(
@@ -30,15 +31,15 @@ class DutchCurriculum {
     ),
     Lesson(
       id: 'nl-home-house',
-      title: 'In huis',
-      description: 'Reik naar g en h en typ woorden voor in huis.',
+      title: 'Dieren',
+      description: 'Reik naar g en h en typ woorden over dieren.',
       category: LessonCategory.homeRow,
       difficulty: LessonDifficulty.beginner,
       orderIndex: 2,
       focusKeys: ['g', 'h'],
-      exercises: ['fg jh gf hj', 'dag had hals', 'glas jas hal'],
+      exercises: ['fg jh gf hj', 'haas das slak', 'haas slak'],
       funTip: 'Reik naar g en h en keer terug naar f en j.',
-      emoji: '⌨️',
+      emoji: '🐾',
     ),
   ];
 }

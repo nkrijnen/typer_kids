@@ -78,9 +78,9 @@ class KeyboardWidget extends StatelessWidget {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                _buildShiftKey(),
+                _buildShiftKey(isLeft: true),
                 _buildRow(rows[3], isDutch),
-                _buildShiftKey(),
+                _buildShiftKey(isLeft: false),
               ],
             )
           else
@@ -103,24 +103,49 @@ class KeyboardWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildShiftKey() {
+  Widget _buildShiftKey({required bool isLeft}) {
+    final character = activeKey;
+    final finger = character == null
+        ? null
+        : KeyboardData.dutchFinger(character);
+    final accent = character != null && KeyboardData.dutchIsAccent(character);
+    final letterFinger = character == null
+        ? null
+        : KeyboardData.keyToFinger[KeyboardData.dutchAccentLetter(
+            character,
+          )?.toLowerCase()];
+    final oppositeHand = isLeft ? 'right' : 'left';
     final active =
-        activeKey != null && KeyboardData.dutchNeedsShift(activeKey!);
-    return Container(
-      width: keySize,
-      height: keySize,
-      margin: EdgeInsets.all(_gap),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: active ? AppColors.secondary : Colors.white,
-        borderRadius: BorderRadius.circular(_borderRadius),
-        border: Border.all(color: active ? AppColors.secondary : Colors.grey),
-      ),
-      child: Text(
-        '⇧',
-        style: TextStyle(
-          fontSize: _fontSize,
-          color: active ? Colors.white : AppColors.textPrimary,
+        character != null &&
+        ((accent &&
+                KeyboardData.dutchDeadKeyNeedsShift(character) &&
+                finger?.startsWith(oppositeHand) == true) ||
+            (accent &&
+                character != character.toLowerCase() &&
+                letterFinger?.startsWith(oppositeHand) == true) ||
+            (!accent &&
+                KeyboardData.dutchNeedsShift(character) &&
+                finger?.startsWith(oppositeHand) == true));
+    return Semantics(
+      label: isLeft ? 'Linker Shift' : 'Rechter Shift',
+      selected: active,
+      excludeSemantics: true,
+      child: Container(
+        width: keySize,
+        height: keySize,
+        margin: EdgeInsets.all(_gap),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: active ? AppColors.secondary : Colors.white,
+          borderRadius: BorderRadius.circular(_borderRadius),
+          border: Border.all(color: active ? AppColors.secondary : Colors.grey),
+        ),
+        child: Text(
+          '⇧',
+          style: TextStyle(
+            fontSize: _fontSize,
+            color: active ? Colors.white : AppColors.textPrimary,
+          ),
         ),
       ),
     );
@@ -136,10 +161,18 @@ class KeyboardWidget extends StatelessWidget {
     final isCorrect = correctKeys.contains(key.toLowerCase());
     final isIncorrect = incorrectKeys.contains(key.toLowerCase());
     final isHomeRow = KeyboardData.homeRowKeys.contains(key.toLowerCase());
+    final isAccent =
+        isDutch && activeKey != null && KeyboardData.dutchIsAccent(activeKey!);
+    final isSecondStep =
+        isAccent &&
+        KeyboardData.dutchAccentLetter(activeKey!)?.toLowerCase() ==
+            key.toLowerCase();
 
     Color bgColor;
     if (isActive) {
       bgColor = AppColors.secondary;
+    } else if (isSecondStep) {
+      bgColor = AppColors.primary.withValues(alpha: 0.4);
     } else if (isCorrect) {
       bgColor = AppColors.correct.withValues(alpha: 0.7);
     } else if (isIncorrect) {
@@ -156,9 +189,13 @@ class KeyboardWidget extends StatelessWidget {
 
     return Semantics(
       label: isDutch && isActive
-          ? 'Volgende toets: ${key.toUpperCase()}'
+          ? isAccent
+                ? 'Dode toets: $key voor $activeKey; daarna ${KeyboardData.dutchAccentLetter(activeKey!)}'
+                : 'Volgende toets: ${key.toUpperCase()} voor $activeKey${KeyboardData.dutchNeedsShift(activeKey!) ? ' met Shift' : ''}'
+          : isSecondStep
+          ? 'Daarna: ${KeyboardData.dutchAccentLetter(activeKey!)}'
           : null,
-      excludeSemantics: isDutch && isActive,
+      excludeSemantics: isDutch && (isActive || isSecondStep),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
         width: keySize,

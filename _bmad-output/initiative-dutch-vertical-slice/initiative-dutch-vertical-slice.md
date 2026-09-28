@@ -4,7 +4,7 @@ title: "Dutch vertical slice for Typer Kids"
 parent: none
 covers: [CAP-1, CAP-2, CAP-3, CAP-4, CAP-5, CAP-6, CAP-7, CAP-8]
 risk: high
-status: in-progress
+status: done
 ---
 
 # Dutch vertical slice for Typer Kids
@@ -39,3 +39,4 @@ Only the first vertical slice. Full Dutch course and cross-platform release rema
 - Progress: story 1.1 completed and verified the first Dutch lesson, game, story, locale persistence, and progress-isolation tracer (2026-09-27).
 - Environment: `flutter` is still absent from the agent sandbox terminal's PATH; resolve its executable location before build verification.
 - Decision: superseding the 2026-09-26 gate, accept documented Netherlands QWERTY mappings and automated tests; no physical-keyboard review is required. Defer Dutch-language review until after completion, before release, and fix any errors found (2026-09-28).
+- Completed: Dutch lesson, game, story, locale and English-progress route verified with 64 passing tests and clean `flutter analyze`; Dutch-language review remains a pre-release follow-up (2026-09-28).
