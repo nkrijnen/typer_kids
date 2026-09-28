@@ -150,6 +150,38 @@ void main() {
       },
     );
 
+    test(
+      'retained legacy and not-yet-real migration targets never leak into aggregate stats',
+      () async {
+        SharedPreferences.setMockInitialValues({
+          dutchKey('nl-home-letters'): LessonProgress(
+            lessonId: 'nl-home-letters',
+            completed: true,
+            bestStarRating: 3,
+            bestAccuracy: 90,
+            attempts: 1,
+          ).encode(),
+          dutchKey('nl-home-house'): LessonProgress(
+            lessonId: 'nl-home-house',
+            completed: true,
+            bestStarRating: 3,
+            bestAccuracy: 90,
+            attempts: 1,
+          ).encode(),
+        });
+        selected.LessonCurriculum.isDutch = true;
+        final progress = ProgressProvider();
+        await progress.init(profileId: profileId, language: 'nl');
+
+        // Only nl-letter-01/02 are real curriculum lessons here; the retained
+        // nl-home-letters legacy record and the nl-letter-05 migration target
+        // (no lesson yet) must not be double- or phantom-counted.
+        expect(progress.completedLessons, 2);
+        expect(progress.totalStars, 6);
+        expect(progress.averageAccuracy, 90);
+      },
+    );
+
     test('English progress is byte-identical after Dutch migration runs', () async {
       final englishProgress = LessonProgress(
         lessonId: 'en-lesson',

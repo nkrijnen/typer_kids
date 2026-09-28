@@ -71,6 +71,13 @@ baseline_revision: 'bae54d868c4257e7e1941d88bddf857649edcba1'
 
 ## Review Triage Log
 
+### 2026-09-28 — Review pass
+- verdicts: 2 findings — high 1, medium 0, low 0, false 0, maybe-false 0
+- findings:
+  - `[high]` `[patch]` Retained legacy Dutch progress records and the not-yet-real `nl-letter-05` migration target leaked into `completedLessons`/`totalStars`/`averageAccuracy`/`averageWpm`, inflating stats and enabling early `allCompleted`/badge triggers — fixed by adding a `_curriculumProgress` filter (only ids present in `LessonCurriculum.allLessons`) and routing all four aggregate getters through it; verified with a new regression test asserting `completedLessons`/`totalStars`/`averageAccuracy` stay correct with legacy+phantom records present.
+  - `[high]` `[patch]` Missing test coverage for the above scenario — fixed together with the same patch by adding `retained legacy and not-yet-real migration targets never leak into aggregate stats` to test/dutch_lesson_migration_test.dart.
+
+
 ## Design Notes
 
 Migration comparison rule: destination wins ties (`>=` on `bestStarRating`) so re-running migration is a no-op once destinations have been touched by real play — this is what makes "exactly once" verifiable via idempotence rather than a one-time flag.

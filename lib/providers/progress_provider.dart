@@ -310,9 +310,19 @@ class ProgressProvider extends ChangeNotifier {
     return getProgress(prevLesson.id).completed;
   }
 
+  /// Progress records for lessons that exist in the current curriculum only.
+  ///
+  /// Retained legacy ids (e.g. `nl-home-letters`) and migration targets for
+  /// stages not yet implemented (e.g. `nl-letter-05`) are stored so migration
+  /// stays idempotent, but must never count toward aggregate stats.
+  Iterable<LessonProgress> get _curriculumProgress {
+    final validIds = LessonCurriculum.allLessons.map((l) => l.id).toSet();
+    return _progressMap.values.where((p) => validIds.contains(p.lessonId));
+  }
+
   /// Total stars earned
   int get totalStars {
-    return _progressMap.values.fold(0, (sum, p) => sum + p.bestStarRating);
+    return _curriculumProgress.fold(0, (sum, p) => sum + p.bestStarRating);
   }
 
   /// Maximum possible stars
@@ -320,7 +330,7 @@ class ProgressProvider extends ChangeNotifier {
 
   /// Total lessons completed
   int get completedLessons {
-    return _progressMap.values.where((p) => p.completed).length;
+    return _curriculumProgress.where((p) => p.completed).length;
   }
 
   /// Total lessons available
@@ -334,7 +344,7 @@ class ProgressProvider extends ChangeNotifier {
 
   /// Average accuracy across all attempted lessons
   double get averageAccuracy {
-    final attempted = _progressMap.values.where((p) => p.attempts > 0);
+    final attempted = _curriculumProgress.where((p) => p.attempts > 0);
     if (attempted.isEmpty) return 0;
     return attempted.fold(0.0, (sum, p) => sum + p.bestAccuracy) /
         attempted.length;
@@ -342,7 +352,7 @@ class ProgressProvider extends ChangeNotifier {
 
   /// Average WPM across all attempted lessons
   double get averageWpm {
-    final attempted = _progressMap.values.where((p) => p.attempts > 0);
+    final attempted = _curriculumProgress.where((p) => p.attempts > 0);
     if (attempted.isEmpty) return 0;
     return attempted.fold(0.0, (sum, p) => sum + p.bestWpm) / attempted.length;
   }
