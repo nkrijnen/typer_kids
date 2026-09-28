@@ -28,9 +28,21 @@ enum ContentDifficulty {
 class WordLists {
   WordLists._();
 
-  static const dutchEasy = ['jas', 'dak', 'zon', 'vis', 'kat', 'tas', 'bal', 'bos'];
-  static const dutchMedium = ['appel', 'fiets', 'water', 'vogel', 'bloem', 'stoel'];
-  static const dutchHard = ['vlinder', 'speeltuin', 'regenboog', 'boekenkast'];
+  static const dutchEasy = [
+    'jas', 'dak', 'zon', 'vis', 'kat', 'tas', 'bal', 'bos',
+    'pen', 'kip', 'pop', 'bus', 'tak', 'mus', 'oog', 'zee',
+    'bel', 'das', 'mug', 'kop', 'sok', 'rok', 'hek', 'uil',
+  ];
+  static const dutchMedium = [
+    'appel', 'fiets', 'water', 'vogel', 'bloem', 'stoel',
+    'kamer', 'regen', 'tafel', 'school', 'raam', 'plant',
+    'molen', 'brood', 'zomer', 'strand', 'speel', 'jongen',
+  ];
+  static const dutchHard = [
+    'vlinder', 'speeltuin', 'regenboog', 'boekenkast',
+    'bibliotheek', 'verjaardag', 'voetballen', 'pannenkoek',
+    'schommel', 'aardbeien', 'vriendschap', 'bloempot',
+  ];
 
   static const List<String> easy = [
     'the',
