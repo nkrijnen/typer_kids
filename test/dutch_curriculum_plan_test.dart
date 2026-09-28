@@ -94,19 +94,52 @@ void main() {
 
     test('milestone lessons stage the approved home-row keys and words', () {
       final lessons = DutchCurriculum.allLessons;
-      expect(lessons, hasLength(4));
+      expect(lessons, hasLength(8));
       expect(lessons.map((lesson) => lesson.id), [
         'nl-letter-01',
         'nl-letter-02',
         'nl-letter-03',
         'nl-letter-04',
+        'nl-letter-05',
+        'nl-letter-06',
+        'nl-letter-07',
+        'nl-letter-08',
       ]);
-      expect(lessons.map((lesson) => lesson.orderIndex), [0, 1, 2, 3]);
+      expect(lessons.map((lesson) => lesson.orderIndex), [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+      ]);
       expect(lessons.map((lesson) => lesson.focusKeys), [
         ['f', 'j'],
         ['f', 'j', 'd', 'k'],
         ['f', 'j', 'd', 'k', 's', 'l'],
         ['f', 'j', 'd', 'k', 's', 'l', 'a'],
+        ['f', 'j', 'd', 'k', 's', 'l', 'a', 'g', 'h'],
+        ['f', 'j', 'd', 'k', 's', 'l', 'a', 'g', 'h', 'e', 'i'],
+        ['f', 'j', 'd', 'k', 's', 'l', 'a', 'g', 'h', 'e', 'i', 'r', 'u'],
+        [
+          'f',
+          'j',
+          'd',
+          'k',
+          's',
+          'l',
+          'a',
+          'g',
+          'h',
+          'e',
+          'i',
+          'r',
+          'u',
+          't',
+          'n',
+        ],
       ]);
       final taught = <String>{};
       for (final lesson in lessons) {
@@ -123,6 +156,12 @@ void main() {
       expect(lessons[1].exercises, contains('fd jk df kj'));
       expect(lessons[2].exercises, contains('sdf jkl dsf lkj'));
       expect(lessons[3].exercises, contains('jas als das kaas'));
+      expect(lessons[4].exercises, contains('fg jh gf hj'));
+      expect(lessons[4].exercises, contains('dag had hals'));
+      expect(lessons[5].exercises, contains('de die ik is'));
+      expect(lessons[6].exercises, contains('fr ju rf uj'));
+      expect(lessons[6].exercises, contains('reis deur kleur'));
+      expect(lessons[7].exercises, contains('tuin trein neus hand'));
     });
 
     test('aggregates actionable errors for malformed stage data', () {

@@ -130,7 +130,7 @@ void main() {
     });
 
     test(
-      'legacy nl-home-house migrates onto nl-letter-05 even though that lesson does not exist yet',
+      'legacy nl-home-house migrates onto its equivalent stage nl-letter-05',
       () async {
         final legacy = LessonProgress(
           lessonId: 'nl-home-house',
@@ -146,12 +146,11 @@ void main() {
         await progress.init(profileId: profileId, language: 'nl');
 
         expect(progress.getProgress('nl-letter-05').bestStarRating, 2);
-        expect(selected.LessonCurriculum.byId('nl-letter-05'), isNull);
       },
     );
 
     test(
-      'retained legacy and not-yet-real migration targets never leak into aggregate stats',
+      'retained legacy records never leak into aggregate stats',
       () async {
         SharedPreferences.setMockInitialValues({
           dutchKey('nl-home-letters'): LessonProgress(
@@ -173,11 +172,11 @@ void main() {
         final progress = ProgressProvider();
         await progress.init(profileId: profileId, language: 'nl');
 
-        // Only nl-letter-01/02 are real curriculum lessons here; the retained
-        // nl-home-letters legacy record and the nl-letter-05 migration target
-        // (no lesson yet) must not be double- or phantom-counted.
-        expect(progress.completedLessons, 2);
-        expect(progress.totalStars, 6);
+        // nl-letter-01/02 (from nl-home-letters) and nl-letter-05 (from
+        // nl-home-house) are real curriculum lessons; the retained legacy
+        // nl-home-letters/nl-home-house records must not be double-counted.
+        expect(progress.completedLessons, 3);
+        expect(progress.totalStars, 9);
         expect(progress.averageAccuracy, 90);
       },
     );
