@@ -106,6 +106,10 @@ class AppRouter {
             // Invalid lesson ID — show home
             return const HomeScreen();
           }
+          if (context.read<LanguageProvider>().isDutch &&
+              !context.read<ProgressProvider>().isLessonUnlocked(lessonId)) {
+            return const HomeScreen();
+          }
           return TypingScreen(lesson: lesson);
         },
         routes: [

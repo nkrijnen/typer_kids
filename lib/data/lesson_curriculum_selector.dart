@@ -61,7 +61,9 @@ class LessonCurriculum {
   };
 
   static Lesson? nextLesson(String currentLessonId) =>
-      isDutch ? null :
+      isDutch ? (allLessons.where((lesson) =>
+        lesson.orderIndex == (byId(currentLessonId)?.orderIndex ?? -2) + 1
+      ).firstOrNull) :
       switch (CurriculumConfig.activeVariant) {
         CurriculumVariant.classic => classic.LessonCurriculum.nextLesson(
           currentLessonId,

@@ -92,8 +92,27 @@ void main() {
       );
     });
 
-    test('preserves the three-lesson runtime boundary', () {
-      expect(DutchCurriculum.allLessons.length, lessThanOrEqualTo(3));
+    test('milestone lessons stage the approved home-row keys and words', () {
+      final lessons = DutchCurriculum.allLessons;
+      expect(lessons, hasLength(3));
+      expect(lessons.map((lesson) => lesson.orderIndex), [0, 1, 2]);
+      expect(lessons.map((lesson) => lesson.focusKeys), [
+        ['f', 'j', 'd', 'k'], ['s', 'l', 'a'], ['g', 'h'],
+      ]);
+      final taught = <String>{};
+      for (final lesson in lessons) {
+        taught.addAll(lesson.focusKeys);
+        for (final exercise in lesson.exercises) {
+          expect(
+            taught.containsAll(exercise.split('').where((key) => key != ' ')),
+            true,
+            reason: lesson.id,
+          );
+        }
+      }
+      expect(lessons[0].exercises, contains('ff jj fj jf'));
+      expect(lessons[1].exercises, contains('jas als das kaas'));
+      expect(lessons[2].exercises, contains('dag had hals'));
     });
 
     test('aggregates actionable errors for malformed stage data', () {

@@ -406,7 +406,7 @@ class _ResultsScreenState extends State<ResultsScreen>
                   children: [
                     Flexible(
                       child: Text(
-                        'Next: ${nextLesson.emoji} ${nextLesson.title}',
+                        '${context.read<LanguageProvider>().isDutch ? 'Volgende' : 'Next'}: ${nextLesson.emoji} ${nextLesson.title}',
                         style: GoogleFonts.fredoka(
                           fontSize: 18,
                           color: Colors.white,
