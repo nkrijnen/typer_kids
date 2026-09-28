@@ -56,7 +56,7 @@ context: []
 - [x] 1.4: word lists, Falling Words views and tests -- supply age-appropriate Dutch words at supported difficulties and translate reachable menu, score and end states; commit when green.
 - [x] 1.5: story content, Free Practice views, provenance and tests -- finish one original Dutch story with difficulty metadata, progress, WPM and accuracy; commit when green.
 - [x] 1.6: reachable screens, dialogs, tooltips, semantics and tests -- remove English UI from the milestone path while preserving English; commit when green.
-- [ ] 1.7: recorded review findings -- perform only justified nonfunctional cleanup, regression test and commit separately.
+- [x] 1.7: recorded review findings -- perform only justified nonfunctional cleanup, regression test and commit separately.
 - [ ] 1.8: closing widget/integration tests -- exercise the full Dutch route, restart, profile/locale isolation, accessibility and English regressions; run full analysis/tests, record evidence and commit.
 
 **Acceptance Criteria:**
@@ -72,6 +72,7 @@ context: []
 - 1.4: Expanded the Dutch pools for every Falling Words difficulty; the tracer already localized its menu and end state, and game-over scoring tests pass.
 - 1.5: Expanded the original easy-level story, retained Free Practice's localized completion/stats path, and reconciled README provenance and review wording.
 - 1.6: Corrected reachable Settings fallback text, live keyboard and difficulty labels, and Dutch semantics for the active key and game difficulty; the `/test` route remains intentionally unavailable in Dutch.
+- 1.7: The completed tracer plan's review log records functional patches and test gaps, already owned by 1.1-1.6 or 1.8, but no deferred nonfunctional maintainability findings. No refactor is warranted; analysis and 61 tests remain green.
 
 ## Plan Change Log
 
