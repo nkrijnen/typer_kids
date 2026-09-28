@@ -22,7 +22,7 @@ A child finishes the Dutch path and returns to intact English progress after res
 1. A child completes Dutch lessons 1 and 2 and a themed lesson with accurate keyboard guidance.
 2. One game and one story run entirely with Dutch content and reachable Dutch UI.
 3. Language and per-profile progress persist through restart without changing existing English data.
-4. Automated and human checks in the spec's companion pass for this path.
+4. Automated checks in the spec's companion pass for this path; human language review follows the initiative before release.
 
 ## Boundaries
 
@@ -35,6 +35,7 @@ Only the first vertical slice. Full Dutch course and cross-platform release rema
 ## Notes
 
 - Decision: one slice epic includes its own platform baseline, so there is no separate platform-baseline epic (2026-09-26).
-- Decision: target Netherlands QWERTY; physical punctuation/dead-key mappings require human verification (2026-09-26).
+- Superseded decision: target Netherlands QWERTY; physical punctuation/dead-key mappings originally required human verification (2026-09-26; superseded 2026-09-28).
 - Progress: story 1.1 completed and verified the first Dutch lesson, game, story, locale persistence, and progress-isolation tracer (2026-09-27).
 - Environment: `flutter` is still absent from the agent sandbox terminal's PATH; resolve its executable location before build verification.
+- Decision: superseding the 2026-09-26 gate, accept documented Netherlands QWERTY mappings and automated tests; no physical-keyboard review is required. Defer Dutch-language review until after completion, before release, and fix any errors found (2026-09-28).

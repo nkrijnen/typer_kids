@@ -22,7 +22,7 @@ The spec's success signal: a child learns, plays, and practices in Dutch, then r
 1. Dutch keyboard guidance, two introductory lessons, and one themed lesson work in order with validated taught keys.
 2. One game and one original story work in Dutch without English content or UI on their paths.
 3. Locale selection and progress isolation survive profile changes and restart without damaging English saves.
-4. Locale, keyboard, content, accessibility, and end-to-end tests pass, with human Dutch language and physical keyboard review recorded.
+4. Locale, keyboard, content, accessibility, and end-to-end tests pass; human Dutch-language review follows the initiative before release.
 
 ## Boundaries
 
@@ -39,11 +39,12 @@ Includes only reachable milestone UI, content, keyboard, and per-profile progres
 ## Notes
 
 - Assumption: Falling Words is the candidate game; story 1 checks which existing game fits before committing (2026-09-26).
-- Decision: Netherlands QWERTY is the target; story 2 still requires physical verification of its punctuation and dead keys (2026-09-26).
+- Superseded decision: Netherlands QWERTY is the target; story 2 originally required physical verification of its punctuation and dead keys (2026-09-26; superseded 2026-09-28).
 - Baseline: user ran `flutter doctor` and `flutter pub get` successfully and `flutter test` passed all 37 existing tests (2026-09-27). The agent terminal still needs a path to `flutter` for its own checks.
 - Completed: story 1.1, "Trace one Dutch path across the app", is done (2026-09-27).
-- Next session: start planned story 1.2, "Verify Dutch physical keyboard guidance", with `bmad-build`; keep the baseline green and record the required physical-keyboard review before acceptance.
+- Next story: start planned story 1.2, "Implement Netherlands QWERTY keyboard guidance"; keep the baseline green and record the documented layout reference and automated checks.
 - Decision: story 1 is the smallest real lesson/game/story path; stories 2-6 deepen it in one dependency lane to avoid shared-code collisions (2026-09-26).
 - Decision: only recorded review cleanup belongs in the refactor sweep; functional fixes and tests stay in their owning stories (2026-09-26).
 - Decision: standalone backlog story 3 owns the complete first-version Dutch curriculum design; story 1.3 consumes only the three milestone lessons from its result, while the full course remains outside this epic (2026-09-27).
 - Satisfied external gate: standalone backlog story 3 is done and its curriculum outline is final (2026-09-27). Story 1.3 remains sequenced after story 1.2 through its in-epic prerequisite.
+- Decision: accept the seven remaining stories in dependency order using automated verification; no human review checkpoint blocks their completion. Assume documented Netherlands QWERTY mappings, keep original-content provenance and all regression checks, and review Dutch language after the initiative before release. No physical-keyboard review is required (2026-09-28).
