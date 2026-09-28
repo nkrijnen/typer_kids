@@ -6,7 +6,7 @@ parent: none
 covers: [CAP-1]
 after: []
 assignee: ""
-refined: false
+refined: true
 hitl: false
 risk: medium
 estimate: ""
@@ -23,23 +23,23 @@ Correct the Dutch keyboard rows and all dependent mapping helpers so visual guid
 1. **Rows match the physical layout**
    **Given** Dutch keyboard guidance
    **When** the rows are rendered or inspected
-   **Then** the number row starts with § and contains 2 (€), the top row ends with [ ], the home row ends with ; ' \\, and the bottom row starts with backtick followed by Z through / exactly as documented in the layout companion.
+   **Then** the number row is `§, 1, 2 (€), 3, 4, 5, 6, 7, 8, 9, 0, -, =`, the top row is `Q, W, E, R, T, Y, U, I, O, P, [, ]`, the home row is `A, S, D, F, G, H, J, K, L, ;, ', \`, and the bottom row is `backtick, Z, X, C, V, B, N, M, ,, ., /`; the space bar remains available as the thumb key.
 2. **Characters resolve to physical keys**
    **Given** Dutch letters, uppercase letters, punctuation, and €
-   **When** a key is highlighted or its finger guidance is requested
-   **Then** the physical base key, Shift requirement, display label, and finger are correct for the requested layout, including the ISO extra key and bottom-row backtick.
+   **When** a character is highlighted or its finger guidance is shown
+   **Then** its base key, display label, and finger match the physical position in the layout companion; uppercase letters use their lowercase key with Shift, shifted punctuation uses the listed shifted output with Shift, and € maps to 2 with AltGr.
 3. **Typing behavior stays coherent**
    **Given** Dutch exercises containing supported keys
    **When** a learner types them
-   **Then** the same physical-key lookup used by guidance accepts the intended characters without changing lesson or game scoring.
+   **Then** matching characters are accepted, other characters do not advance the exercise, and lesson and game scoring remain unchanged.
 4. **English behavior is preserved**
    **Given** the existing English keyboard and tests
    **When** the Dutch correction is applied
    **Then** English rows, colors, physical-key highlighting, and typing behavior remain unchanged.
 5. **Regression checks are automated**
-   **Given** the corrected mapping
-   **When** focused keyboard tests and the existing Flutter checks run
-   **Then** they pass for the Dutch matrix and English regression, and fail if any requested row or dependent mapping regresses.
+   **Given** the Dutch mapping and English keyboard
+   **When** `flutter test test/keyboard_data_test.dart`, `flutter test`, and `flutter analyze` run
+   **Then** the focused tests check every row, special key, finger, shifted character, modifier, and typing lookup against the layout companion, English behavior remains unchanged, and all checks pass.
 
 ## Boundaries
 
@@ -49,12 +49,11 @@ Correct the Dutch keyboard rows and all dependent mapping helpers so visual guid
 
 ## References
 
-- requirement contract — _bmad-output/specs/spec-dutch-iso-qwerty-keyboard/SPEC.md
-- layout matrix — _bmad-output/specs/spec-dutch-iso-qwerty-keyboard/layout-matrix.md
-- current mapping implementation — lib/data/keyboard_data.dart
-- related completed story — _bmad-output/initiative-dutch-vertical-slice/epic-dutch-learning-path/tickets.toml, entry 2
+- requirement — _bmad-output/specs/spec-dutch-iso-qwerty-keyboard/SPEC.md, CAP-1
+- layout — _bmad-output/specs/spec-dutch-iso-qwerty-keyboard/layout-matrix.md, Dutch ISO QWERTY Layout Matrix
 
 ## Notes
 
-- Decision: this is a follow-up to the completed keyboard story because the requested physical matrix supersedes its earlier mapping assumption (2026-09-28).
+- Decision: the requested ISO QWERTY matrix supersedes the earlier KBDNE mapping decision recorded in _bmad-output/initiative-dutch-vertical-slice/epic-dutch-learning-path/tickets.toml, entry 2 (2026-09-28).
+- Implementation touchpoint: lib/data/keyboard_data.dart.
 - Risk: shared keyboard helpers can affect Dutch lessons and games; focused mapping/widget tests must run before the full suite.
