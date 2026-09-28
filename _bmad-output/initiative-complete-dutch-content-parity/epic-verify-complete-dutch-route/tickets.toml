@@ -1,0 +1,54 @@
+[[entry]]
+id = 1
+type = "story"
+title = "Verify language, profile, and progress persistence"
+description = "Exercise repeated Dutch-English switching, profile switching, legacy lesson migration, lesson completion, scores, story statistics, and restart recovery against the completed content contracts."
+verify = "Provider and widget tests restart every persistence combination and recover isolated Dutch and English state without lost or cross-written progress, scores, or statistics."
+covers = ["DV-2", "DV-5"]
+after = ["1.7", "2.11", "3.13"]
+hitl = false
+risk = "high"
+
+[[entry]]
+id = 2
+type = "story"
+title = "Localize every remaining Dutch production route"
+description = "Inventory every production screen reachable from Dutch Home and replace remaining English visible text, dialogs, errors, tooltips, badges, progress copy, and semantics while preserving the English branch."
+verify = "Phone and desktop widget walkthroughs cover the complete route inventory with no known English strings or clipped Dutch labels and the equivalent English snapshots remain valid."
+covers = ["DV-1", "DV-3", "DV-5"]
+after = [1]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 3
+type = "story"
+title = "Add the complete Dutch no-fallback audit"
+description = "Build an automated route and semantics audit using the known English string inventory to cover all lessons, all games and states, every story tier, profiles, settings, progress, badges, dialogs, and errors."
+verify = "The audit fails when a known English label is injected and passes across every Dutch production route without dictionary false positives."
+covers = ["DV-1", "DV-3", "DV-4", "DV-5"]
+after = [2]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 4
+type = "story"
+title = "Refactor sweep for complete Dutch parity"
+description = "Resolve recorded nonfunctional cross-capability findings from the full initiative without moving missing content, localization, persistence, behavior, or tests out of their owning stories."
+verify = "Every recorded initiative cleanup finding is resolved or retained with a reason and all curriculum, game, story, persistence, localization, and English regression tests pass."
+covers = ["DV-1", "DV-2", "DV-3", "DV-5"]
+after = [3]
+hitl = false
+risk = "low"
+
+[[entry]]
+id = 5
+type = "story"
+title = "Verify the complete Dutch product"
+description = "Run the closing end-to-end route through all 16 lessons, six games and difficulties, three passage tiers, profile and language changes, restart recovery, responsive layouts, and equivalent English behavior."
+verify = "The closing integration test, no-fallback audit, exact content checks, full Flutter suite, `flutter analyze`, responsive widget checks, and connected hot restart complete without runtime errors."
+covers = ["DV-1", "DV-2", "DV-3", "DV-4", "DV-5"]
+after = [4]
+hitl = false
+risk = "high"

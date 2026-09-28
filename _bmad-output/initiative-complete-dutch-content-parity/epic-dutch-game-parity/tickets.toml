@@ -1,0 +1,120 @@
+[[entry]]
+id = 1
+type = "story"
+title = "Complete the Dutch easy word pool"
+description = "Expand the easy pool to exactly 302 unique, common Dutch words that use lowercase letters only and retain short beginner-friendly shapes."
+verify = "Focused tests assert 302 unique easy words, accepted keyboard characters, no empty entries, and the documented beginner length distribution while the English pool is unchanged."
+covers = ["DG-1", "DG-5"]
+after = ["1.7"]
+hitl = false
+risk = "low"
+
+[[entry]]
+id = 2
+type = "story"
+title = "Complete the Dutch medium word pool"
+description = "Expand the medium pool to exactly 309 unique everyday Dutch words with broader length and movement than easy while remaining suitable for ages 10-12."
+verify = "Focused tests assert 309 unique medium words, accepted keyboard characters, no empty entries, and a longer distribution than easy while prior pools remain valid."
+covers = ["DG-1", "DG-5"]
+after = [1]
+hitl = false
+risk = "low"
+
+[[entry]]
+id = 3
+type = "story"
+title = "Complete the Dutch hard word pool"
+description = "Expand the hard pool to exactly 279 unique longer or less frequent Dutch words, including valid compounds, without accents or unsupported punctuation."
+verify = "Focused tests assert 279 unique hard words, accepted keyboard characters, no empty entries, and a harder length distribution than medium while all English data remains unchanged."
+covers = ["DG-1", "DG-5"]
+after = [2]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 4
+type = "story"
+title = "Complete Defend the Temple in Dutch"
+description = "Route Defend the Temple through the Dutch word pools and localize its setup, live play, abandon dialog, feedback, statistics, game-over state, and semantics."
+verify = "Widget tests complete Dutch rounds at easy, medium, and hard with only Dutch words and labels while existing scoring, timing, high-score, and English tests pass."
+covers = ["DG-3", "DG-4", "DG-5"]
+after = [3]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 5
+type = "story"
+title = "Complete Word Bubbles in Dutch"
+description = "Route Word Bubbles through the Dutch word pools and localize every setup, play, pause, feedback, result, button, and semantic state."
+verify = "Widget tests complete Dutch rounds at all difficulties with only Dutch words and labels while bubble behavior, scores, records, and English remain unchanged."
+covers = ["DG-3", "DG-4", "DG-5"]
+after = [4]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 6
+type = "story"
+title = "Complete Speed Chase in Dutch"
+description = "Route Speed Chase through the Dutch word pools and localize its setup, race, pause, feedback, finish, statistics, controls, and semantics."
+verify = "Widget tests complete Dutch races at all difficulties with only Dutch words and labels while race timing, scoring, records, and English remain unchanged."
+covers = ["DG-3", "DG-4", "DG-5"]
+after = [5]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 7
+type = "story"
+title = "Complete Key Critters in Dutch"
+description = "Keep Key Critters' letter-and-digit pools and tricky-key bias intact while localizing every setup, play, pause, feedback, result, control, and semantic state for Dutch."
+verify = "Widget tests complete Dutch rounds at all difficulties with accepted keys and Dutch labels while tricky-key bias, timing, scoring, records, and English remain unchanged."
+covers = ["DG-3", "DG-4", "DG-5"]
+after = [6]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 8
+type = "story"
+title = "Complete Story Sprint in Dutch"
+description = "Author exactly 20 original Dutch sentences for each difficulty, route Story Sprint by language, and localize every setup, race, pause, feedback, result, and semantic state."
+verify = "Data and widget tests prove 20/20/20 valid tier-shaped Dutch sentences and complete a Dutch race at each difficulty without changing English sentences or mechanics."
+covers = ["DG-2", "DG-3", "DG-4", "DG-5"]
+after = [7]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 9
+type = "story"
+title = "Localize the complete game menu and shared dialogs"
+description = "Localize all six game names and descriptions, difficulty copy, navigation, shared quit dialogs, shared statistics labels, and accessibility semantics on the Dutch game route."
+verify = "A game-menu and shared-state widget walkthrough finds all six routes and no known English visible or semantic labels in Dutch while the English menu is unchanged."
+covers = ["DG-4", "DG-5"]
+after = [8]
+hitl = false
+risk = "low"
+
+[[entry]]
+id = 10
+type = "story"
+title = "Refactor sweep for Dutch games"
+description = "Resolve recorded nonfunctional duplication and maintainability findings from entries 1-9 without moving missing localization, content, behavior, or tests out of their owning stories."
+verify = "Every recorded game cleanup finding is resolved or retained with a reason and all focused Dutch and English game tests still pass."
+covers = ["DG-4", "DG-5"]
+after = [9]
+hitl = false
+risk = "low"
+
+[[entry]]
+id = 11
+type = "story"
+title = "Verify all six Dutch games"
+description = "Add the closing integration route that opens every game in Dutch, exercises each difficulty and major state, records scores, restarts, and checks the equivalent English routes."
+verify = "The all-games integration test, exact content-pool tests, full Flutter suite, and `flutter analyze` pass with Dutch and English scores and content isolated as specified."
+covers = ["DG-1", "DG-2", "DG-3", "DG-4", "DG-5"]
+after = [10]
+hitl = false
+risk = "medium"

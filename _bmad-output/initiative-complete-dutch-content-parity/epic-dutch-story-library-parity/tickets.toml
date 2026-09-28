@@ -1,0 +1,142 @@
+[[entry]]
+id = 1
+type = "story"
+title = "Establish Dutch story libraries and selection contract"
+description = "Split Dutch passage data into easy, medium, and hard files behind `StoryContent`, retain `De jas in de boom` as easy, and route Dutch selection by requested difficulty without changing the English facade."
+verify = "Focused tests select the retained story only from Dutch easy, return no cross-tier or English fallback, and find unchanged English list counts and random selection."
+covers = ["DS-1", "DS-4", "DS-5"]
+after = ["2.11"]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 2
+type = "story"
+title = "Author Dutch easy stories 2 through 6"
+description = "Author five original easy passages beside the retained story with short common sentences, distinct child-friendly topics, exact easy metadata, and Typer Kids provenance."
+verify = "Focused checks find six valid Dutch easy passages total, unique titles and text, accepted characters, required provenance, and no medium or hard selection leakage."
+covers = ["DS-1", "DS-2", "DS-3"]
+after = [1]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 3
+type = "story"
+title = "Author Dutch easy stories 7 through 12"
+description = "Add six original easy passages with new topics, short common sentences, exact easy metadata, and Typer Kids provenance."
+verify = "Focused checks find 12 valid Dutch easy passages total with unique titles and text, accepted characters, required provenance, and easy-tier sentence shape."
+covers = ["DS-1", "DS-2", "DS-3"]
+after = [2]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 4
+type = "story"
+title = "Author Dutch easy stories 13 through 18"
+description = "Add the final six original easy passages with new topics, short common sentences, exact easy metadata, and Typer Kids provenance."
+verify = "Focused checks find exactly 18 valid Dutch easy passages with unique titles and text, accepted characters, required provenance, and easy-tier sentence shape."
+covers = ["DS-1", "DS-2", "DS-3"]
+after = [3]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 5
+type = "story"
+title = "Author Dutch medium stories 1 through 6"
+description = "Author six original medium passages with broader Dutch vocabulary, varied sentence lengths, supported mixed punctuation, distinct topics, and Typer Kids provenance."
+verify = "Focused checks find six valid Dutch medium passages with unique titles and text, accepted characters, required provenance, and no easy or hard selection leakage."
+covers = ["DS-1", "DS-2", "DS-3"]
+after = [1]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 6
+type = "story"
+title = "Author Dutch medium stories 7 through 12"
+description = "Add six original medium passages with new topics, broader vocabulary, varied sentence lengths, supported mixed punctuation, and Typer Kids provenance."
+verify = "Focused checks find 12 valid Dutch medium passages total with unique titles and text, accepted characters, required provenance, and medium-tier shape."
+covers = ["DS-1", "DS-2", "DS-3"]
+after = [5]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 7
+type = "story"
+title = "Author Dutch medium stories 13 through 18"
+description = "Add the final six original medium passages with new topics, broader vocabulary, varied sentence lengths, supported mixed punctuation, and Typer Kids provenance."
+verify = "Focused checks find exactly 18 valid Dutch medium passages with unique titles and text, accepted characters, required provenance, and medium-tier shape."
+covers = ["DS-1", "DS-2", "DS-3"]
+after = [6]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 8
+type = "story"
+title = "Author Dutch hard stories 1 through 6"
+description = "Author six original hard passages with longer Dutch structures, richer vocabulary, supported punctuation, distinct topics, and Typer Kids provenance."
+verify = "Focused checks find six valid Dutch hard passages with unique titles and text, accepted characters, required provenance, and no easy or medium selection leakage."
+covers = ["DS-1", "DS-2", "DS-3"]
+after = [1]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 9
+type = "story"
+title = "Author Dutch hard stories 7 through 12"
+description = "Add six original hard passages with new topics, longer structures, richer vocabulary, supported punctuation, and Typer Kids provenance."
+verify = "Focused checks find 12 valid Dutch hard passages total with unique titles and text, accepted characters, required provenance, and hard-tier shape."
+covers = ["DS-1", "DS-2", "DS-3"]
+after = [8]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 10
+type = "story"
+title = "Author Dutch hard stories 13 through 18"
+description = "Add the final six original hard passages with new topics, longer structures, richer vocabulary, supported punctuation, and Typer Kids provenance."
+verify = "Focused checks find exactly 18 valid Dutch hard passages with unique titles and text, accepted characters, required provenance, and hard-tier shape."
+covers = ["DS-1", "DS-2", "DS-3"]
+after = [9]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 11
+type = "story"
+title = "Complete Dutch story practice and typing-test UI"
+description = "Localize difficulty selection, passage title and source, controls, progress, WPM, accuracy, completion, results, navigation, tooltips, and semantics in Free Practice and Typing Test."
+verify = "Widget tests complete one passage from every Dutch tier in both surfaces with Dutch UI and correct statistics while English presentation and calculations remain unchanged."
+covers = ["DS-4", "DS-5"]
+after = [4, 7, 10]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 12
+type = "story"
+title = "Refactor sweep for Dutch stories"
+description = "Resolve recorded nonfunctional data and maintainability findings from entries 1-11 without moving missing prose, localization, behavior, provenance, or tests out of their owning stories."
+verify = "Every recorded story cleanup finding is resolved or retained with a reason and all focused Dutch and English passage tests still pass."
+covers = ["DS-3", "DS-4", "DS-5"]
+after = [11]
+hitl = false
+risk = "low"
+
+[[entry]]
+id = 13
+type = "story"
+title = "Verify the complete Dutch story library"
+description = "Add the closing integration route that samples every Dutch passage, completes each difficulty in Free Practice and Typing Test, restarts, and checks equivalent English selection and statistics."
+verify = "Exact 18/18/18 data checks, Dutch story integration, the full Flutter suite, and `flutter analyze` pass with no cross-language or cross-difficulty fallback."
+covers = ["DS-1", "DS-2", "DS-3", "DS-4", "DS-5"]
+after = [12]
+hitl = false
+risk = "medium"

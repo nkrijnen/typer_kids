@@ -1,0 +1,30 @@
+[[epic]]
+id = 1
+slug = "epic-complete-dutch-curriculum"
+title = "Complete the Dutch letter curriculum"
+covers = ["DP-1", "DP-2", "DP-3", "DP-8", "DP-9"]
+
+[[epic]]
+id = 2
+slug = "epic-dutch-game-parity"
+title = "Give every game complete Dutch content"
+covers = ["DP-4", "DP-5", "DP-7", "DP-8", "DP-9"]
+after = [{ epic = 1, needs = "the complete taught-letter and keyboard-valid content contract" }]
+
+[[epic]]
+id = 3
+slug = "epic-dutch-story-library-parity"
+title = "Build the complete Dutch story library"
+covers = ["DP-6", "DP-7", "DP-8", "DP-9"]
+after = [{ epic = 2, needs = "the settled Dutch difficulty and language-routing contract" }]
+
+[[epic]]
+id = 4
+slug = "epic-verify-complete-dutch-route"
+title = "Verify the complete Dutch product route"
+covers = ["DP-3", "DP-4", "DP-6", "DP-7", "DP-8", "DP-10"]
+after = [
+  { epic = 1, needs = "the complete migrated curriculum" },
+  { epic = 2, needs = "all six Dutch games" },
+  { epic = 3, needs = "all 54 Dutch passages" },
+]

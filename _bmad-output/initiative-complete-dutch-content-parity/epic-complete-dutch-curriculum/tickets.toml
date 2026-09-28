@@ -1,0 +1,76 @@
+[[entry]]
+id = 1
+type = "story"
+title = "Establish production lesson IDs and migrate milestone progress"
+description = "Add the Dutch Letters category, implement `nl-letter-01` through `nl-letter-04` from the approved outline, and idempotently copy the three legacy completion records to their equivalent production stages without weakening newer results."
+verify = "Focused tests prove stages 1-4 accept only their cumulative keys and every legacy-completion combination migrates to stages 1-5 exactly once while English and existing destination progress remain unchanged."
+covers = ["DC-1", "DC-2", "DC-3", "DC-4", "DC-6"]
+after = []
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 2
+type = "story"
+title = "Author Dutch curriculum stages 5 through 8"
+description = "Implement the G/H, E/I, R/U, and T/N lessons with explicit reach-and-return guidance, cumulative drills, natural Dutch words from the allowed keys, and outline checkpoints."
+verify = "Focused curriculum tests match stages 5-8 to the outline and reject any exercise character outside the cumulative taught set."
+covers = ["DC-1", "DC-2", "DC-3"]
+after = [1]
+hitl = false
+risk = "low"
+
+[[entry]]
+id = 3
+type = "story"
+title = "Author Dutch curriculum stages 9 through 12"
+description = "Implement the O/W, M/C, V/B, and P lessons with their ring, lower-row, same-finger, and outer-finger guidance plus cumulative Dutch practice."
+verify = "Focused curriculum tests match stages 9-12 to the outline, introduce each focus key once, and keep every exercise within the cumulative key set."
+covers = ["DC-1", "DC-2", "DC-3"]
+after = [2]
+hitl = false
+risk = "low"
+
+[[entry]]
+id = 4
+type = "story"
+title = "Author Dutch curriculum stages 13 through 16"
+description = "Implement the Z, X, Q, and Y lessons with rare-letter guidance, purposeful drills, familiar Dutch words, and a final all-letter retrieval checkpoint."
+verify = "Focused tests prove stages 13-16 match the outline, all 26 letters are introduced exactly once across the course, and the final lesson exercises the complete lowercase alphabet without unsupported characters."
+covers = ["DC-1", "DC-2", "DC-3", "DC-6"]
+after = [3]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 5
+type = "story"
+title = "Integrate Dutch lesson navigation and progress"
+description = "Present the 16 lessons under a localized Letters category and make next-lesson, recommended-lesson, unlock, completion, profile, language-switch, and restart behavior follow production stage order."
+verify = "Widget and provider tests complete stages 1-16 in order, show localized lesson UI, restore the recommendation after restart, and find unchanged English ordering and progress."
+covers = ["DC-4", "DC-5", "DC-6"]
+after = [4]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 6
+type = "story"
+title = "Refactor sweep for the Dutch curriculum"
+description = "Resolve nonfunctional maintainability findings recorded by entries 1-5 without moving missing content, behavior, migration, or tests out of their owning stories."
+verify = "Every recorded curriculum cleanup finding is resolved or retained with a reason and all focused Dutch and English curriculum tests still pass."
+covers = ["DC-3", "DC-6"]
+after = [5]
+hitl = false
+risk = "low"
+
+[[entry]]
+id = 7
+type = "story"
+title = "Verify the complete Dutch letter course"
+description = "Add the closing course test that migrates a milestone learner, completes the remaining stages through Y, restarts, switches profiles and languages, and returns to the correct Dutch recommendation."
+verify = "The integrated curriculum test, full Flutter suite, and `flutter analyze` pass with all Dutch completion intact and all pre-existing English progress unchanged."
+covers = ["DC-1", "DC-2", "DC-3", "DC-4", "DC-5", "DC-6"]
+after = [6]
+hitl = false
+risk = "medium"
