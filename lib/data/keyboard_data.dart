@@ -20,6 +20,61 @@ class KeyboardData {
     [' '],
   ];
 
+  // Netherlands QWERTY (KBDNE): https://kbdlayout.info/KBDNE/download/klc
+  static const List<List<String>> dutchRows = [
+    ['@', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '/', '°'],
+    ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '¨', '*', '<'],
+    ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', '+', '´'],
+    [']', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '-'],
+    [' '],
+  ];
+
+  static const Map<String, String> _dutchShifted = {
+    '!': '1', '"': '2', '#': '3', r'$': '4', '%': '5',
+    '&': '6', '_': '7', '(': '8', ')': '9', "'": '0',
+    '?': '/', '~': '°', '^': '¨', '|': '*', '>': '<',
+    '±': '+', '`': '´', '[': ']', ';': ',', ':': '.', '=': '-',
+  };
+
+  static const Map<String, String> _dutchAccents = {
+    'á': '´', 'é': '´', 'í': '´', 'ó': '´', 'ú': '´', 'ý': '´',
+    'à': '´', 'è': '´', 'ì': '´', 'ò': '´', 'ù': '´',
+    'ä': '¨', 'ë': '¨', 'ï': '¨', 'ö': '¨', 'ü': '¨', 'ÿ': '¨',
+    'â': '¨', 'ê': '¨', 'î': '¨', 'ô': '¨', 'û': '¨',
+  };
+
+  static const _dutchShiftedAccents = {
+    'à', 'è', 'ì', 'ò', 'ù',
+    'â', 'ê', 'î', 'ô', 'û',
+  };
+
+  static const Map<String, String> _dutchPunctuationFingers = {
+    '@': 'left-pinky', '/': 'right-pinky', '°': 'right-pinky',
+    '¨': 'right-pinky', '*': 'right-pinky', '<': 'right-pinky',
+    '+': 'right-pinky', '´': 'right-pinky', ']': 'left-pinky',
+    ',': 'right-middle', '.': 'right-ring', '-': 'right-pinky',
+  };
+
+  static String? dutchBaseKey(String character) {
+    final key = character.toLowerCase();
+    if (_dutchAccents.containsKey(key)) return _dutchAccents[key];
+    if (_dutchShifted.containsKey(character)) return _dutchShifted[character];
+    if (dutchRows.any((row) => row.contains(key))) return key;
+    return null;
+  }
+
+  static String? dutchFinger(String character) {
+    final base = dutchBaseKey(character);
+    if (base == null) return null;
+    return _dutchPunctuationFingers[base] ?? keyToFinger[base];
+  }
+
+  static bool dutchNeedsShift(String character) =>
+      _dutchShifted.containsKey(character) ||
+      _dutchShiftedAccents.contains(character.toLowerCase()) ||
+      (character != character.toLowerCase() &&
+          dutchBaseKey(character) != null);
+
   /// Which finger types each key (finger name)
   static const Map<String, String> keyToFinger = {
     // Left pinky
@@ -92,6 +147,11 @@ class KeyboardData {
     final finger = keyToFinger[key.toLowerCase()];
     if (finger == null) return Colors.grey.shade300;
     return fingerColor(finger);
+  }
+
+  static Color dutchColorForKey(String key) {
+    final finger = dutchFinger(key);
+    return finger == null ? Colors.grey.shade300 : fingerColor(finger);
   }
 
   /// Get the finger name for a specific key (kid-friendly)

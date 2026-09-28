@@ -3,9 +3,10 @@ title: 'Complete Dutch vertical slice'
 type: 'feature'
 ticket: ''
 created: '2026-09-28'
-status: 'ready-for-dev'
+status: 'in-progress'
 route: 'full'
 route_source: 'auto'
+baseline_revision: '32e3ab801915d7252cf578d1bfb7413376308770'
 review: ''
 review_source: ''
 lenses_ran: []
@@ -50,7 +51,7 @@ context: []
 ## Tasks & Acceptance
 
 **Execution:**
-- [ ] 1.2: keyboard data and guidance widgets -- add referenced Netherlands QWERTY mappings for letters, punctuation, shift and introduced accents, with focused mapping/widget tests; commit when green.
+- [x] 1.2: keyboard data and guidance widgets -- add referenced Netherlands QWERTY mappings for letters, punctuation, shift and introduced accents, with focused mapping/widget tests; commit when green.
 - [ ] 1.3: Dutch curriculum, lesson progression and tests -- replace the tracer with two introductory and one themed lesson mapped to the approved outline; validate keys, Dutch text, ordering and isolated unlocks; commit when green.
 - [ ] 1.4: word lists, Falling Words views and tests -- supply age-appropriate Dutch words at supported difficulties and translate reachable menu, score and end states; commit when green.
 - [ ] 1.5: story content, Free Practice views, provenance and tests -- finish one original Dutch story with difficulty metadata, progress, WPM and accuracy; commit when green.
@@ -65,6 +66,8 @@ context: []
 - Given saved English progress, when the child switches profiles and languages and restarts, then both languages' progress and the selected locale persist without corruption.
 
 ## Implementation Notes
+
+- 1.2: KBDNE mapping and Dutch-only guidance use the existing English keyboard as a separate unchanged path; focused keyboard/widget tests and the full Flutter suite pass.
 
 ## Plan Change Log
 

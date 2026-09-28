@@ -401,11 +401,12 @@ class _TypingScreenState extends State<TypingScreen> {
 
                 // The keyboard is ~14.5 keys wide (13 keys + padding + offsets)
                 // Calculate key size to fill available width with some margin
-                final keyboardWidthKeys = 15.0; // effective key-width-units
+                final dutchKeyboard = context.read<LanguageProvider>().isDutch;
+                final keyboardWidthKeys = dutchKeyboard ? 17.0 : 15.0;
                 final horizontalPad = maxW > 800 ? 32.0 : 16.0;
                 final availableWidth = maxW - horizontalPad * 2;
                 final keySizeFromWidth = (availableWidth / keyboardWidthKeys)
-                    .clamp(28.0, 64.0);
+                    .clamp(dutchKeyboard ? 20.0 : 28.0, 64.0);
 
                 // Also constrain by height: keyboard ~6 keys tall, plus stats + display + guides
                 final keySizeFromHeight = ((maxH * 0.38) / 6).clamp(28.0, 64.0);

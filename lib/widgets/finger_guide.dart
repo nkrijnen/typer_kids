@@ -17,10 +17,13 @@ class FingerGuide extends StatelessWidget {
   Widget build(BuildContext context) {
     if (currentKey == null) return const SizedBox.shrink();
 
-    final finger = KeyboardData.keyToFinger[currentKey!.toLowerCase()];
+    final isDutch = context.watch<LanguageProvider>().isDutch;
+    final finger = isDutch
+      ? KeyboardData.dutchFinger(currentKey!)
+      : KeyboardData.keyToFinger[currentKey!.toLowerCase()];
     if (finger == null) return const SizedBox.shrink();
 
-    final fingerName = context.watch<LanguageProvider>().isDutch
+    final fingerName = isDutch
         ? switch (finger) {
             'left-pinky' => 'Linkerpink 🤙',
             'left-ring' => 'Linkerringvinger 💍',
@@ -68,7 +71,9 @@ class FingerGuide extends StatelessWidget {
             border: Border.all(color: fingerColor.withValues(alpha: 0.5)),
           ),
           child: Text(
-            fingerName,
+            isDutch && KeyboardData.dutchNeedsShift(currentKey!)
+              ? '$fingerName + Shift ${isLeft ? 'rechts' : 'links'}'
+              : fingerName,
             style: GoogleFonts.fredoka(
               fontSize: 14,
               fontWeight: FontWeight.w500,
