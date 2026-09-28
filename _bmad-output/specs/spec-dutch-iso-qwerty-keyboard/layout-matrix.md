@@ -16,7 +16,7 @@ left-to-right order as the base layout.
 
 | Row | Shifted keys |
 | --- | --- |
-| Number | ±, !, ", #, $, %, ^, &, *, (, ), _, + |
+| Number | ±, !, @, #, $, %, ^, &, *, (, ), _, + |
 | Top letter | Q, W, E, R, T, Y, U, I, O, P, {, } |
 | Home | A, S, D, F, G, H, J, K, L, :, ", \| |
 | Bottom | ~, Z, X, C, V, B, N, M, <, >, ? |
@@ -30,6 +30,5 @@ left-to-right order as the base layout.
 ## Mapping expectations
 
 - Uppercase letters resolve to their lowercase physical keys and require Shift.
-- Shifted punctuation and `€` resolve to their documented physical base keys and require Shift where applicable.
 - Finger guidance follows the physical key position, including the ISO extra key and the bottom-row backtick.
 - The space bar remains available as the thumb key.
