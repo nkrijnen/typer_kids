@@ -30,7 +30,7 @@ import 'package:typer_kids/data/lesson_curriculum.dart';
 import 'package:typer_kids/models/lesson.dart';
 
 void main() {
-  testWidgets('Dutch keyboard and finger guide show dead key and Shift', (
+  testWidgets('Unlisted Dutch accents do not map to a physical key', (
     tester,
   ) async {
     GoogleFonts.config.allowRuntimeFetching = false;
@@ -54,39 +54,48 @@ void main() {
       ),
     );
     await tester.pump();
-    expect(find.text('´'), findsOneWidget);
+    expect(find.text('´'), findsNothing);
     expect(find.text('⇧'), findsNWidgets(2));
     expect(find.text('SPATIE'), findsOneWidget);
-    final semantics = tester.ensureSemantics();
-    expect(
-      find.bySemanticsLabel('Dode toets: ´ voor É; daarna E'),
-      findsOneWidget,
-    );
-    expect(find.bySemanticsLabel('Daarna: E'), findsOneWidget);
-    expect(find.textContaining('Shift rechts + E'), findsOneWidget);
-    expect(
-      tester
-          .getSemantics(find.bySemanticsLabel('Rechter Shift'))
-          .getSemanticsData()
-          .flagsCollection
-          .isSelected
-          .toBoolOrNull(),
-      isTrue,
-    );
-    expect(
-      tester
-          .getSemantics(find.bySemanticsLabel('Linker Shift'))
-          .getSemanticsData()
-          .flagsCollection
-          .isSelected
-          .toBoolOrNull(),
-      isFalse,
-    );
     expect(tester.takeException(), isNull);
     await language.select('en');
     await tester.pump();
     expect(find.text('´'), findsNothing);
     expect(find.text('SPACE'), findsOneWidget);
+    selected.LessonCurriculum.isDutch = false;
+  });
+
+  testWidgets('Dutch euro guidance shows the physical 2 key and AltGr', (
+    tester,
+  ) async {
+    GoogleFonts.config.allowRuntimeFetching = false;
+    SharedPreferences.setMockInitialValues({});
+    final language = LanguageProvider();
+    await language.init();
+    await language.select('nl');
+    final semantics = tester.ensureSemantics();
+    await tester.pumpWidget(
+      ChangeNotifierProvider.value(
+        value: language,
+        child: const MaterialApp(
+          home: Scaffold(
+            body: Column(
+              children: [
+                KeyboardWidget(activeKey: '€', keySize: 26),
+                FingerGuide(currentKey: '€'),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+    expect(find.text('2 €'), findsOneWidget);
+    expect(
+      find.bySemanticsLabel('Volgende toets: 2 voor € met AltGr'),
+      findsOneWidget,
+    );
+    expect(find.textContaining('AltGr'), findsOneWidget);
+    expect(tester.takeException(), isNull);
     semantics.dispose();
     selected.LessonCurriculum.isDutch = false;
   });
@@ -104,12 +113,12 @@ void main() {
       ChangeNotifierProvider.value(
         value: language,
         child: const MaterialApp(
-          home: Scaffold(body: KeyboardWidget(activeKey: ';', keySize: 26)),
+          home: Scaffold(body: KeyboardWidget(activeKey: ':', keySize: 26)),
         ),
       ),
     );
     expect(
-      find.bySemanticsLabel('Volgende toets: , voor ; met Shift'),
+      find.bySemanticsLabel('Volgende toets: ; voor : met Shift'),
       findsOneWidget,
     );
     expect(
@@ -219,30 +228,19 @@ void main() {
     selected.LessonCurriculum.isDutch = false;
   });
 
-  test('Dutch KBDNE mappings differ from English and reject unknown keys', () {
+  test('Dutch ISO mappings differ from English and reject unknown keys', () {
     expect(KeyboardData.dutchBaseKey('!'), '1');
     expect(KeyboardData.dutchBaseKey('?'), '/');
-    expect(KeyboardData.dutchBaseKey('"'), '2');
-    expect(KeyboardData.dutchBaseKey("'"), '0');
-    expect(KeyboardData.dutchBaseKey(';'), ',');
-    expect(KeyboardData.dutchBaseKey(':'), '.');
-    expect(KeyboardData.dutchBaseKey('='), '-');
-    expect(KeyboardData.dutchBaseKey('['), ']');
-    expect(KeyboardData.dutchBaseKey('é'), '´');
-    expect(KeyboardData.dutchBaseKey('ï'), '¨');
-    expect(KeyboardData.dutchBaseKey('è'), '´');
-    expect(KeyboardData.dutchBaseKey('ê'), '¨');
-    expect(KeyboardData.dutchFinger('é'), 'right-pinky');
-    expect(KeyboardData.dutchBaseKey('€'), isNull);
-    expect(KeyboardData.dutchNeedsShift('?'), true);
-    expect(KeyboardData.dutchNeedsShift(';'), true);
-    expect(KeyboardData.dutchNeedsShift(':'), true);
-    expect(KeyboardData.dutchNeedsShift('è'), true);
-    expect(KeyboardData.dutchNeedsShift('ê'), true);
-    expect(KeyboardData.dutchNeedsShift('ï'), false);
+    expect(KeyboardData.dutchBaseKey('"'), "'");
+    expect(KeyboardData.dutchBaseKey(':'), ';');
+    expect(KeyboardData.dutchBaseKey('|'), '\\');
+    expect(KeyboardData.dutchBaseKey('~'), '`');
+    expect(KeyboardData.dutchBaseKey('é'), isNull);
+    expect(KeyboardData.dutchBaseKey('€'), '2');
+    expect(KeyboardData.dutchNeedsAltGr('€'), true);
     expect(KeyboardData.baseKey('?'), '/');
     expect(KeyboardData.keyboardRows[0].first, '`');
-    expect(KeyboardData.dutchRows[0].first, '@');
+    expect(KeyboardData.dutchRows[0].first, '§');
   });
 
   testWidgets('Every bundled font face is present and readable offline', (

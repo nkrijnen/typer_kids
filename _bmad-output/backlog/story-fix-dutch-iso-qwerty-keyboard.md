@@ -23,11 +23,11 @@ Correct the Dutch keyboard rows and all dependent mapping helpers so visual guid
 1. **Rows match the physical layout**
    **Given** Dutch keyboard guidance
    **When** the rows are rendered or inspected
-   **Then** the number row is `§, 1, 2 (€), 3, 4, 5, 6, 7, 8, 9, 0, -, =`, the top row is `Q, W, E, R, T, Y, U, I, O, P, [, ]`, the home row is `A, S, D, F, G, H, J, K, L, ;, ', \`, and the bottom row is `backtick, Z, X, C, V, B, N, M, ,, ., /`; the space bar remains available as the thumb key.
+   **Then** every row matches the base-key rows in the canonical layout matrix; the space bar remains available as the thumb key.
 2. **Characters resolve to physical keys**
-   **Given** Dutch letters, uppercase letters, punctuation, and €
+   **Given** characters listed in the canonical layout matrix
    **When** a character is highlighted or its finger guidance is shown
-   **Then** its base key, display label, and finger match the physical position in the layout companion; uppercase letters use their lowercase key with Shift, shifted punctuation uses the listed shifted output with Shift, and € maps to 2 with AltGr.
+   **Then** its base key, display label, and finger match the physical position in the matrix; uppercase letters use their lowercase key with Shift, shifted punctuation uses the listed shifted output with Shift, and € maps to 2 with AltGr. Characters not listed in the matrix have no Dutch physical-key mapping.
 3. **Typing behavior stays coherent**
    **Given** Dutch exercises containing supported keys
    **When** a learner types them
@@ -45,12 +45,12 @@ Correct the Dutch keyboard rows and all dependent mapping helpers so visual guid
 
 - Must not change: English keyboard behavior, lesson/game mechanics, scoring, or Dutch curriculum content.
 - Do not redesign the keyboard widget, add AZERTY, or infer mappings from the previous Netherlands layout.
-- No physical-keyboard review is required; the requested matrix is the acceptance reference.
+- The matrix is the acceptance reference and was physically checked against an actual Dutch Mac keyboard.
 
 ## References
 
 - requirement — _bmad-output/specs/spec-dutch-iso-qwerty-keyboard/SPEC.md, CAP-1
-- layout — _bmad-output/specs/spec-dutch-iso-qwerty-keyboard/layout-matrix.md, Dutch ISO QWERTY Layout Matrix
+- canonical layout — _bmad-output/specs/spec-dutch-iso-qwerty-keyboard/layout-matrix.md, Dutch ISO QWERTY Layout Matrix
 
 ## Notes
 

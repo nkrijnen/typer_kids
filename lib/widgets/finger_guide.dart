@@ -39,22 +39,10 @@ class FingerGuide extends StatelessWidget {
     final fingerColor = KeyboardData.fingerColor(finger);
     final isLeft = finger.startsWith('left');
     final isThumb = finger == 'thumb';
-    final isAccent = isDutch && KeyboardData.dutchIsAccent(currentKey!);
-    final deadShift =
-        isAccent && KeyboardData.dutchDeadKeyNeedsShift(currentKey!);
-    final letterFinger = isAccent
-        ? KeyboardData.keyToFinger[KeyboardData.dutchAccentLetter(
-            currentKey!,
-          )?.toLowerCase()]
-        : null;
-    final letterShift = isAccent && currentKey != currentKey!.toLowerCase();
-    final label = isAccent
-        ? '$fingerName: ${deadShift ? 'Shift ${isLeft ? 'rechts' : 'links'} + ' : ''}'
-              '${KeyboardData.dutchBaseKey(currentKey!)} → '
-              '${letterShift ? 'Shift ${letterFinger?.startsWith('left') == true ? 'rechts' : 'links'} + ' : ''}'
-              '${KeyboardData.dutchAccentLetter(currentKey!)}'
-        : isDutch && KeyboardData.dutchNeedsShift(currentKey!)
+    final label = isDutch && KeyboardData.dutchNeedsShift(currentKey!)
         ? '$fingerName + Shift ${isLeft ? 'rechts' : 'links'}'
+        : isDutch && KeyboardData.dutchNeedsAltGr(currentKey!)
+        ? '$fingerName + AltGr'
         : fingerName;
 
     return Column(

@@ -19,7 +19,7 @@ Dutch keyboard guidance currently does not match the requested physical ISO QWER
 
 ## Constraints
 
-- The layout is positional: the first number-row key is §, the 2 key includes €, the home row includes backslash, and the bottom row begins with backtick.
+- The companion `layout-matrix.md` is the canonical complete contract for physical keys and base, Shift, and AltGr outputs; characters absent from it have no mapping.
 - Preserve English keyboard behavior and existing lesson and game mechanics; change only Dutch mapping, display, finger guidance, and the tests needed to prove them.
 
 ## Non-goals
