@@ -21,6 +21,16 @@ class ProgressProvider extends ChangeNotifier {
   String _profileId = '';
   String _language = 'en';
 
+  /// Legacy vertical-slice Dutch lesson ids mapped to the production lesson
+  /// stage(s) that replaced them. `nl-letter-05` isn't a lesson yet (that's a
+  /// later story), but progress is still migrated onto its key so it's
+  /// picked up once the lesson exists.
+  static const _legacyDutchLessonMigrations = <String, List<String>>{
+    'nl-home-letters': ['nl-letter-01', 'nl-letter-02'],
+    'nl-home-words': ['nl-letter-03', 'nl-letter-04'],
+    'nl-home-house': ['nl-letter-05'],
+  };
+
   bool get isLoaded => _isLoaded;
 
   /// Key prefix for the current profile
@@ -73,6 +83,7 @@ class ProgressProvider extends ChangeNotifier {
     _progressMap.clear();
     _lastLessonId = null;
     _loadProgress();
+    await _migrateLegacyDutchLessonIds();
     _lastLessonId = _prefs?.getString('${_lessonPrefix}last_lesson_id');
     _isLoaded = true;
     notifyListeners();
@@ -84,6 +95,7 @@ class ProgressProvider extends ChangeNotifier {
     _progressMap.clear();
     _lastLessonId = null;
     _loadProgress();
+    await _migrateLegacyDutchLessonIds();
     _lastLessonId = _prefs?.getString('${_lessonPrefix}last_lesson_id');
     notifyListeners();
   }
@@ -93,6 +105,7 @@ class ProgressProvider extends ChangeNotifier {
     _progressMap.clear();
     _lastLessonId = null;
     _loadProgress();
+    await _migrateLegacyDutchLessonIds();
     _lastLessonId = _prefs?.getString('${_lessonPrefix}last_lesson_id');
     notifyListeners();
   }
@@ -112,6 +125,36 @@ class ProgressProvider extends ChangeNotifier {
         } catch (_) {
           // Ignore corrupted data
         }
+      }
+    }
+  }
+
+  /// Copies each legacy vertical-slice lesson's completion onto its
+  /// production replacement stage(s), unless the destination already has an
+  /// equal or better `bestStarRating`. Never deletes the legacy record, so
+  /// running this on every init/switch is idempotent and non-destructive.
+  Future<void> _migrateLegacyDutchLessonIds() async {
+    if (_language != 'nl') return;
+    for (final entry in _legacyDutchLessonMigrations.entries) {
+      final legacy = _progressMap[entry.key];
+      if (legacy == null) continue;
+      for (final destinationId in entry.value) {
+        final destination = _progressMap[destinationId];
+        if (destination != null &&
+            destination.bestStarRating >= legacy.bestStarRating) {
+          continue;
+        }
+        final migrated = LessonProgress(
+          lessonId: destinationId,
+          completed: legacy.completed,
+          bestStarRating: legacy.bestStarRating,
+          bestAccuracy: legacy.bestAccuracy,
+          bestWpm: legacy.bestWpm,
+          attempts: legacy.attempts,
+          history: legacy.history,
+        );
+        _progressMap[destinationId] = migrated;
+        await _saveProgress(migrated);
       }
     }
   }

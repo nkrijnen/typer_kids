@@ -206,7 +206,7 @@ void main() {
     await tester.pumpAndSettle();
     GoRouter.of(
       tester.element(find.text('Typer Kids')),
-    ).go('/lesson/nl-home-house');
+    ).go('/lesson/nl-letter-03');
     await tester.pumpAndSettle();
     expect(find.text('Begin!'), findsNothing);
     final stats = TypingStats(
@@ -221,7 +221,7 @@ void main() {
     final router = GoRouter.of(tester.element(find.text('Typer Kids')));
     router.go('/');
     await tester.pumpAndSettle();
-    router.go('/lesson/nl-home-house');
+    router.go('/lesson/nl-letter-03');
     await tester.pumpAndSettle();
     expect(find.text('Begin!'), findsOneWidget);
     await tester.pumpWidget(const MaterialApp(home: SizedBox()));
@@ -519,7 +519,7 @@ void main() {
       }
       await tester.pump(const Duration(milliseconds: 400));
       await tester.pump(const Duration(seconds: 4));
-      expect(progress.getProgress('nl-home-letters').completed, true);
+      expect(progress.getProgress('nl-letter-01').completed, true);
       expect(find.text('Goed gedaan!'), findsOneWidget);
       for (final lesson in DutchCurriculum.allLessons.skip(1)) {
         expect(find.textContaining('Volgende:'), findsOneWidget);
@@ -552,8 +552,8 @@ void main() {
       await restarted.init();
       final loaded = ProgressProvider();
       await loaded.init(profileId: child.id, language: restarted.language);
-      expect(loaded.getProgress('nl-home-letters').completed, true);
-      expect(loaded.completedLessons, 3);
+      expect(loaded.getProgress('nl-letter-01').completed, true);
+      expect(loaded.completedLessons, 4);
       await tester.pumpWidget(const MaterialApp(home: SizedBox()));
       selected.LessonCurriculum.isDutch = false;
     },
@@ -602,7 +602,7 @@ void main() {
     );
     expect(tester.takeException(), isNull);
     expect(find.text('Leer typen met plezier! 🎮'), findsOneWidget);
-    expect(find.text('1/3'), findsOneWidget);
+    expect(find.text('1/4'), findsOneWidget);
     expect(find.text('🐵'), findsOneWidget);
     expect(find.text('Mijn badges'), findsOneWidget);
     await tester.pumpWidget(const MaterialApp(home: SizedBox()));

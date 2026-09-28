@@ -94,12 +94,19 @@ void main() {
 
     test('milestone lessons stage the approved home-row keys and words', () {
       final lessons = DutchCurriculum.allLessons;
-      expect(lessons, hasLength(3));
-      expect(lessons.map((lesson) => lesson.orderIndex), [0, 1, 2]);
+      expect(lessons, hasLength(4));
+      expect(lessons.map((lesson) => lesson.id), [
+        'nl-letter-01',
+        'nl-letter-02',
+        'nl-letter-03',
+        'nl-letter-04',
+      ]);
+      expect(lessons.map((lesson) => lesson.orderIndex), [0, 1, 2, 3]);
       expect(lessons.map((lesson) => lesson.focusKeys), [
+        ['f', 'j'],
         ['f', 'j', 'd', 'k'],
-        ['s', 'l', 'a'],
-        ['g', 'h'],
+        ['f', 'j', 'd', 'k', 's', 'l'],
+        ['f', 'j', 'd', 'k', 's', 'l', 'a'],
       ]);
       final taught = <String>{};
       for (final lesson in lessons) {
@@ -113,9 +120,9 @@ void main() {
         }
       }
       expect(lessons[0].exercises, contains('ff jj fj jf'));
-      expect(lessons[1].exercises, contains('jas als das kaas'));
-      expect(lessons[2].title, 'Dieren');
-      expect(lessons[2].exercises, contains('haas das slak'));
+      expect(lessons[1].exercises, contains('fd jk df kj'));
+      expect(lessons[2].exercises, contains('sdf jkl dsf lkj'));
+      expect(lessons[3].exercises, contains('jas als das kaas'));
     });
 
     test('aggregates actionable errors for malformed stage data', () {

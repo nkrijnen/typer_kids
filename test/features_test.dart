@@ -32,7 +32,7 @@ void main() {
         expect(restarted.language, 'nl');
         final progress = ProgressProvider();
         await progress.init(profileId: 'second', language: restarted.language);
-        expect(progress.recommendedLesson.id, 'nl-home-letters');
+        expect(progress.recommendedLesson.id, 'nl-letter-01');
       },
     );
 
@@ -61,17 +61,17 @@ void main() {
         final dutch = selected.LessonCurriculum.allLessons.first;
         expect(progress.getProgress(dutch.id).completed, false);
         expect(progress.isLessonUnlocked(dutch.id), true);
-        expect(progress.isLessonUnlocked('nl-home-words'), false);
+        expect(progress.isLessonUnlocked('nl-letter-02'), false);
         await progress.recordAttempt(dutch, stats);
         expect(progress.getProgress(dutch.id).completed, true);
-        expect(progress.isLessonUnlocked('nl-home-words'), true);
-        expect(progress.isLessonUnlocked('nl-home-house'), false);
-        expect(progress.recommendedLesson.id, 'nl-home-words');
+        expect(progress.isLessonUnlocked('nl-letter-02'), true);
+        expect(progress.isLessonUnlocked('nl-letter-03'), false);
+        expect(progress.recommendedLesson.id, 'nl-letter-02');
         await progress.recordAttempt(selected.LessonCurriculum.allLessons[1], stats);
-        expect(progress.isLessonUnlocked('nl-home-house'), true);
+        expect(progress.isLessonUnlocked('nl-letter-03'), true);
         await progress.switchProfile('two');
         expect(progress.getProgress(dutch.id).completed, false);
-        expect(progress.isLessonUnlocked('nl-home-words'), false);
+        expect(progress.isLessonUnlocked('nl-letter-02'), false);
         await progress.switchProfile('one');
         expect(progress.getProgress(dutch.id).completed, true);
         await prefs.setString('profile_two_nl_progress_${dutch.id}', 'broken');
