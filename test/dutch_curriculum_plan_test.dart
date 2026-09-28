@@ -94,7 +94,7 @@ void main() {
 
     test('milestone lessons stage the approved home-row keys and words', () {
       final lessons = DutchCurriculum.allLessons;
-      expect(lessons, hasLength(8));
+      expect(lessons, hasLength(12));
       expect(lessons.map((lesson) => lesson.id), [
         'nl-letter-01',
         'nl-letter-02',
@@ -104,6 +104,10 @@ void main() {
         'nl-letter-06',
         'nl-letter-07',
         'nl-letter-08',
+        'nl-letter-09',
+        'nl-letter-10',
+        'nl-letter-11',
+        'nl-letter-12',
       ]);
       expect(lessons.map((lesson) => lesson.orderIndex), [
         0,
@@ -114,32 +118,10 @@ void main() {
         5,
         6,
         7,
-      ]);
-      expect(lessons.map((lesson) => lesson.focusKeys), [
-        ['f', 'j'],
-        ['f', 'j', 'd', 'k'],
-        ['f', 'j', 'd', 'k', 's', 'l'],
-        ['f', 'j', 'd', 'k', 's', 'l', 'a'],
-        ['f', 'j', 'd', 'k', 's', 'l', 'a', 'g', 'h'],
-        ['f', 'j', 'd', 'k', 's', 'l', 'a', 'g', 'h', 'e', 'i'],
-        ['f', 'j', 'd', 'k', 's', 'l', 'a', 'g', 'h', 'e', 'i', 'r', 'u'],
-        [
-          'f',
-          'j',
-          'd',
-          'k',
-          's',
-          'l',
-          'a',
-          'g',
-          'h',
-          'e',
-          'i',
-          'r',
-          'u',
-          't',
-          'n',
-        ],
+        8,
+        9,
+        10,
+        11,
       ]);
       final taught = <String>{};
       for (final lesson in lessons) {
@@ -162,6 +144,37 @@ void main() {
       expect(lessons[6].exercises, contains('fr ju rf uj'));
       expect(lessons[6].exercises, contains('reis deur kleur'));
       expect(lessons[7].exercises, contains('tuin trein neus hand'));
+      expect(lessons[8].exercises, contains('sw lo ws ol'));
+      expect(lessons[8].exercises, contains('hond woord stoel water'));
+      expect(lessons[9].exercises, contains('muis room school cirkel'));
+      expect(lessons[10].exercises, contains('fv fb vf bf'));
+      expect(lessons[10].exercises, contains('vis vijf boom brief'));
+      expect(lessons[11].exercises, contains('pen poes appel soep'));
+      final lastFocusKeys = {
+        'f',
+        'j',
+        'd',
+        'k',
+        's',
+        'l',
+        'a',
+        'g',
+        'h',
+        'e',
+        'i',
+        'r',
+        'u',
+        't',
+        'n',
+        'o',
+        'w',
+        'm',
+        'c',
+        'v',
+        'b',
+        'p',
+      };
+      expect(lessons.last.focusKeys.toSet(), lastFocusKeys);
     });
 
     test('aggregates actionable errors for malformed stage data', () {
