@@ -41,12 +41,37 @@ class TypingDisplay extends StatelessWidget {
     return ranges;
   }
 
-  TextSpan _charSpan(int index) {
+  InlineSpan _charSpan(int index) {
     final char = text[index];
     final state = index < charStates.length
         ? charStates[index]
         : CharState.pending;
     final isSpace = char == ' ';
+
+    if (isSpace &&
+        (state == CharState.current || state == CharState.incorrect)) {
+      final color = state == CharState.current
+          ? AppColors.secondary
+          : AppColors.incorrect;
+      return WidgetSpan(
+        alignment: PlaceholderAlignment.middle,
+        child: SizedBox(
+          width: fontSize * 1.4,
+          height: fontSize * 1.5,
+          child: Center(
+            child: Container(
+              key: ValueKey('space-cue-${state.name}'),
+              width: fontSize * 0.32,
+              height: 4,
+              decoration: BoxDecoration(
+                color: color,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
 
     return switch (state) {
       CharState.correct => TextSpan(
@@ -62,7 +87,7 @@ class TypingDisplay extends StatelessWidget {
         style:
             AppTheme.typingTextStyle(
               fontSize: fontSize,
-              fontWeight: isSpace ? FontWeight.w500 : FontWeight.w600,
+              fontWeight: FontWeight.w600,
               color: AppColors.incorrect,
               height: 1.5,
             ).copyWith(
@@ -74,7 +99,7 @@ class TypingDisplay extends StatelessWidget {
         style:
             AppTheme.typingTextStyle(
               fontSize: fontSize,
-              fontWeight: isSpace ? FontWeight.w500 : FontWeight.w700,
+              fontWeight: FontWeight.w700,
               color: AppColors.textPrimary,
               height: 1.5,
               decoration: TextDecoration.underline,

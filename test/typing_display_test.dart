@@ -36,6 +36,14 @@ void main() {
         (widget) => widget is RichText && widget.text.toPlainText() == 'b',
       );
       positions.add(tester.getRect(followingCharacter).left);
+
+      final spaceCue = find.byKey(ValueKey('space-cue-${states[1].name}'));
+      if (states[1] == CharState.current || states[1] == CharState.incorrect) {
+        expect(spaceCue, findsOneWidget);
+      } else {
+        expect(find.byKey(const ValueKey('space-cue-current')), findsNothing);
+        expect(find.byKey(const ValueKey('space-cue-incorrect')), findsNothing);
+      }
     }
 
     for (final position in positions.skip(1)) {
