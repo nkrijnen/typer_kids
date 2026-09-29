@@ -185,43 +185,42 @@ class _SpaceCuePainter extends CustomPainter {
         TextSelection(baseOffset: index, extentOffset: index + 1),
       );
       if (boxes.isEmpty) continue;
-      final style =
-          AppTheme.typingTextStyle(
-            fontSize: fontSize,
-            fontWeight: state == CharState.current
-                ? FontWeight.w700
-                : FontWeight.w600,
-            color: state == CharState.current
-                ? AppColors.textPrimary
-                : AppColors.incorrect,
-            height: 1.5,
-            decoration: state == CharState.current
-                ? TextDecoration.underline
-                : null,
-            decorationColor: AppColors.secondary,
-          ).copyWith(
-            backgroundColor:
-                (state == CharState.current
-                        ? AppColors.secondary
-                        : AppColors.incorrect)
-                    .withValues(
-                      alpha: state == CharState.current ? 0.25 : 0.15,
-                    ),
-            decorationThickness: state == CharState.current ? 3 : null,
-          );
+      final box = boxes.first.toRect();
+      final style = AppTheme.typingTextStyle(
+        fontSize: fontSize,
+        fontWeight: state == CharState.current
+            ? FontWeight.w700
+            : FontWeight.w600,
+        color: state == CharState.current
+            ? AppColors.textPrimary
+            : AppColors.incorrect,
+        height: 1.5,
+      );
       final cue = TextPainter(
         text: TextSpan(text: '␣', style: style),
         textDirection: textDirection,
         textScaler: textScaler,
       )..layout();
-      final box = boxes.first.toRect();
-      cue.paint(
-        canvas,
-        Offset(
-          box.left + (box.width - cue.width) / 2,
-          box.top + (box.height - cue.height) / 2,
-        ),
+      final horizontalScale = cue.width > box.width - 2
+          ? ((box.width - 2) / cue.width).clamp(0.0, 1.0)
+          : 1.0;
+      canvas.save();
+      canvas.clipRect(box);
+      canvas.drawRect(
+        box,
+        Paint()
+          ..color = (state == CharState.current
+                  ? AppColors.secondary
+                  : AppColors.incorrect)
+              .withValues(alpha: state == CharState.current ? 0.25 : 0.15),
       );
+      canvas.translate(
+        box.left + (box.width - cue.width * horizontalScale) / 2,
+        box.top + (box.height - cue.height) / 2,
+      );
+      canvas.scale(horizontalScale, 1);
+      cue.paint(canvas, Offset.zero);
+      canvas.restore();
       cue.dispose();
     }
   }
