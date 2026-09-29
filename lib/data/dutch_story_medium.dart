@@ -133,4 +133,69 @@ const List<StoryPassage> dutchMediumPassages = [
         'Imani knikt en noteert snel de beste momenten. '
         'Na de wedstrijd luistert het hele team naar haar spannende verhaal!',
   ),
+  StoryPassage(
+    title: 'Scherven onder de grond',
+    source: 'Origineel verhaal van Typer Kids',
+    difficulty: ContentDifficulty.medium,
+    text:
+        'Op een open dag mogen kinderen helpen bij een echte opgraving. '
+        'Juna schraapt voorzichtig aarde weg, terwijl een onderzoeker aantekeningen maakt. '
+        'Plotseling ziet ze een blauw stukje steen. Is het deel van een oude schaal? '
+        'Ze legt de scherf in een bakje met een nummer. '
+        'Later blijkt dat haar vondst honderden jaren oud is!',
+  ),
+  StoryPassage(
+    title: 'Nieuws voor de schoolkrant',
+    source: 'Origineel verhaal van Typer Kids',
+    difficulty: ContentDifficulty.medium,
+    text:
+        'De schoolkrant zoekt een verslaggever, dus Fenna meldt zich aan. '
+        'Ze interviewt de nieuwe beheerder en vraagt waarom hij graag op school werkt. '
+        'Welke foto past bij het artikel? Samen kiezen ze een beeld van de werkplaats. '
+        'Fenna controleert alle namen en leest haar tekst nog eens na. '
+        'Op maandag staat haar eerste artikel op de voorpagina!',
+  ),
+  StoryPassage(
+    title: 'Een sluis op tafel',
+    source: 'Origineel verhaal van Typer Kids',
+    difficulty: ContentDifficulty.medium,
+    text:
+        'Voor aardrijkskunde bouwt Dex een sluis in een plastic bak. '
+        'Hij gebruikt twee schuiven, water en een klein bootje van kurk. '
+        'Hoe krijgt hij het bootje naar het hogere deel? Dex sluit de achterste schuif en giet er water bij. '
+        'Langzaam stijgt het bootje. Als beide kanten gelijk zijn, opent hij de voorste schuif!',
+  ),
+  StoryPassage(
+    title: 'Het eerste optreden',
+    source: 'Origineel verhaal van Typer Kids',
+    difficulty: ContentDifficulty.medium,
+    text:
+        'Na maanden oefenen speelt de band voor het eerst in de aula. '
+        'Malik telt af, Suze begint op gitaar en Jonah slaat het ritme op de trommel. '
+        'Waarom klinkt de zang zo zacht? De microfoon staat nog niet aan. '
+        'Een docent zet snel de juiste knop om. '
+        'Bij het laatste lied klapt de hele zaal mee!',
+  ),
+  StoryPassage(
+    title: 'De vogel bij het fietsenhok',
+    source: 'Origineel verhaal van Typer Kids',
+    difficulty: ContentDifficulty.medium,
+    text:
+        'Bij het fietsenhok vindt Rosa een vogel die niet wegvliegt. '
+        'Ze houdt afstand, terwijl haar vriend de dierenopvang belt. '
+        'Mag de vogel water drinken? De medewerker zegt dat ze hem vooral rustig moeten laten. '
+        'Ze zetten een lege krat om hem heen als bescherming. '
+        'Even later neemt een verzorger de vogel veilig mee!',
+  ),
+  StoryPassage(
+    title: 'Een plan voor het schoolplein',
+    source: 'Origineel verhaal van Typer Kids',
+    difficulty: ContentDifficulty.medium,
+    text:
+        'De leerlingenraad bespreekt drie plannen voor het lege stuk schoolplein. '
+        'Mats wil een klimrek, terwijl Salma liever bomen en banken kiest. '
+        'Kan er misschien ruimte zijn voor beide? Ze tekenen samen een nieuw ontwerp. '
+        'Na het debat stemt bijna iedereen voor hun combinatie. '
+        'De directeur bekijkt de tekening en zegt: dit is een sterk plan!',
+  ),
 ];
