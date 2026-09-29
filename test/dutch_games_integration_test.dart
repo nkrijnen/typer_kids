@@ -240,4 +240,51 @@ void main() {
       expect(englishRestart.allHighScores, dutchScores);
     },
   );
+
+  test(
+    'all game scores survive profile and language switches plus restart',
+    () async {
+      SharedPreferences.setMockInitialValues({});
+      const gameIds = [
+        'falling_words',
+        'defend_temple',
+        'word_bubbles',
+        'speed_chase',
+        'key_critters',
+        'story_sprint',
+      ];
+      final profileADutchScores = {
+        for (final (index, gameId) in gameIds.indexed) gameId: 200 + index,
+      };
+      final profileBEnglishScores = {
+        for (final (index, gameId) in gameIds.indexed) gameId: 50 + index,
+      };
+
+      final progress = ProgressProvider();
+      await progress.init(profileId: 'profile-a', language: 'nl');
+      for (final MapEntry(key: gameId, value: score)
+          in profileADutchScores.entries) {
+        await progress.recordScore(gameId, score);
+      }
+      await progress.switchProfile('profile-b');
+      await progress.switchLanguage('en');
+      expect(progress.allHighScores, isEmpty);
+      for (final MapEntry(key: gameId, value: score)
+          in profileBEnglishScores.entries) {
+        await progress.recordScore(gameId, score);
+      }
+
+      final restarted = ProgressProvider();
+      await restarted.init(profileId: 'profile-b', language: 'en');
+      expect(restarted.allHighScores, profileBEnglishScores);
+      await restarted.switchProfile('profile-a');
+      expect(restarted.allHighScores, isEmpty);
+      await restarted.switchLanguage('nl');
+      expect(restarted.allHighScores, profileADutchScores);
+      await restarted.switchProfile('profile-b');
+      expect(restarted.allHighScores, isEmpty);
+      await restarted.switchLanguage('en');
+      expect(restarted.allHighScores, profileBEnglishScores);
+    },
+  );
 }
