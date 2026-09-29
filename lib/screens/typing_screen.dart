@@ -34,6 +34,7 @@ class _TypingScreenState extends State<TypingScreen> {
   final _sfx = SoundManager();
   bool _showIntro = true;
   bool _isTransitioning = false;
+  bool _showFocusPrompt = true;
 
   @override
   void initState() {
@@ -93,6 +94,9 @@ class _TypingScreenState extends State<TypingScreen> {
 
     final key = event.character;
     if (key != null && key.isNotEmpty) {
+      if (_showFocusPrompt) {
+        setState(() => _showFocusPrompt = false);
+      }
       final correct = _typingProvider.onKeyPressed(key);
       if (correct == true) {
         _sfx.playKeystroke();
@@ -391,7 +395,12 @@ class _TypingScreenState extends State<TypingScreen> {
         autofocus: true,
         onKeyEvent: _handleKeyEvent,
         child: GestureDetector(
-          onTap: () => _focusNode.requestFocus(),
+          onTap: () {
+            if (_showFocusPrompt) {
+              setState(() => _showFocusPrompt = false);
+            }
+            _focusNode.requestFocus();
+          },
           child: SafeArea(
             child: LayoutBuilder(
               builder: (context, constraints) {
@@ -454,7 +463,7 @@ class _TypingScreenState extends State<TypingScreen> {
                     ListenableBuilder(
                       listenable: _focusNode,
                       builder: (context, _) => Visibility.maintain(
-                        visible: !_focusNode.hasFocus,
+                        visible: _showFocusPrompt || !_focusNode.hasFocus,
                         child: Padding(
                           padding: const EdgeInsets.only(bottom: 4),
                           child: _buildFocusPrompt(),

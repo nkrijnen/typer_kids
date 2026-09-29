@@ -209,6 +209,7 @@ void main() {
           matching: find.byType(Visibility),
         )
         .first;
+    expect(tester.widget<Visibility>(promptVisibility).visible, isTrue);
     focusNode.unfocus();
     await tester.pumpAndSettle();
     expect(focusNode.hasFocus, isFalse, reason: 'typing area loses focus');
@@ -216,9 +217,17 @@ void main() {
     final textBounds = tester.getRect(find.byType(TypingDisplay));
     focusNode.requestFocus();
     await tester.pumpAndSettle();
-    expect(tester.widget<Visibility>(promptVisibility).visible, isFalse);
+    expect(tester.widget<Visibility>(promptVisibility).visible, isTrue);
     expect(tester.getRect(find.byType(TypingDisplay)), textBounds);
     await tester.sendKeyEvent(LogicalKeyboardKey.keyF);
+    await tester.pumpAndSettle();
+    expect(tester.widget<Visibility>(promptVisibility).visible, isFalse);
+    expect(tester.getRect(find.byType(TypingDisplay)), textBounds);
+    focusNode.unfocus();
+    await tester.pumpAndSettle();
+    expect(tester.widget<Visibility>(promptVisibility).visible, isTrue);
+    expect(tester.getRect(find.byType(TypingDisplay)), textBounds);
+    await tester.tap(find.byType(TypingDisplay));
     await tester.pumpAndSettle();
     expect(tester.widget<Visibility>(promptVisibility).visible, isFalse);
     expect(tester.getRect(find.byType(TypingDisplay)), textBounds);
