@@ -111,7 +111,7 @@ void main() {
           expect(
             StoryContent.forDifficulty(difficulty),
             difficulty == ContentDifficulty.easy
-                ? [StoryContent.dutch]
+                ? StoryContent.dutchEasy
                 : isEmpty,
           );
           expect(words, isNot(contains('the')));

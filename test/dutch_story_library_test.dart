@@ -6,13 +6,26 @@ import 'package:typer_kids/data/word_lists.dart';
 void main() {
   tearDown(() => selected.LessonCurriculum.isDutch = false);
 
-  test('Dutch easy contains only the retained original story', () {
+  test('Dutch easy has six unique original, typeable passages', () {
     selected.LessonCurriculum.isDutch = true;
 
-    expect(StoryContent.dutchEasy, [StoryContent.dutch]);
-    expect(StoryContent.forDifficulty(ContentDifficulty.easy), [
-      StoryContent.dutch,
-    ]);
+    final passages = StoryContent.forDifficulty(ContentDifficulty.easy);
+    expect(passages, hasLength(6));
+    expect(passages, StoryContent.dutchEasy);
+    expect(passages, contains(StoryContent.dutch));
+    expect(passages.map((passage) => passage.title).toSet(), hasLength(6));
+    expect(passages.map((passage) => passage.text).toSet(), hasLength(6));
+    expect(
+      passages.every(
+        (passage) =>
+            passage.source == 'Origineel verhaal van Typer Kids' &&
+            passage.difficulty == ContentDifficulty.easy &&
+            passage.text.isNotEmpty &&
+            RegExp(r"^[A-Za-z0-9 .,!?'-]+$").hasMatch(passage.title) &&
+            RegExp(r"^[A-Za-z0-9 .,!?'-]+$").hasMatch(passage.text),
+      ),
+      isTrue,
+    );
     expect(StoryContent.dutch.title, 'De jas in de boom');
     expect(StoryContent.dutch.source, 'Origineel verhaal van Typer Kids');
     expect(StoryContent.dutch.difficulty, ContentDifficulty.easy);
@@ -33,13 +46,13 @@ void main() {
     );
   });
 
-  test('Dutch random easy selection returns only the retained story', () {
+  test('Dutch random easy selection stays within the easy library', () {
     selected.LessonCurriculum.isDutch = true;
 
-    for (var attempt = 0; attempt < 10; attempt++) {
+    for (var attempt = 0; attempt < 30; attempt++) {
       expect(
-        StoryContent.randomPassage(ContentDifficulty.easy),
-        same(StoryContent.dutch),
+        StoryContent.dutchEasy,
+        contains(StoryContent.randomPassage(ContentDifficulty.easy)),
       );
     }
   });

@@ -669,7 +669,11 @@ void main() {
       ),
     );
     await tester.pump();
-    expect(find.text('De jas in de boom'), findsOneWidget);
+    await tester.ensureVisible(find.text('🎲 Surprise me!'));
+    await tester.tap(find.text('🎲 Surprise me!'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.textContaining('De jas in de boom').last);
+    await tester.pumpAndSettle();
     expect(find.text('The Little Red Hen'), findsNothing);
     expect(find.text('Kies een niveau'), findsNothing);
     await tester.ensureVisible(find.text('Begin'));
@@ -1350,7 +1354,12 @@ void main() {
     await tester.ensureVisible(find.text('Vrij oefenen'));
     await tester.tap(find.text('Vrij oefenen'));
     await tester.pumpAndSettle();
-    expect(find.text('De jas in de boom'), findsOneWidget);
+    await tester.ensureVisible(find.text('🎲 Surprise me!'));
+    await tester.tap(find.text('🎲 Surprise me!'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.textContaining('De jas in de boom').last);
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Begin'));
     await tester.tap(find.text('Begin'));
     await tester.pump();
     for (final character in StoryContent.dutch.text.split('')) {
