@@ -451,11 +451,16 @@ class _TypingScreenState extends State<TypingScreen> {
                       ),
                     ),
                     // "Click here to type" prompt
-                    if (!_focusNode.hasFocus)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 4),
-                        child: _buildFocusPrompt(),
+                    ListenableBuilder(
+                      listenable: _focusNode,
+                      builder: (context, _) => Visibility.maintain(
+                        visible: !_focusNode.hasFocus,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 4),
+                          child: _buildFocusPrompt(),
+                        ),
                       ),
+                    ),
                     // Virtual keyboard — pinned to bottom
                     Padding(
                       padding: EdgeInsets.only(

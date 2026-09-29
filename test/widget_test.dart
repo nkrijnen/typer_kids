@@ -13,6 +13,7 @@ import 'package:typer_kids/providers/progress_provider.dart';
 import 'package:typer_kids/data/dutch_curriculum.dart';
 import 'package:typer_kids/data/keyboard_data.dart';
 import 'package:typer_kids/widgets/keyboard_widget.dart';
+import 'package:typer_kids/widgets/typing_display.dart';
 import 'package:typer_kids/widgets/finger_guide.dart';
 import 'package:typer_kids/widgets/stat_tiles.dart';
 import 'package:typer_kids/data/story_content.dart';
@@ -192,6 +193,35 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(KeyboardWidget), findsOneWidget);
     expect(tester.takeException(), isNull, reason: 'Dutch typing');
+    final focusNode = tester
+        .widget<KeyboardListener>(
+          find
+              .ancestor(
+                of: find.byType(TypingDisplay),
+                matching: find.byType(KeyboardListener),
+              )
+              .first,
+        )
+        .focusNode;
+    final promptVisibility = find
+        .ancestor(
+          of: find.text('Klik hier en begin met typen!'),
+          matching: find.byType(Visibility),
+        )
+        .first;
+    focusNode.unfocus();
+    await tester.pumpAndSettle();
+    expect(focusNode.hasFocus, isFalse, reason: 'typing area loses focus');
+    expect(tester.widget<Visibility>(promptVisibility).visible, isTrue);
+    final textBounds = tester.getRect(find.byType(TypingDisplay));
+    focusNode.requestFocus();
+    await tester.pumpAndSettle();
+    expect(tester.widget<Visibility>(promptVisibility).visible, isFalse);
+    expect(tester.getRect(find.byType(TypingDisplay)), textBounds);
+    await tester.sendKeyEvent(LogicalKeyboardKey.keyF);
+    await tester.pumpAndSettle();
+    expect(tester.widget<Visibility>(promptVisibility).visible, isFalse);
+    expect(tester.getRect(find.byType(TypingDisplay)), textBounds);
     await tester.pumpWidget(const MaterialApp(home: SizedBox()));
   });
 
@@ -1135,9 +1165,15 @@ void main() {
         .widgetList<Text>(find.byType(Text))
         .map((text) => text.data)
         .firstWhere(
-          (text) => text != null && text.length == 1 && easyKeys.contains(text.toLowerCase()),
+          (text) =>
+              text != null &&
+              text.length == 1 &&
+              easyKeys.contains(text.toLowerCase()),
         )!;
-    await tester.sendKeyEvent(LogicalKeyboardKey.keyA, character: letter.toLowerCase());
+    await tester.sendKeyEvent(
+      LogicalKeyboardKey.keyA,
+      character: letter.toLowerCase(),
+    );
     await tester.pump();
     for (
       var frame = 0;
@@ -1247,9 +1283,7 @@ void main() {
     }
     selected.LessonCurriculum.isDutch = false;
   });
-  testWidgets('Dutch game menu shows all six localized games', (
-    tester,
-  ) async {
+  testWidgets('Dutch game menu shows all six localized games', (tester) async {
     GoogleFonts.config.allowRuntimeFetching = false;
     SharedPreferences.setMockInitialValues({});
     final language = LanguageProvider();
