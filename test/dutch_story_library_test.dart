@@ -6,15 +6,15 @@ import 'package:typer_kids/data/word_lists.dart';
 void main() {
   tearDown(() => selected.LessonCurriculum.isDutch = false);
 
-  test('Dutch easy has twelve unique original, typeable passages', () {
+  test('Dutch easy has eighteen unique original, typeable passages', () {
     selected.LessonCurriculum.isDutch = true;
 
     final passages = StoryContent.forDifficulty(ContentDifficulty.easy);
-    expect(passages, hasLength(12));
+    expect(passages, hasLength(18));
     expect(passages, StoryContent.dutchEasy);
     expect(passages, contains(StoryContent.dutch));
-    expect(passages.map((passage) => passage.title).toSet(), hasLength(12));
-    expect(passages.map((passage) => passage.text).toSet(), hasLength(12));
+    expect(passages.map((passage) => passage.title).toSet(), hasLength(18));
+    expect(passages.map((passage) => passage.text).toSet(), hasLength(18));
     expect(
       passages.every(
         (passage) =>

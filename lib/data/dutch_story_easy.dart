@@ -130,4 +130,64 @@ const List<StoryPassage> dutchEasyPassages = [
         'Elin draagt de bloemen heel recht naar huis. Oma zet ze in een vaas. '
         'De gele rozen komen op tafel te staan.',
   ),
+  StoryPassage(
+    title: 'De zachte band',
+    source: 'Origineel verhaal van Typer Kids',
+    difficulty: ContentDifficulty.easy,
+    text:
+        'Tess wil naar het plein fietsen. Haar achterband voelt heel zacht. '
+        'Ze haalt de pomp uit de schuur. Papa houdt de fiets recht. '
+        'Tess zet de slang op het ventiel en pompt tien keer. '
+        'Nu is de band weer hard. Ze doet haar helm op en rijdt naar haar vrienden.',
+  ),
+  StoryPassage(
+    title: 'Schat in het park',
+    source: 'Origineel verhaal van Typer Kids',
+    difficulty: ContentDifficulty.easy,
+    text:
+        'Mila krijgt een kaart van haar broer. Er staat een kruis bij de grote boom. '
+        'Ze loopt door het park en telt vijf bankjes. Achter de boom ligt een platte steen. '
+        'Mila tilt hem op en vindt een klein blik. In het blik zit een brief en een snoepje. '
+        'Ze heeft de schat gevonden!',
+  ),
+  StoryPassage(
+    title: 'Botten in het museum',
+    source: 'Origineel verhaal van Typer Kids',
+    difficulty: ContentDifficulty.easy,
+    text:
+        'Ilyas bezoekt een museum met zijn oom. In de hal staat een groot skelet. '
+        'De lange staart hangt hoog boven hun hoofd. Ilyas telt de scherpe tanden. '
+        'Een gids vertelt dat de botten heel oud zijn. '
+        'Ilyas tekent het dier in zijn boek. Zijn tekening krijgt ook een lange staart.',
+  ),
+  StoryPassage(
+    title: 'Een nacht in de tuin',
+    source: 'Origineel verhaal van Typer Kids',
+    difficulty: ContentDifficulty.easy,
+    text:
+        'Fien en Roan zetten een tent in de tuin. Ze leggen twee slaapzakken op de grond. '
+        'Als het donker wordt, doen ze een lamp aan. Buiten horen ze een uil. '
+        'Roan leest een grappig verhaal voor. Daarna kruipen ze diep in hun slaapzakken. '
+        'In de ochtend maakt mama warme pap.',
+  ),
+  StoryPassage(
+    title: 'Tas voor de buurvrouw',
+    source: 'Origineel verhaal van Typer Kids',
+    difficulty: ContentDifficulty.easy,
+    text:
+        'De buurvrouw komt terug van de winkel. Haar tas is zwaar. '
+        'Noud ziet haar bij de deur en loopt naar haar toe. Hij draagt de tas naar de keuken. '
+        'Er zitten appels, brood en sap in. De buurvrouw geeft Noud een appel. '
+        'Hij zwaait en gaat weer naar buiten.',
+  ),
+  StoryPassage(
+    title: 'De vlieger in de wind',
+    source: 'Origineel verhaal van Typer Kids',
+    difficulty: ContentDifficulty.easy,
+    text:
+        'Zoey neemt haar vlieger mee naar het veld. De wind trekt hard aan het touw. '
+        'Ze rent en laat het touw langzaam los. De rode vlieger stijgt boven de bomen. '
+        'Een vogel vliegt er even naast. Zoey houdt het handvat stevig vast. '
+        'Haar vlieger blijft lang in de lucht.',
+  ),
 ];
