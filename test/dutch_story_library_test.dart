@@ -87,36 +87,18 @@ void main() {
     expect(passages.any(StoryContent.dutchMedium.contains), isFalse);
   });
 
-  test('Dutch random easy selection stays within the easy library', () {
+  test('Dutch random selection stays within each difficulty library', () {
     selected.LessonCurriculum.isDutch = true;
 
-    for (var attempt = 0; attempt < 30; attempt++) {
-      expect(
-        StoryContent.dutchEasy,
-        contains(StoryContent.randomPassage(ContentDifficulty.easy)),
-      );
-    }
-  });
-
-  test('Dutch random medium selection stays within the medium library', () {
-    selected.LessonCurriculum.isDutch = true;
-
-    for (var attempt = 0; attempt < 30; attempt++) {
-      expect(
-        StoryContent.dutchMedium,
-        contains(StoryContent.randomPassage(ContentDifficulty.medium)),
-      );
-    }
-  });
-
-  test('Dutch random hard selection stays within the hard library', () {
-    selected.LessonCurriculum.isDutch = true;
-
-    for (var attempt = 0; attempt < 30; attempt++) {
-      expect(
-        StoryContent.dutchHard,
-        contains(StoryContent.randomPassage(ContentDifficulty.hard)),
-      );
+    for (final difficulty in ContentDifficulty.values) {
+      final passages = StoryContent.forDifficulty(difficulty);
+      for (var attempt = 0; attempt < 30; attempt++) {
+        expect(
+          passages,
+          contains(StoryContent.randomPassage(difficulty)),
+          reason: difficulty.name,
+        );
+      }
     }
   });
 
