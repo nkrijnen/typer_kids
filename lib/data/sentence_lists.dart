@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'lesson_curriculum_selector.dart';
 import 'word_lists.dart';
 
 /// Sentence pools for the Story Sprint game, organized by difficulty.
@@ -149,16 +148,14 @@ class SentenceLists {
     "That's the biggest pumpkin I've ever seen!",
   ];
 
-  static List<String> forDifficulty(ContentDifficulty d) =>
-      LessonCurriculum.isDutch ? switch (d) {
-        ContentDifficulty.easy => dutchEasy,
-        ContentDifficulty.medium => dutchMedium,
-        ContentDifficulty.hard => dutchHard,
-      } : switch (d) {
-    ContentDifficulty.easy => easy,
-    ContentDifficulty.medium => medium,
-    ContentDifficulty.hard => hard,
-  };
+  static List<String> forDifficulty(ContentDifficulty d) => d.selectLocalized(
+    englishEasy: easy,
+    englishMedium: medium,
+    englishHard: hard,
+    dutchEasy: dutchEasy,
+    dutchMedium: dutchMedium,
+    dutchHard: dutchHard,
+  );
 
   static final _random = Random();
 

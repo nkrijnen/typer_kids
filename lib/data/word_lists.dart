@@ -22,6 +22,22 @@ enum ContentDifficulty {
     ContentDifficulty.medium => 'Gewone woorden',
     ContentDifficulty.hard => 'Lange woorden',
   };
+
+  List<T> selectLocalized<T>({
+    required List<T> englishEasy,
+    required List<T> englishMedium,
+    required List<T> englishHard,
+    required List<T> dutchEasy,
+    required List<T> dutchMedium,
+    required List<T> dutchHard,
+  }) => switch ((LessonCurriculum.isDutch, this)) {
+    (true, ContentDifficulty.easy) => dutchEasy,
+    (true, ContentDifficulty.medium) => dutchMedium,
+    (true, ContentDifficulty.hard) => dutchHard,
+    (false, ContentDifficulty.easy) => englishEasy,
+    (false, ContentDifficulty.medium) => englishMedium,
+    (false, ContentDifficulty.hard) => englishHard,
+  };
 }
 
 /// Word pools for typing games, organized by difficulty.
@@ -1074,16 +1090,14 @@ class WordLists {
     'zucchini',
   ];
 
-  static List<String> forDifficulty(ContentDifficulty d) =>
-      LessonCurriculum.isDutch ? switch (d) {
-        ContentDifficulty.easy => dutchEasy,
-        ContentDifficulty.medium => dutchMedium,
-        ContentDifficulty.hard => dutchHard,
-      } : switch (d) {
-    ContentDifficulty.easy => easy,
-    ContentDifficulty.medium => medium,
-    ContentDifficulty.hard => hard,
-  };
+  static List<String> forDifficulty(ContentDifficulty d) => d.selectLocalized(
+    englishEasy: easy,
+    englishMedium: medium,
+    englishHard: hard,
+    dutchEasy: dutchEasy,
+    dutchMedium: dutchMedium,
+    dutchHard: dutchHard,
+  );
 
   static final _random = Random();
 
