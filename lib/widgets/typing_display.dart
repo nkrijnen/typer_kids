@@ -7,8 +7,8 @@ import '../providers/typing_provider.dart';
 /// Displays the lesson text to type with color-coded feedback per character.
 ///
 /// Text wraps at word boundaries (words never split across lines), uses the
-/// shared fixed-width typing font, and renders spaces normally — the ␣
-/// symbol appears only on the current target or a mistyped space.
+/// shared fixed-width typing font, and keeps each character's position stable
+/// across feedback states.
 class TypingDisplay extends StatelessWidget {
   final String text;
   final List<CharState> charStates;
@@ -46,17 +46,11 @@ class TypingDisplay extends StatelessWidget {
     final state = index < charStates.length
         ? charStates[index]
         : CharState.pending;
-
     final isSpace = char == ' ';
-    final display = switch (state) {
-      CharState.current when isSpace => '␣',
-      CharState.incorrect when isSpace => '␣',
-      _ => char,
-    };
 
     return switch (state) {
       CharState.correct => TextSpan(
-        text: display,
+        text: char,
         style: AppTheme.typingTextStyle(
           fontSize: fontSize,
           color: AppColors.correct,
@@ -64,32 +58,34 @@ class TypingDisplay extends StatelessWidget {
         ),
       ),
       CharState.incorrect => TextSpan(
-        text: display,
-        style: AppTheme.typingTextStyle(
-          fontSize: fontSize,
-          fontWeight: FontWeight.w600,
-          color: AppColors.incorrect,
-          height: 1.5,
-        ).copyWith(
-          backgroundColor: AppColors.incorrect.withValues(alpha: 0.15),
-        ),
+        text: char,
+        style:
+            AppTheme.typingTextStyle(
+              fontSize: fontSize,
+              fontWeight: isSpace ? FontWeight.w500 : FontWeight.w600,
+              color: AppColors.incorrect,
+              height: 1.5,
+            ).copyWith(
+              backgroundColor: AppColors.incorrect.withValues(alpha: 0.15),
+            ),
       ),
       CharState.current => TextSpan(
-        text: display,
-        style: AppTheme.typingTextStyle(
-          fontSize: fontSize,
-          fontWeight: FontWeight.w700,
-          color: AppColors.textPrimary,
-          height: 1.5,
-          decoration: TextDecoration.underline,
-          decorationColor: AppColors.secondary,
-        ).copyWith(
-          backgroundColor: AppColors.secondary.withValues(alpha: 0.25),
-          decorationThickness: 3,
-        ),
+        text: char,
+        style:
+            AppTheme.typingTextStyle(
+              fontSize: fontSize,
+              fontWeight: isSpace ? FontWeight.w500 : FontWeight.w700,
+              color: AppColors.textPrimary,
+              height: 1.5,
+              decoration: TextDecoration.underline,
+              decorationColor: AppColors.secondary,
+            ).copyWith(
+              backgroundColor: AppColors.secondary.withValues(alpha: 0.25),
+              decorationThickness: 3,
+            ),
       ),
       CharState.pending => TextSpan(
-        text: display,
+        text: char,
         style: AppTheme.typingTextStyle(
           fontSize: fontSize,
           color: Colors.grey.shade600,
