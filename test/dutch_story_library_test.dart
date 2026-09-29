@@ -58,14 +58,33 @@ void main() {
     },
   );
 
-  test('empty Dutch hard tier never falls back to English passages', () {
+  test('Dutch hard has six unique originals with broad punctuation', () {
     selected.LessonCurriculum.isDutch = true;
 
-    expect(StoryContent.forDifficulty(ContentDifficulty.hard), isEmpty);
+    final passages = StoryContent.forDifficulty(ContentDifficulty.hard);
+    expect(passages, hasLength(6));
+    expect(passages, StoryContent.dutchHard);
+    expect(passages.map((passage) => passage.title).toSet(), hasLength(6));
+    expect(passages.map((passage) => passage.text).toSet(), hasLength(6));
     expect(
-      () => StoryContent.randomPassage(ContentDifficulty.hard),
-      throwsRangeError,
+      passages.every(
+        (passage) =>
+            passage.source == 'Origineel verhaal van Typer Kids' &&
+            passage.difficulty == ContentDifficulty.hard &&
+            passage.text.isNotEmpty &&
+            RegExp(
+              r'''^[A-Za-z0-9 .,!?:;'"()/-]+$''',
+            ).hasMatch(passage.title) &&
+            RegExp(r'''^[A-Za-z0-9 .,!?:;'"()/-]+$''').hasMatch(passage.text),
+      ),
+      isTrue,
     );
+    final allText = passages.map((passage) => passage.text).join();
+    for (final punctuation in [',', ';', ':', "'", '(', ')', '?', '!']) {
+      expect(allText, contains(punctuation), reason: punctuation);
+    }
+    expect(passages.any(StoryContent.dutchEasy.contains), isFalse);
+    expect(passages.any(StoryContent.dutchMedium.contains), isFalse);
   });
 
   test('Dutch random easy selection stays within the easy library', () {
@@ -86,6 +105,17 @@ void main() {
       expect(
         StoryContent.dutchMedium,
         contains(StoryContent.randomPassage(ContentDifficulty.medium)),
+      );
+    }
+  });
+
+  test('Dutch random hard selection stays within the hard library', () {
+    selected.LessonCurriculum.isDutch = true;
+
+    for (var attempt = 0; attempt < 30; attempt++) {
+      expect(
+        StoryContent.dutchHard,
+        contains(StoryContent.randomPassage(ContentDifficulty.hard)),
       );
     }
   });

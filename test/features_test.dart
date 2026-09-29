@@ -113,7 +113,7 @@ void main() {
             switch (difficulty) {
               ContentDifficulty.easy => StoryContent.dutchEasy,
               ContentDifficulty.medium => StoryContent.dutchMedium,
-              ContentDifficulty.hard => isEmpty,
+              ContentDifficulty.hard => StoryContent.dutchHard,
             },
           );
           expect(words, isNot(contains('the')));
