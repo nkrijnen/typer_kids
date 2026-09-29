@@ -32,15 +32,15 @@ void main() {
   });
 
   test(
-    'Dutch medium has six unique original passages with mixed punctuation',
+    'Dutch medium has twelve unique original passages with mixed punctuation',
     () {
       selected.LessonCurriculum.isDutch = true;
 
       final passages = StoryContent.forDifficulty(ContentDifficulty.medium);
-      expect(passages, hasLength(6));
+      expect(passages, hasLength(12));
       expect(passages, StoryContent.dutchMedium);
-      expect(passages.map((passage) => passage.title).toSet(), hasLength(6));
-      expect(passages.map((passage) => passage.text).toSet(), hasLength(6));
+      expect(passages.map((passage) => passage.title).toSet(), hasLength(12));
+      expect(passages.map((passage) => passage.text).toSet(), hasLength(12));
       expect(
         passages.every(
           (passage) =>

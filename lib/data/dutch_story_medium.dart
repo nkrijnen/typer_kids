@@ -67,4 +67,70 @@ const List<StoryPassage> dutchMediumPassages = [
         'Bij een spel moet ze drie ringen om houten paaltjes gooien. '
         'De derde ring blijft liggen. Ze wint een klein schrift met een gouden maan!',
   ),
+  StoryPassage(
+    title: 'Live vanuit de school',
+    source: 'Origineel verhaal van Typer Kids',
+    difficulty: ContentDifficulty.medium,
+    text:
+        'Op vrijdag maakt groep zeven een eigen radioprogramma. '
+        'Rayan leest het nieuws, Evi kiest de muziek en Mees bedient de knoppen. '
+        'Vlak voor de start valt de microfoon uit. Wat nu? '
+        'Evi ontdekt een losse kabel en duwt hem stevig vast. '
+        'Het rode lampje gaat aan. Hun eerste uitzending kan beginnen!',
+  ),
+  StoryPassage(
+    title: 'Schoon water langs de kade',
+    source: 'Origineel verhaal van Typer Kids',
+    difficulty: ContentDifficulty.medium,
+    text:
+        'Langs de kade verzamelen vrijwilligers afval uit het water. '
+        'Sofia draagt handschoenen, terwijl haar neef een lange grijper gebruikt. '
+        'Ze vinden blikjes, een oude bal en zelfs een kapotte paraplu. '
+        'Waarom gooien mensen dit zomaar weg? Na een uur zijn drie zakken vol. '
+        'De eenden zwemmen weer tussen schoon riet!',
+  ),
+  StoryPassage(
+    title: 'Sterren boven het dak',
+    source: 'Origineel verhaal van Typer Kids',
+    difficulty: ContentDifficulty.medium,
+    text:
+        'De sterrenwacht opent laat, dus Lotte mag langer wakker blijven. '
+        'Door een grote telescoop ziet ze kraters op de maan. '
+        'Een gids wijst naar een helder punt: dat is geen ster, maar een planeet. '
+        'Hoe ver zou die van ons staan? Lotte noteert haar vraag in een schrift. '
+        'Thuis zoekt ze het antwoord meteen op!',
+  ),
+  StoryPassage(
+    title: 'De soepwedstrijd',
+    source: 'Origineel verhaal van Typer Kids',
+    difficulty: ContentDifficulty.medium,
+    text:
+        'Tijdens het buurtfeest koken drie teams een grote pan soep. '
+        'Kenan snijdt wortels, zijn oma roert en buurman Jo proeft voorzichtig. '
+        'Mist er nog iets? Een beetje peper maakt de smaak precies goed. '
+        'De jury ruikt, proeft en schrijft cijfers op. '
+        'Hun groentesoep wint niet, maar de pan is als eerste leeg!',
+  ),
+  StoryPassage(
+    title: 'Donker in de straat',
+    source: 'Origineel verhaal van Typer Kids',
+    difficulty: ContentDifficulty.medium,
+    text:
+        'Tijdens een storm valt plotseling de stroom in de straat uit. '
+        'Mara zoekt een zaklamp, terwijl haar vader kaarsen op tafel zet. '
+        'Zonder wifi spelen ze een kaartspel en vertellen ze grappige raadsels. '
+        'Wie hoort daar voetstappen bij de deur? Het is de buurman met warme chocolademelk. '
+        'Als het licht terugkomt, speelt iedereen toch nog een ronde!',
+  ),
+  StoryPassage(
+    title: 'Verslag langs de lijn',
+    source: 'Origineel verhaal van Typer Kids',
+    difficulty: ContentDifficulty.medium,
+    text:
+        'Imani kan niet meespelen door haar zere enkel, maar ze gaat wel mee. '
+        'Langs het veld schrijft ze op wie passt, schiet en een doelpunt maakt. '
+        'In de rust vraagt de trainer: wil jij straks het verslag voorlezen? '
+        'Imani knikt en noteert snel de beste momenten. '
+        'Na de wedstrijd luistert het hele team naar haar spannende verhaal!',
+  ),
 ];
