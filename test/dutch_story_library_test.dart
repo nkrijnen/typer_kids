@@ -31,15 +31,37 @@ void main() {
     expect(StoryContent.dutch.difficulty, ContentDifficulty.easy);
   });
 
-  test('empty Dutch tiers never fall back to English passages', () {
+  test(
+    'Dutch medium has six unique original passages with mixed punctuation',
+    () {
+      selected.LessonCurriculum.isDutch = true;
+
+      final passages = StoryContent.forDifficulty(ContentDifficulty.medium);
+      expect(passages, hasLength(6));
+      expect(passages, StoryContent.dutchMedium);
+      expect(passages.map((passage) => passage.title).toSet(), hasLength(6));
+      expect(passages.map((passage) => passage.text).toSet(), hasLength(6));
+      expect(
+        passages.every(
+          (passage) =>
+              passage.source == 'Origineel verhaal van Typer Kids' &&
+              passage.difficulty == ContentDifficulty.medium &&
+              passage.text.isNotEmpty &&
+              RegExp(r"^[A-Za-z0-9 .,!?:'-]+$").hasMatch(passage.title) &&
+              RegExp(r"^[A-Za-z0-9 .,!?:'-]+$").hasMatch(passage.text) &&
+              passage.text.contains(',') &&
+              RegExp(r'[?!]').hasMatch(passage.text),
+        ),
+        isTrue,
+      );
+      expect(passages.any(StoryContent.dutchEasy.contains), isFalse);
+    },
+  );
+
+  test('empty Dutch hard tier never falls back to English passages', () {
     selected.LessonCurriculum.isDutch = true;
 
-    expect(StoryContent.forDifficulty(ContentDifficulty.medium), isEmpty);
     expect(StoryContent.forDifficulty(ContentDifficulty.hard), isEmpty);
-    expect(
-      () => StoryContent.randomPassage(ContentDifficulty.medium),
-      throwsRangeError,
-    );
     expect(
       () => StoryContent.randomPassage(ContentDifficulty.hard),
       throwsRangeError,
@@ -53,6 +75,17 @@ void main() {
       expect(
         StoryContent.dutchEasy,
         contains(StoryContent.randomPassage(ContentDifficulty.easy)),
+      );
+    }
+  });
+
+  test('Dutch random medium selection stays within the medium library', () {
+    selected.LessonCurriculum.isDutch = true;
+
+    for (var attempt = 0; attempt < 30; attempt++) {
+      expect(
+        StoryContent.dutchMedium,
+        contains(StoryContent.randomPassage(ContentDifficulty.medium)),
       );
     }
   });

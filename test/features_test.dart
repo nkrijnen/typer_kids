@@ -110,9 +110,11 @@ void main() {
           }), true);
           expect(
             StoryContent.forDifficulty(difficulty),
-            difficulty == ContentDifficulty.easy
-                ? StoryContent.dutchEasy
-                : isEmpty,
+            switch (difficulty) {
+              ContentDifficulty.easy => StoryContent.dutchEasy,
+              ContentDifficulty.medium => StoryContent.dutchMedium,
+              ContentDifficulty.hard => isEmpty,
+            },
           );
           expect(words, isNot(contains('the')));
         }
