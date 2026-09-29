@@ -70,4 +70,64 @@ const List<StoryPassage> dutchEasyPassages = [
         'Samen springen ze nog een keer. Dan breekt de zon door de wolken. '
         'Thuis hangen ze hun natte jas op.',
   ),
+  StoryPassage(
+    title: 'Boeken voor de klas',
+    source: 'Origineel verhaal van Typer Kids',
+    difficulty: ContentDifficulty.easy,
+    text:
+        'Aya gaat met haar klas naar de bieb. Ze zoekt een boek over de maan. '
+        'Naast haar vindt Daan een boek met vissen. De juf legt alle boeken op tafel. '
+        'Ieder kind mag er een kiezen. Aya leest de eerste bladzij al in de bus. '
+        'Morgen vertelt ze de klas over haar boek.',
+  ),
+  StoryPassage(
+    title: 'Met de trein',
+    source: 'Origineel verhaal van Typer Kids',
+    difficulty: ContentDifficulty.easy,
+    text:
+        'Omar gaat met zijn tante op reis. Op het spoor staat een gele trein. '
+        'Ze vinden twee stoelen bij het raam. Buiten ziet Omar koeien en molens. '
+        'De trein rijdt over een brug en stopt bij een groot station. '
+        'Omar pakt zijn tas. Ze zijn er al!',
+  ),
+  StoryPassage(
+    title: 'Koekjes in de oven',
+    source: 'Origineel verhaal van Typer Kids',
+    difficulty: ContentDifficulty.easy,
+    text:
+        'Saar doet meel en boter in een kom. Luuk roert er suiker door. '
+        'Ze maken ronde koekjes met hun handen. Op elk koekje komt een noot. '
+        'Mama zet de plaat in de oven. Al snel ruikt het huis heel lekker. '
+        'Na het eten delen Saar en Luuk de koekjes uit.',
+  ),
+  StoryPassage(
+    title: 'Pip op het strand',
+    source: 'Origineel verhaal van Typer Kids',
+    difficulty: ContentDifficulty.easy,
+    text:
+        'Pip de hond rent over het strand. Hij jaagt op een bal bij de zee. '
+        'Een golf spoelt over zijn poten. Pip springt opzij en schudt zich uit. '
+        'Er komt zand op de handdoek van Bo. Bo moet lachen. '
+        'Ze gooit de bal nog een keer, ver van het water.',
+  ),
+  StoryPassage(
+    title: 'De vis van groep zes',
+    source: 'Origineel verhaal van Typer Kids',
+    difficulty: ContentDifficulty.easy,
+    text:
+        'In groep zes staat een bak met een vis. De vis heet Spat. '
+        'Vandaag mag Ravi hem eten geven. Hij strooit drie korrels op het water. '
+        'Spat zwemt snel naar boven en hapt ze op. Daarna maakt Ravi het glas schoon. '
+        'De hele klas kan Spat weer goed zien.',
+  ),
+  StoryPassage(
+    title: 'Bloemen op de markt',
+    source: 'Origineel verhaal van Typer Kids',
+    difficulty: ContentDifficulty.easy,
+    text:
+        'Elin loopt met opa over de markt. Bij een kraam staan veel bloemen. '
+        'Ze ziet rode tulpen en gele rozen. Opa kiest een bos voor oma. '
+        'Elin draagt de bloemen heel recht naar huis. Oma zet ze in een vaas. '
+        'De gele rozen komen op tafel te staan.',
+  ),
 ];
