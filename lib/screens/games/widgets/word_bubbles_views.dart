@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../data/word_lists.dart';
+import '../../../providers/language_provider.dart';
 import '../../../widgets/difficulty_card.dart';
 import '../../../widgets/stat_tiles.dart';
 
@@ -46,6 +48,7 @@ class WordBubblesMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dutch = context.watch<LanguageProvider>().isDutch;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: KeyboardListener(
@@ -85,7 +88,7 @@ class WordBubblesMenu extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  'Back',
+                                  dutch ? 'Terug' : 'Back',
                                   style: GoogleFonts.fredoka(fontSize: 16),
                                 ),
                                 const SizedBox(width: 6),
@@ -104,7 +107,7 @@ class WordBubblesMenu extends StatelessWidget {
                         ),
                         SizedBox(height: isTall ? 8 : 4),
                         Text(
-                          'Word Bubbles',
+                          dutch ? 'Woordbubbels' : 'Word Bubbles',
                           style: GoogleFonts.fredoka(
                             fontSize: isWide ? 34 : 26,
                             fontWeight: FontWeight.w700,
@@ -113,7 +116,9 @@ class WordBubblesMenu extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'Pop the bubbles by typing the words!',
+                          dutch
+                              ? 'Knap de bubbels door de woorden te typen!'
+                              : 'Pop the bubbles by typing the words!',
                           style: GoogleFonts.nunito(
                             fontSize: isWide ? 16 : 14,
                             color: AppColors.textSecondary,
@@ -122,7 +127,7 @@ class WordBubblesMenu extends StatelessWidget {
                         ),
                         SizedBox(height: isTall ? 32 : 16),
                         Text(
-                          'Choose Difficulty',
+                          dutch ? 'Kies een niveau' : 'Choose Difficulty',
                           style: GoogleFonts.fredoka(
                             fontSize: isWide ? 20 : 18,
                             fontWeight: FontWeight.w600,
@@ -172,7 +177,7 @@ class WordBubblesMenu extends StatelessWidget {
                                 const SizedBox(width: 6),
                                 Flexible(
                                   child: Text(
-                                    'Start Game',
+                                    dutch ? 'Start spel' : 'Start Game',
                                     style: GoogleFonts.fredoka(
                                       fontSize: isWide ? 22 : 18,
                                       fontWeight: FontWeight.w600,
@@ -241,6 +246,7 @@ class WordBubblesGameOver extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dutch = context.watch<LanguageProvider>().isDutch;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: KeyboardListener(
@@ -276,7 +282,7 @@ class WordBubblesGameOver extends StatelessWidget {
                         ),
                         SizedBox(height: isTall ? 8 : 4),
                         Text(
-                          'Time\'s Up!',
+                          dutch ? 'Tijd voorbij!' : 'Time\'s Up!',
                           style: GoogleFonts.fredoka(
                             fontSize: isWide ? 36 : 28,
                             fontWeight: FontWeight.w700,
@@ -308,7 +314,7 @@ class WordBubblesGameOver extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 4),
                                   child: Text(
-                                    '⭐ New High Score! ⭐',
+                                    dutch ? '⭐ Nieuw record! ⭐' : '⭐ New High Score! ⭐',
                                     style: GoogleFonts.fredoka(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
@@ -325,7 +331,7 @@ class WordBubblesGameOver extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                'points',
+                                dutch ? 'punten' : 'points',
                                 style: GoogleFonts.nunito(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
@@ -336,7 +342,7 @@ class WordBubblesGameOver extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.only(top: 4),
                                   child: Text(
-                                    'Best: $highScore',
+                                    dutch ? 'Record: $highScore' : 'Best: $highScore',
                                     style: GoogleFonts.nunito(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w600,
@@ -352,13 +358,13 @@ class WordBubblesGameOver extends StatelessWidget {
                           children: [
                             EmojiStatTile(
                               emoji: '🫧',
-                              label: 'Popped',
+                              label: dutch ? 'Geknapt' : 'Popped',
                               value: '$popped',
                             ),
                             const SizedBox(width: 12),
                             EmojiStatTile(
                               emoji: '💨',
-                              label: 'Missed',
+                              label: dutch ? 'Gemist' : 'Missed',
                               value: '$missed',
                             ),
                           ],
@@ -368,13 +374,13 @@ class WordBubblesGameOver extends StatelessWidget {
                           children: [
                             EmojiStatTile(
                               emoji: '🔥',
-                              label: 'Best Streak',
+                              label: dutch ? 'Beste reeks' : 'Best Streak',
                               value: '$bestStreak',
                             ),
                             const SizedBox(width: 12),
                             EmojiStatTile(
                               emoji: '⏱️',
-                              label: 'Duration',
+                              label: dutch ? 'Duur' : 'Duration',
                               value: '${gameDuration}s',
                             ),
                           ],
@@ -398,7 +404,7 @@ class WordBubblesGameOver extends StatelessWidget {
                                 const Icon(Icons.replay_rounded, size: 24),
                                 const SizedBox(width: 8),
                                 Text(
-                                  'Play Again',
+                                  dutch ? 'Opnieuw spelen' : 'Play Again',
                                   style: GoogleFonts.fredoka(fontSize: 20),
                                 ),
                                 const SizedBox(width: 8),
@@ -415,7 +421,7 @@ class WordBubblesGameOver extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                'Back to Games',
+                                dutch ? 'Terug naar spellen' : 'Back to Games',
                                 style: GoogleFonts.fredoka(fontSize: 16),
                               ),
                               const SizedBox(width: 6),

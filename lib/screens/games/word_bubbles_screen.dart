@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/sound_manager.dart';
 import '../../data/word_lists.dart';
+import '../../providers/language_provider.dart';
 import '../../providers/progress_provider.dart';
 import '../../widgets/quit_dialog.dart';
 import 'widgets/word_bubbles_models.dart';
@@ -376,14 +377,15 @@ class _WordBubblesScreenState extends State<WordBubblesScreen> {
     _gameTimer?.cancel();
     _spawnTimer?.cancel();
     _tickTimer?.cancel();
+    final dutch = context.read<LanguageProvider>().isDutch;
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (ctx) => QuitDialog(
-        title: 'Quit Game?',
-        message: 'Your current score will be lost.',
-        stayLabel: 'Resume',
-        quitLabel: 'Quit',
+        title: dutch ? 'Spel verlaten?' : 'Quit Game?',
+        message: dutch ? 'Je huidige score gaat verloren.' : 'Your current score will be lost.',
+        stayLabel: dutch ? 'Verder' : 'Resume',
+        quitLabel: dutch ? 'Verlaten' : 'Quit',
         stayBadge: 'Esc',
         quitBadge: 'Q',
         stayKey: LogicalKeyboardKey.keyR,
@@ -558,7 +560,7 @@ class _WordBubblesScreenState extends State<WordBubblesScreen> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          '${_difficulty.emoji} ${_difficulty.label}',
+                          '${_difficulty.emoji} ${context.watch<LanguageProvider>().isDutch ? _difficulty.dutchLabel : _difficulty.label}',
                           style: GoogleFonts.nunito(
                             fontSize: 12,
                             fontWeight: FontWeight.w700,
@@ -605,7 +607,9 @@ class _WordBubblesScreenState extends State<WordBubblesScreen> {
             if (_bubbles.isEmpty && _ghosts.isEmpty)
               Center(
                 child: Text(
-                  'Pop the bubbles! 🫧',
+                  context.watch<LanguageProvider>().isDutch
+                      ? 'Knap de bubbels! 🫧'
+                      : 'Pop the bubbles! 🫧',
                   style: GoogleFonts.fredoka(
                     fontSize: 24,
                     color: AppColors.textSecondary.withValues(alpha: 0.4),
@@ -805,6 +809,7 @@ class _WordBubblesScreenState extends State<WordBubblesScreen> {
   }
 
   Widget _buildInputArea() {
+    final dutch = context.watch<LanguageProvider>().isDutch;
     final hasMatch = _target != null;
     final hasInput = _input.isNotEmpty;
     final noMatch = hasInput && !hasMatch;
@@ -884,12 +889,12 @@ class _WordBubblesScreenState extends State<WordBubblesScreen> {
           Expanded(
             child: Text(
               _flash == _FlashType.correct
-                  ? '✓ Popped!'
+                  ? (dutch ? '✓ Gepakt!' : '✓ Popped!')
                   : _flash == _FlashType.wrong
-                  ? '✗ No match'
+                  ? (dutch ? '✗ Geen match' : '✗ No match')
                   : hasInput
                   ? _input
-                  : 'Type a word...',
+                  : (dutch ? 'Typ een woord...' : 'Type a word...'),
               style: GoogleFonts.fredoka(
                 fontSize: fontSize,
                 fontWeight: FontWeight.w500,
@@ -908,7 +913,7 @@ class _WordBubblesScreenState extends State<WordBubblesScreen> {
           if (hasInput && _flash == null) ...[
             if (noMatch)
               Text(
-                'Space',
+                dutch ? 'Spatie' : 'Space',
                 style: GoogleFonts.robotoMono(
                   fontSize: 10,
                   fontWeight: FontWeight.w600,
