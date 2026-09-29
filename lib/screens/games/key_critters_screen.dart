@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import '../../core/sound_manager.dart';
 import '../../core/theme/app_colors.dart';
 import '../../data/word_lists.dart';
+import '../../providers/language_provider.dart';
 import '../../providers/progress_provider.dart';
 import '../../widgets/quit_dialog.dart';
 import 'widgets/key_critters_views.dart';
@@ -266,14 +267,15 @@ class _KeyCrittersScreenState extends State<KeyCrittersScreen> {
 
   void _showQuitDialog() {
     _tickTimer?.cancel();
+    final dutch = context.read<LanguageProvider>().isDutch;
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (ctx) => QuitDialog(
-        title: 'Leave the Garden?',
-        message: 'Your current score will be lost.',
-        stayLabel: 'Resume',
-        quitLabel: 'Quit',
+        title: dutch ? 'Tuin verlaten?' : 'Leave the Garden?',
+        message: dutch ? 'Je huidige score gaat verloren.' : 'Your current score will be lost.',
+        stayLabel: dutch ? 'Verder' : 'Resume',
+        quitLabel: dutch ? 'Verlaten' : 'Quit',
         stayBadge: 'Esc',
         quitBadge: 'Q',
         stayKey: LogicalKeyboardKey.keyR,
@@ -439,7 +441,7 @@ class _KeyCrittersScreenState extends State<KeyCrittersScreen> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          '${_difficulty.emoji} ${_difficulty.label}',
+                          '${_difficulty.emoji} ${context.watch<LanguageProvider>().isDutch ? _difficulty.dutchLabel : _difficulty.label}',
                           style: GoogleFonts.nunito(
                             fontSize: 12,
                             fontWeight: FontWeight.w700,
@@ -480,7 +482,9 @@ class _KeyCrittersScreenState extends State<KeyCrittersScreen> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10),
                   child: Text(
-                    'Press the key on each critter before it hides!',
+                    context.watch<LanguageProvider>().isDutch
+                        ? 'Druk op de toets van elk beestje voordat het zich verstopt!'
+                        : 'Press the key on each critter before it hides!',
                     style: GoogleFonts.nunito(
                       fontSize: 13,
                       color: AppColors.textSecondary,

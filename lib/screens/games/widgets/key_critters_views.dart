@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../data/word_lists.dart';
+import '../../../providers/language_provider.dart';
 import '../../../widgets/difficulty_card.dart';
 import '../../../widgets/stat_tiles.dart';
 
@@ -47,6 +49,7 @@ class KeyCrittersMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dutch = context.watch<LanguageProvider>().isDutch;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: KeyboardListener(
@@ -86,7 +89,7 @@ class KeyCrittersMenu extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  'Back',
+                                  dutch ? 'Terug' : 'Back',
                                   style: GoogleFonts.fredoka(fontSize: 16),
                                 ),
                                 const SizedBox(width: 6),
@@ -105,7 +108,7 @@ class KeyCrittersMenu extends StatelessWidget {
                         ),
                         SizedBox(height: isTall ? 8 : 4),
                         Text(
-                          'Key Critters',
+                          dutch ? 'Toetsbeestjes' : 'Key Critters',
                           style: GoogleFonts.fredoka(
                             fontSize: isWide ? 34 : 26,
                             fontWeight: FontWeight.w700,
@@ -114,7 +117,9 @@ class KeyCrittersMenu extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'Critters pop out holding a key — press it to bonk them before they hide!',
+                          dutch
+                              ? 'Beestjes komen tevoorschijn met een toets — druk erop voordat ze zich verstoppen!'
+                              : 'Critters pop out holding a key — press it to bonk them before they hide!',
                           style: GoogleFonts.nunito(
                             fontSize: isWide ? 16 : 14,
                             color: AppColors.textSecondary,
@@ -136,9 +141,13 @@ class KeyCrittersMenu extends StatelessWidget {
                               ),
                             ),
                             child: Text(
-                              '🔧 Watch out — your tricky keys '
-                              '${trickyKeys.map((k) => k.toUpperCase()).join(' ')} '
-                              'will show up extra often!',
+                              dutch
+                                  ? '🔧 Let op — je lastige toetsen '
+                                        '${trickyKeys.map((k) => k.toUpperCase()).join(' ')} '
+                                        'komen extra vaak voor!'
+                                  : '🔧 Watch out — your tricky keys '
+                                        '${trickyKeys.map((k) => k.toUpperCase()).join(' ')} '
+                                        'will show up extra often!',
                               style: GoogleFonts.nunito(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w700,
@@ -150,7 +159,7 @@ class KeyCrittersMenu extends StatelessWidget {
                         ],
                         SizedBox(height: isTall ? 28 : 14),
                         Text(
-                          'Choose Difficulty',
+                          dutch ? 'Kies een niveau' : 'Choose Difficulty',
                           style: GoogleFonts.fredoka(
                             fontSize: isWide ? 20 : 18,
                             fontWeight: FontWeight.w600,
@@ -200,7 +209,7 @@ class KeyCrittersMenu extends StatelessWidget {
                                 const SizedBox(width: 6),
                                 Flexible(
                                   child: Text(
-                                    'Start Bonking',
+                                    dutch ? 'Begin met bonken' : 'Start Bonking',
                                     style: GoogleFonts.fredoka(
                                       fontSize: isWide ? 22 : 18,
                                       fontWeight: FontWeight.w600,
@@ -266,6 +275,7 @@ class KeyCrittersGameOver extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dutch = context.watch<LanguageProvider>().isDutch;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: KeyboardListener(
@@ -301,7 +311,7 @@ class KeyCrittersGameOver extends StatelessWidget {
                         ),
                         SizedBox(height: isTall ? 8 : 4),
                         Text(
-                          'Garden Closed!',
+                          dutch ? 'Tuin gesloten!' : 'Garden Closed!',
                           style: GoogleFonts.fredoka(
                             fontSize: isWide ? 36 : 28,
                             fontWeight: FontWeight.w700,
@@ -333,7 +343,7 @@ class KeyCrittersGameOver extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 4),
                                   child: Text(
-                                    '⭐ New High Score! ⭐',
+                                    dutch ? '⭐ Nieuw record! ⭐' : '⭐ New High Score! ⭐',
                                     style: GoogleFonts.fredoka(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
@@ -350,7 +360,7 @@ class KeyCrittersGameOver extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                'points',
+                                dutch ? 'punten' : 'points',
                                 style: GoogleFonts.nunito(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
@@ -361,7 +371,7 @@ class KeyCrittersGameOver extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.only(top: 4),
                                   child: Text(
-                                    'Best: $highScore',
+                                    dutch ? 'Record: $highScore' : 'Best: $highScore',
                                     style: GoogleFonts.nunito(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w600,
@@ -377,13 +387,13 @@ class KeyCrittersGameOver extends StatelessWidget {
                           children: [
                             EmojiStatTile(
                               emoji: '🔨',
-                              label: 'Bonked',
+                              label: dutch ? 'Gebonkt' : 'Bonked',
                               value: '$bonked',
                             ),
                             const SizedBox(width: 12),
                             EmojiStatTile(
                               emoji: '💨',
-                              label: 'Escaped',
+                              label: dutch ? 'Ontsnapt' : 'Escaped',
                               value: '$escaped',
                             ),
                           ],
@@ -393,13 +403,13 @@ class KeyCrittersGameOver extends StatelessWidget {
                           children: [
                             EmojiStatTile(
                               emoji: '🎯',
-                              label: 'Accuracy',
+                              label: dutch ? 'Nauwkeurigheid' : 'Accuracy',
                               value: '$accuracy%',
                             ),
                             const SizedBox(width: 12),
                             EmojiStatTile(
                               emoji: '🔥',
-                              label: 'Best Streak',
+                              label: dutch ? 'Beste reeks' : 'Best Streak',
                               value: '$bestStreak',
                             ),
                           ],
@@ -423,7 +433,7 @@ class KeyCrittersGameOver extends StatelessWidget {
                                 const Icon(Icons.replay_rounded, size: 24),
                                 const SizedBox(width: 8),
                                 Text(
-                                  'Play Again',
+                                  dutch ? 'Opnieuw spelen' : 'Play Again',
                                   style: GoogleFonts.fredoka(fontSize: 20),
                                 ),
                                 const SizedBox(width: 8),
@@ -440,7 +450,7 @@ class KeyCrittersGameOver extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                'Back to Games',
+                                dutch ? 'Terug naar spellen' : 'Back to Games',
                                 style: GoogleFonts.fredoka(fontSize: 16),
                               ),
                               const SizedBox(width: 6),

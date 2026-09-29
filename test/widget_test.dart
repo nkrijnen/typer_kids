@@ -26,6 +26,8 @@ import 'package:typer_kids/screens/games/word_bubbles_screen.dart';
 import 'package:typer_kids/screens/games/widgets/word_bubbles_views.dart';
 import 'package:typer_kids/screens/games/speed_chase_screen.dart';
 import 'package:typer_kids/screens/games/widgets/speed_chase_views.dart';
+import 'package:typer_kids/screens/games/key_critters_screen.dart';
+import 'package:typer_kids/screens/games/widgets/key_critters_views.dart';
 import 'package:typer_kids/screens/sandbox/sandbox_screen.dart';
 import 'package:typer_kids/widgets/home/activity_card.dart';
 import 'package:typer_kids/widgets/home/stat_card.dart';
@@ -1086,6 +1088,60 @@ void main() {
       await tester.pumpWidget(const MaterialApp(home: SizedBox()));
       await tester.pump(const Duration(milliseconds: 600));
     }
+    selected.LessonCurriculum.isDutch = false;
+  });
+  testWidgets('Dutch Key Critters records a separate score on game over', (
+    tester,
+  ) async {
+    GoogleFonts.config.allowRuntimeFetching = false;
+    SharedPreferences.setMockInitialValues({});
+    final language = LanguageProvider();
+    await language.init();
+    await language.select('nl');
+    final progress = ProgressProvider();
+    await progress.init(profileId: 'game-child', language: language.language);
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider.value(value: language),
+          ChangeNotifierProvider.value(value: progress),
+        ],
+        child: const MaterialApp(home: KeyCrittersScreen()),
+      ),
+    );
+    expect(find.text('Toetsbeestjes'), findsOneWidget);
+    expect(find.text('Kies een niveau'), findsOneWidget);
+    await tester.tap(find.text('Begin met bonken'));
+    await tester.pump();
+    expect(tester.takeException(), isNull);
+    for (var frame = 0; frame < 10; frame++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+    const easyKeys = 'asdfghjkl';
+    final letter = tester
+        .widgetList<Text>(find.byType(Text))
+        .map((text) => text.data)
+        .firstWhere(
+          (text) => text != null && text.length == 1 && easyKeys.contains(text.toLowerCase()),
+        )!;
+    await tester.sendKeyEvent(LogicalKeyboardKey.keyA, character: letter.toLowerCase());
+    await tester.pump();
+    for (
+      var frame = 0;
+      frame < 700 && find.byType(KeyCrittersGameOver).evaluate().isEmpty;
+      frame++
+    ) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+    expect(find.byType(KeyCrittersGameOver), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    expect(find.text('Tuin gesloten!'), findsOneWidget);
+    expect(find.text('punten'), findsOneWidget);
+    expect(progress.getHighScore('key_critters'), greaterThan(0));
+    await progress.switchLanguage('en');
+    expect(progress.getHighScore('key_critters'), 0);
+    await tester.pumpWidget(const MaterialApp(home: SizedBox()));
+    await tester.pump(const Duration(milliseconds: 600));
     selected.LessonCurriculum.isDutch = false;
   });
   testWidgets('Dutch game and story route returns to saved English progress', (
