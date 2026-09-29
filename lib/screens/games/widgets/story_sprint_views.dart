@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../data/word_lists.dart';
+import '../../../providers/language_provider.dart';
 import '../../../widgets/difficulty_card.dart';
 import '../../../widgets/stat_tiles.dart';
 
@@ -45,6 +47,7 @@ class StorySprintMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dutch = context.watch<LanguageProvider>().isDutch;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: KeyboardListener(
@@ -84,7 +87,7 @@ class StorySprintMenu extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  'Back',
+                                  dutch ? 'Terug' : 'Back',
                                   style: GoogleFonts.fredoka(fontSize: 16),
                                 ),
                                 const SizedBox(width: 6),
@@ -103,7 +106,7 @@ class StorySprintMenu extends StatelessWidget {
                         ),
                         SizedBox(height: isTall ? 8 : 4),
                         Text(
-                          'Story Sprint',
+                          dutch ? 'Verhaalsprint' : 'Story Sprint',
                           style: GoogleFonts.fredoka(
                             fontSize: isWide ? 34 : 26,
                             fontWeight: FontWeight.w700,
@@ -112,7 +115,9 @@ class StorySprintMenu extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'Type sentences to sprint down the track — every finished sentence is another 100 m!',
+                          dutch
+                              ? 'Typ zinnen om over de baan te sprinten — elke afgeronde zin is nog eens 100 m!'
+                              : 'Type sentences to sprint down the track — every finished sentence is another 100 m!',
                           style: GoogleFonts.nunito(
                             fontSize: isWide ? 16 : 14,
                             color: AppColors.textSecondary,
@@ -121,7 +126,9 @@ class StorySprintMenu extends StatelessWidget {
                         ),
                         SizedBox(height: isTall ? 12 : 6),
                         Text(
-                          'Capitals and punctuation count, so watch that Shift key!',
+                          dutch
+                              ? 'Hoofdletters en leestekens tellen mee, dus let op die Shift-toets!'
+                              : 'Capitals and punctuation count, so watch that Shift key!',
                           style: GoogleFonts.nunito(
                             fontSize: 13,
                             fontWeight: FontWeight.w700,
@@ -131,7 +138,7 @@ class StorySprintMenu extends StatelessWidget {
                         ),
                         SizedBox(height: isTall ? 28 : 14),
                         Text(
-                          'Choose Difficulty',
+                          dutch ? 'Kies een niveau' : 'Choose Difficulty',
                           style: GoogleFonts.fredoka(
                             fontSize: isWide ? 20 : 18,
                             fontWeight: FontWeight.w600,
@@ -181,7 +188,7 @@ class StorySprintMenu extends StatelessWidget {
                                 const SizedBox(width: 6),
                                 Flexible(
                                   child: Text(
-                                    'Start Running',
+                                    dutch ? 'Begin met rennen' : 'Start Running',
                                     style: GoogleFonts.fredoka(
                                       fontSize: isWide ? 22 : 18,
                                       fontWeight: FontWeight.w600,
@@ -249,6 +256,7 @@ class StorySprintGameOver extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dutch = context.watch<LanguageProvider>().isDutch;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: KeyboardListener(
@@ -284,7 +292,7 @@ class StorySprintGameOver extends StatelessWidget {
                         ),
                         SizedBox(height: isTall ? 8 : 4),
                         Text(
-                          'Race Finished!',
+                          dutch ? 'Race afgelopen!' : 'Race Finished!',
                           style: GoogleFonts.fredoka(
                             fontSize: isWide ? 36 : 28,
                             fontWeight: FontWeight.w700,
@@ -293,7 +301,7 @@ class StorySprintGameOver extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'You ran $distance meters!',
+                          dutch ? 'Je rende $distance meter!' : 'You ran $distance meters!',
                           style: GoogleFonts.nunito(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -325,7 +333,7 @@ class StorySprintGameOver extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 4),
                                   child: Text(
-                                    '⭐ New High Score! ⭐',
+                                    dutch ? '⭐ Nieuw record! ⭐' : '⭐ New High Score! ⭐',
                                     style: GoogleFonts.fredoka(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
@@ -342,7 +350,7 @@ class StorySprintGameOver extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                'points',
+                                dutch ? 'punten' : 'points',
                                 style: GoogleFonts.nunito(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
@@ -353,7 +361,7 @@ class StorySprintGameOver extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.only(top: 4),
                                   child: Text(
-                                    'Best: $highScore',
+                                    dutch ? 'Record: $highScore' : 'Best: $highScore',
                                     style: GoogleFonts.nunito(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w600,
@@ -369,7 +377,7 @@ class StorySprintGameOver extends StatelessWidget {
                           children: [
                             EmojiStatTile(
                               emoji: '💬',
-                              label: 'Sentences',
+                              label: dutch ? 'Zinnen' : 'Sentences',
                               value: '$sentencesDone',
                             ),
                             const SizedBox(width: 12),
@@ -385,13 +393,13 @@ class StorySprintGameOver extends StatelessWidget {
                           children: [
                             EmojiStatTile(
                               emoji: '🎯',
-                              label: 'Accuracy',
+                              label: dutch ? 'Nauwkeurigheid' : 'Accuracy',
                               value: '$accuracy%',
                             ),
                             const SizedBox(width: 12),
                             EmojiStatTile(
                               emoji: '🔥',
-                              label: 'Best Streak',
+                              label: dutch ? 'Beste reeks' : 'Best Streak',
                               value: '$bestStreak',
                             ),
                           ],
@@ -415,7 +423,7 @@ class StorySprintGameOver extends StatelessWidget {
                                 const Icon(Icons.replay_rounded, size: 24),
                                 const SizedBox(width: 8),
                                 Text(
-                                  'Run Again',
+                                  dutch ? 'Nog een keer rennen' : 'Run Again',
                                   style: GoogleFonts.fredoka(fontSize: 20),
                                 ),
                                 const SizedBox(width: 8),
@@ -432,7 +440,7 @@ class StorySprintGameOver extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                'Back to Games',
+                                dutch ? 'Terug naar spellen' : 'Back to Games',
                                 style: GoogleFonts.fredoka(fontSize: 16),
                               ),
                               const SizedBox(width: 6),

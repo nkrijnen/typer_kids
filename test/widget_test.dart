@@ -28,6 +28,9 @@ import 'package:typer_kids/screens/games/speed_chase_screen.dart';
 import 'package:typer_kids/screens/games/widgets/speed_chase_views.dart';
 import 'package:typer_kids/screens/games/key_critters_screen.dart';
 import 'package:typer_kids/screens/games/widgets/key_critters_views.dart';
+import 'package:typer_kids/screens/games/story_sprint_screen.dart';
+import 'package:typer_kids/screens/games/widgets/story_sprint_views.dart';
+import 'package:typer_kids/data/sentence_lists.dart';
 import 'package:typer_kids/screens/sandbox/sandbox_screen.dart';
 import 'package:typer_kids/widgets/home/activity_card.dart';
 import 'package:typer_kids/widgets/home/stat_card.dart';
@@ -1142,6 +1145,96 @@ void main() {
     expect(progress.getHighScore('key_critters'), 0);
     await tester.pumpWidget(const MaterialApp(home: SizedBox()));
     await tester.pump(const Duration(milliseconds: 600));
+    selected.LessonCurriculum.isDutch = false;
+  });
+  testWidgets('Dutch Story Sprint records a separate score on game over', (
+    tester,
+  ) async {
+    GoogleFonts.config.allowRuntimeFetching = false;
+    SharedPreferences.setMockInitialValues({});
+    final language = LanguageProvider();
+    await language.init();
+    await language.select('nl');
+    final progress = ProgressProvider();
+    await progress.init(profileId: 'game-child', language: language.language);
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider.value(value: language),
+          ChangeNotifierProvider.value(value: progress),
+        ],
+        child: const MaterialApp(home: StorySprintScreen()),
+      ),
+    );
+    expect(find.text('Verhaalsprint'), findsOneWidget);
+    expect(find.text('Kies een niveau'), findsOneWidget);
+    await tester.tap(find.text('Begin met rennen'));
+    await tester.pump();
+    expect(tester.takeException(), isNull);
+
+    final sentence = tester
+        .widgetList<RichText>(find.byType(RichText))
+        .map((w) => w.text.toPlainText())
+        .firstWhere((text) => SentenceLists.dutchEasy.contains(text));
+    for (final character in sentence.split('')) {
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyA, character: character);
+      await tester.pump();
+    }
+    for (
+      var frame = 0;
+      frame < 1000 && find.byType(StorySprintGameOver).evaluate().isEmpty;
+      frame++
+    ) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+    expect(find.byType(StorySprintGameOver), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    expect(find.text('Race afgelopen!'), findsOneWidget);
+    expect(find.text('punten'), findsOneWidget);
+    expect(progress.getHighScore('story_sprint'), greaterThan(0));
+    await progress.switchLanguage('en');
+    expect(progress.getHighScore('story_sprint'), 0);
+    await tester.pumpWidget(const MaterialApp(home: SizedBox()));
+    await tester.pump(const Duration(milliseconds: 600));
+    selected.LessonCurriculum.isDutch = false;
+  });
+  testWidgets('Dutch Story Sprint uses medium and hard selections', (
+    tester,
+  ) async {
+    GoogleFonts.config.allowRuntimeFetching = false;
+    SharedPreferences.setMockInitialValues({});
+    final language = LanguageProvider();
+    await language.init();
+    await language.select('nl');
+    final progress = ProgressProvider();
+    await progress.init(profileId: 'game-child', language: 'nl');
+    for (final difficulty in [
+      ContentDifficulty.medium,
+      ContentDifficulty.hard,
+    ]) {
+      await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider.value(value: language),
+            ChangeNotifierProvider.value(value: progress),
+          ],
+          child: const MaterialApp(home: StorySprintScreen()),
+        ),
+      );
+      await tester.tap(find.text(difficulty.dutchLabel));
+      await tester.tap(find.text('Begin met rennen'));
+      await tester.pump();
+      final sentences = SentenceLists.forDifficulty(difficulty);
+      expect(
+        tester
+            .widgetList<RichText>(find.byType(RichText))
+            .map((w) => w.text.toPlainText())
+            .any((text) => sentences.contains(text)),
+        isTrue,
+      );
+      await tester.pumpWidget(const MaterialApp(home: SizedBox()));
+      await tester.pump(const Duration(milliseconds: 600));
+    }
     selected.LessonCurriculum.isDutch = false;
   });
   testWidgets('Dutch game and story route returns to saved English progress', (

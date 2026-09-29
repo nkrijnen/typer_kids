@@ -491,6 +491,41 @@ void main() {
       final shuffled = SentenceLists.shuffledFor(ContentDifficulty.medium);
       expect(shuffled.toSet(), SentenceLists.medium.toSet());
     });
+
+    test('Dutch pools each have exactly 20 unique, well-formed sentences', () {
+      selected.LessonCurriculum.isDutch = true;
+      addTearDown(() => selected.LessonCurriculum.isDutch = false);
+      final pools = {
+        ContentDifficulty.easy: SentenceLists.dutchEasy,
+        ContentDifficulty.medium: SentenceLists.dutchMedium,
+        ContentDifficulty.hard: SentenceLists.dutchHard,
+      };
+      for (final entry in pools.entries) {
+        expect(entry.value, hasLength(20), reason: entry.key.label);
+        expect(entry.value.toSet(), hasLength(20), reason: entry.key.label);
+        expect(
+          SentenceLists.forDifficulty(entry.key),
+          same(entry.value),
+          reason: entry.key.label,
+        );
+        for (final sentence in entry.value) {
+          expect(sentence.trim(), isNotEmpty);
+          expect(sentence.contains('  '), isFalse, reason: sentence);
+          expect(
+            sentence.codeUnits.every((c) => c < 128),
+            isTrue,
+            reason: sentence,
+          );
+        }
+      }
+      for (final sentence in SentenceLists.dutchEasy) {
+        expect(
+          RegExp(r'^[a-z0-9 .,]+$').hasMatch(sentence),
+          isTrue,
+          reason: sentence,
+        );
+      }
+    });
   });
 
   group('StoryContent', () {
