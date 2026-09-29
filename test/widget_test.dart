@@ -1267,7 +1267,7 @@ void main() {
       ),
     );
     expect(find.text('Typspellen'), findsOneWidget);
-    expect(find.text('Veel plezier met oefenen!'), findsOneWidget);
+    expect(find.text('Veel plezier tijdens het oefenen!'), findsOneWidget);
     expect(find.text('Verdedig de Tempel'), findsOneWidget);
     expect(find.text('Vallende woorden'), findsOneWidget);
     expect(find.text('Woordbubbels'), findsOneWidget);

@@ -394,7 +394,7 @@ class _HomeScreenState extends State<HomeScreen> {
         emoji: '🎮',
         title: dutch ? 'Typspellen' : 'Typing Games',
         subtitle: dutch
-            ? 'Veel plezier met oefenen!'
+            ? 'Veel plezier tijdens het oefenen!'
             : 'Have fun while you practice!',
         shortcut: 'G',
         color: AppColors.accent,

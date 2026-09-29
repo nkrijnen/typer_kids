@@ -193,7 +193,7 @@ class _GameMenuScreenState extends State<GameMenuScreen> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          dutch ? 'Veel plezier met oefenen!' : 'Have fun while you practice!',
+                          dutch ? 'Veel plezier tijdens het oefenen!' : 'Have fun while you practice!',
                           style: GoogleFonts.nunito(
                             fontSize: isWide ? 16.0 : 14.0,
                             color: AppColors.textSecondary,
