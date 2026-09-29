@@ -669,8 +669,8 @@ void main() {
       ),
     );
     await tester.pump();
-    await tester.ensureVisible(find.text('🎲 Surprise me!'));
-    await tester.tap(find.text('🎲 Surprise me!'));
+    await tester.ensureVisible(find.text('🎲 Verras mij!'));
+    await tester.tap(find.text('🎲 Verras mij!'));
     await tester.pumpAndSettle();
     await tester.tap(find.textContaining('De jas in de boom').last);
     await tester.pumpAndSettle();
@@ -1354,8 +1354,8 @@ void main() {
     await tester.ensureVisible(find.text('Vrij oefenen'));
     await tester.tap(find.text('Vrij oefenen'));
     await tester.pumpAndSettle();
-    await tester.ensureVisible(find.text('🎲 Surprise me!'));
-    await tester.tap(find.text('🎲 Surprise me!'));
+    await tester.ensureVisible(find.text('🎲 Verras mij!'));
+    await tester.tap(find.text('🎲 Verras mij!'));
     await tester.pumpAndSettle();
     await tester.tap(find.textContaining('De jas in de boom').last);
     await tester.pumpAndSettle();

@@ -71,13 +71,9 @@ class AppRouter {
       final profileProv = Provider.of<ProfileProvider>(context, listen: false);
       final hasActive = profileProv.hasActiveProfile;
       final onProfilePage = state.matchedLocation == '/profiles';
-      final dutch = Provider.of<LanguageProvider>(context, listen: false).isDutch;
 
       // If no active profile and not already on profile page, redirect there
       if (!hasActive && !onProfilePage) return '/profiles';
-      if (dutch && state.matchedLocation == '/test') {
-        return '/';
-      }
       // If has active profile and on profile page, go home
       // (only on initial nav, not user-initiated)
       return null;

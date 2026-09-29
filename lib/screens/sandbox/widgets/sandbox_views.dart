@@ -115,7 +115,7 @@ class SandboxSetupView extends StatelessWidget {
                     const SizedBox(height: 32),
                     if (passages.length > 1) ...[
                       Text(
-                        'Choose Difficulty',
+                        dutch ? 'Niveau' : 'Choose Difficulty',
                         style: GoogleFonts.fredoka(
                           fontSize: 20,
                           fontWeight: FontWeight.w600,
@@ -160,7 +160,7 @@ class SandboxSetupView extends StatelessWidget {
                         style: GoogleFonts.fredoka(fontSize: 18),
                       )
                     else
-                      _buildStoryPicker(),
+                      _buildStoryPicker(dutch),
                     const SizedBox(height: 32),
                     SizedBox(
                       width: 240,
@@ -208,7 +208,7 @@ class SandboxSetupView extends StatelessWidget {
 
   /// Dropdown of stories for the chosen difficulty, with a "surprise me"
   /// option (null) that picks a random passage each round.
-  Widget _buildStoryPicker() {
+  Widget _buildStoryPicker(bool dutch) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -238,7 +238,7 @@ class SandboxSetupView extends StatelessWidget {
             DropdownMenuItem<StoryPassage?>(
               value: null,
               child: Text(
-                '🎲 Surprise me!',
+                dutch ? '🎲 Verras mij!' : '🎲 Surprise me!',
                 style: GoogleFonts.nunito(
                   fontSize: 16,
                   fontWeight: FontWeight.w800,

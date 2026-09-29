@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../data/story_content.dart';
 import '../../data/word_lists.dart';
+import '../../providers/language_provider.dart';
 import '../../providers/typing_provider.dart';
 import '../../widgets/passage_typing_display.dart';
 import '../../widgets/quit_dialog.dart';
@@ -186,12 +188,17 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
   void _showQuitDialog() {
     _timer?.cancel();
     final hadStarted = _hasStartedTyping;
+    final dutch = context.read<LanguageProvider>().isDutch;
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (ctx) => QuitDialog(
-        title: 'End Test?',
-        message: 'Your test results won\'t be saved.',
+        title: dutch ? 'Test stoppen?' : 'End Test?',
+        message: dutch
+            ? 'Je testresultaten worden niet opgeslagen.'
+            : 'Your test results won\'t be saved.',
+        stayLabel: dutch ? 'Verder' : 'Stay',
+        quitLabel: dutch ? 'Stoppen' : 'Quit',
         onStay: () => Navigator.of(ctx).pop(),
         onQuit: () {
           Navigator.of(ctx).pop();
@@ -253,6 +260,7 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
   // ── Typing ────────────────────────────────────────────────────────────────
 
   Widget _buildTyping() {
+    final dutch = context.watch<LanguageProvider>().isDutch;
     final totalSeconds = _duration.seconds;
     final elapsed = totalSeconds - _remainingSeconds;
     final progress = totalSeconds > 0 ? elapsed / totalSeconds : 0.0;
@@ -269,7 +277,9 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: Text('Typing Test — ${_duration.label}'),
+        title: Text(
+          '${dutch ? 'Typetest' : 'Typing Test'} — ${_duration.label}',
+        ),
         leading: IconButton(
           icon: const Icon(Icons.close_rounded),
           onPressed: _showQuitDialog,
@@ -288,7 +298,7 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
-                  '${_difficulty.emoji} ${_difficulty.label}',
+                  '${_difficulty.emoji} ${dutch ? _difficulty.dutchLabel : _difficulty.label}',
                   style: GoogleFonts.nunito(
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
@@ -337,7 +347,7 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
                         children: [
                           LiveStatItem(
                             icon: Icons.timer_outlined,
-                            label: 'Remaining',
+                            label: dutch ? 'Resterend' : 'Remaining',
                             value: '$mins:$secs',
                             color: timerColor,
                             compact: true,
@@ -351,7 +361,7 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
                           ),
                           LiveStatItem(
                             icon: Icons.gps_fixed_rounded,
-                            label: 'Accuracy',
+                            label: dutch ? 'Nauwkeurig' : 'Accuracy',
                             value: '${_accuracy.toStringAsFixed(0)}%',
                             color: _accuracy >= 90
                                 ? AppColors.correct
@@ -362,7 +372,7 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
                           ),
                           LiveStatItem(
                             icon: Icons.text_fields_rounded,
-                            label: 'Chars',
+                            label: dutch ? 'Tekens' : 'Chars',
                             value: '$_correctCount',
                             color: AppColors.accent,
                             compact: true,
@@ -389,7 +399,9 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4),
                     child: Text(
-                      'Timer starts when you begin typing!',
+                      dutch
+                          ? 'De timer start zodra je begint te typen!'
+                          : 'Timer starts when you begin typing!',
                       style: GoogleFonts.nunito(
                         fontSize: 13,
                         fontWeight: FontWeight.w700,
@@ -439,7 +451,9 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
                           ),
                           const SizedBox(width: 6),
                           Text(
-                            'Click here and start typing!',
+                            dutch
+                                ? 'Klik hier en begin met typen!'
+                                : 'Click here and start typing!',
                             style: GoogleFonts.fredoka(
                               fontSize: 14,
                               color: AppColors.accent,

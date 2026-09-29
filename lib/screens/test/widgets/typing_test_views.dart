@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../data/word_lists.dart';
+import '../../../providers/language_provider.dart';
 import '../../../widgets/difficulty_card.dart';
 import '../../../widgets/stat_tiles.dart';
 import 'time_duration_card.dart';
@@ -59,6 +61,7 @@ class TypingTestSetup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dutch = context.watch<LanguageProvider>().isDutch;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: KeyboardListener(
@@ -83,7 +86,7 @@ class TypingTestSetup extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              'Back',
+                              dutch ? 'Terug' : 'Back',
                               style: GoogleFonts.fredoka(fontSize: 16),
                             ),
                             const SizedBox(width: 6),
@@ -99,7 +102,7 @@ class TypingTestSetup extends StatelessWidget {
                     const Text('⏱️', style: TextStyle(fontSize: 56)),
                     const SizedBox(height: 8),
                     Text(
-                      'Typing Test',
+                      dutch ? 'Typetest' : 'Typing Test',
                       style: GoogleFonts.fredoka(
                         fontSize: 34,
                         fontWeight: FontWeight.w700,
@@ -108,7 +111,9 @@ class TypingTestSetup extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Test your typing speed and accuracy!',
+                      dutch
+                          ? 'Test je typesnelheid en nauwkeurigheid!'
+                          : 'Test your typing speed and accuracy!',
                       style: GoogleFonts.nunito(
                         fontSize: 16,
                         color: AppColors.textSecondary,
@@ -119,7 +124,7 @@ class TypingTestSetup extends StatelessWidget {
 
                     // ── Difficulty selector ──
                     Text(
-                      'Difficulty',
+                      dutch ? 'Niveau' : 'Difficulty',
                       style: GoogleFonts.fredoka(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
@@ -151,7 +156,7 @@ class TypingTestSetup extends StatelessWidget {
 
                     // ── Duration selector ──
                     Text(
-                      'Duration',
+                      dutch ? 'Duur' : 'Duration',
                       style: GoogleFonts.fredoka(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
@@ -206,7 +211,7 @@ class TypingTestSetup extends StatelessWidget {
                             const SizedBox(width: 6),
                             Flexible(
                               child: Text(
-                                'Start Test',
+                                dutch ? 'Start test' : 'Start Test',
                                 style: GoogleFonts.fredoka(
                                   fontSize: 22,
                                   fontWeight: FontWeight.w600,
@@ -274,6 +279,7 @@ class TypingTestResults extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dutch = context.watch<LanguageProvider>().isDutch;
     final mins = (elapsedSeconds ~/ 60).toString().padLeft(2, '0');
     final secs = (elapsedSeconds % 60).toString().padLeft(2, '0');
 
@@ -300,19 +306,19 @@ class TypingTestResults extends StatelessWidget {
     String speedLabel;
     String speedEmoji;
     if (finalWpm >= 60) {
-      speedLabel = 'Lightning Fast!';
+      speedLabel = dutch ? 'Bliksemsnel!' : 'Lightning Fast!';
       speedEmoji = '⚡';
     } else if (finalWpm >= 40) {
-      speedLabel = 'Super Speedy!';
+      speedLabel = dutch ? 'Supersnel!' : 'Super Speedy!';
       speedEmoji = '🚀';
     } else if (finalWpm >= 25) {
-      speedLabel = 'Great Job!';
+      speedLabel = dutch ? 'Heel goed!' : 'Great Job!';
       speedEmoji = '🎉';
     } else if (finalWpm >= 15) {
-      speedLabel = 'Good Work!';
+      speedLabel = dutch ? 'Goed gedaan!' : 'Good Work!';
       speedEmoji = '👍';
     } else {
-      speedLabel = 'Keep Practicing!';
+      speedLabel = dutch ? 'Blijf oefenen!' : 'Keep Practicing!';
       speedEmoji = '💪';
     }
 
@@ -342,7 +348,7 @@ class TypingTestResults extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '${difficulty.emoji} ${difficulty.label} · ${duration.label} test',
+                      '${difficulty.emoji} ${dutch ? difficulty.dutchLabel : difficulty.label} · ${duration.label} test',
                       style: GoogleFonts.nunito(
                         fontSize: 14,
                         color: AppColors.textSecondary,
@@ -399,7 +405,7 @@ class TypingTestResults extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            'Words Per Minute',
+                            dutch ? 'Woorden per minuut' : 'Words Per Minute',
                             style: GoogleFonts.nunito(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
@@ -416,13 +422,13 @@ class TypingTestResults extends StatelessWidget {
                       children: [
                         EmojiStatTile(
                           emoji: '⏱️',
-                          label: 'Time',
+                          label: dutch ? 'Tijd' : 'Time',
                           value: '$mins:$secs',
                         ),
                         const SizedBox(width: 12),
                         EmojiStatTile(
                           emoji: '🎯',
-                          label: 'Accuracy',
+                          label: dutch ? 'Nauwkeurigheid' : 'Accuracy',
                           value: '${accuracy.toStringAsFixed(1)}%',
                         ),
                       ],
@@ -432,13 +438,13 @@ class TypingTestResults extends StatelessWidget {
                       children: [
                         EmojiStatTile(
                           emoji: '✅',
-                          label: 'Correct',
+                          label: dutch ? 'Goed' : 'Correct',
                           value: '$correctCount',
                         ),
                         const SizedBox(width: 12),
                         EmojiStatTile(
                           emoji: '❌',
-                          label: 'Errors',
+                          label: dutch ? 'Fouten' : 'Errors',
                           value: '$incorrectCount',
                         ),
                       ],
@@ -448,13 +454,13 @@ class TypingTestResults extends StatelessWidget {
                       children: [
                         EmojiStatTile(
                           emoji: '🔤',
-                          label: 'Total Chars',
+                          label: dutch ? 'Totaal tekens' : 'Total Chars',
                           value: '$totalTyped',
                         ),
                         const SizedBox(width: 12),
                         EmojiStatTile(
                           emoji: '📝',
-                          label: 'Passages',
+                          label: dutch ? 'Verhalen' : 'Passages',
                           value: '$passageCount',
                         ),
                       ],
@@ -480,7 +486,7 @@ class TypingTestResults extends StatelessWidget {
                             const Icon(Icons.refresh_rounded, size: 24),
                             const SizedBox(width: 8),
                             Text(
-                              'Test Again',
+                              dutch ? 'Opnieuw testen' : 'Test Again',
                               style: GoogleFonts.fredoka(fontSize: 20),
                             ),
                             const SizedBox(width: 8),
@@ -497,7 +503,7 @@ class TypingTestResults extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            'Back',
+                            dutch ? 'Terug' : 'Back',
                             style: GoogleFonts.fredoka(fontSize: 16),
                           ),
                           const SizedBox(width: 6),
