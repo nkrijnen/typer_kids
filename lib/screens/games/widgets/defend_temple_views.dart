@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../data/word_lists.dart';
+import '../../../providers/language_provider.dart';
 import '../../../widgets/difficulty_card.dart';
 import '../../../widgets/stat_tiles.dart';
 
@@ -48,6 +50,7 @@ class DefendTempleMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dutch = context.watch<LanguageProvider>().isDutch;
     return Scaffold(
       backgroundColor: _bgTop,
       body: KeyboardListener(
@@ -92,7 +95,7 @@ class DefendTempleMenu extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  'Back',
+                                  dutch ? 'Terug' : 'Back',
                                   style: GoogleFonts.fredoka(fontSize: 16),
                                 ),
                                 const SizedBox(width: 6),
@@ -109,7 +112,7 @@ class DefendTempleMenu extends StatelessWidget {
                         Text('🏯', style: TextStyle(fontSize: emojiSize)),
                         SizedBox(height: isTall ? 8 : 4),
                         Text(
-                          'Defend the Temple',
+                          dutch ? 'Verdedig de Tempel' : 'Defend the Temple',
                           style: GoogleFonts.fredoka(
                             fontSize: headerFontSize,
                             fontWeight: FontWeight.w700,
@@ -118,7 +121,9 @@ class DefendTempleMenu extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'Demons are attacking! Type to destroy them\nbefore they reach your temple!',
+                          dutch
+                              ? 'Demonen vallen aan! Typ om ze te vernietigen\nvoordat ze je tempel bereiken!'
+                              : 'Demons are attacking! Type to destroy them\nbefore they reach your temple!',
                           style: GoogleFonts.nunito(
                             fontSize: isWide ? 16.0 : 14.0,
                             color: Colors.white60,
@@ -128,7 +133,7 @@ class DefendTempleMenu extends StatelessWidget {
                         SizedBox(height: sectionGap),
                         // Difficulty
                         Text(
-                          'Choose Difficulty',
+                          dutch ? 'Kies een niveau' : 'Choose Difficulty',
                           style: GoogleFonts.fredoka(
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
@@ -180,7 +185,7 @@ class DefendTempleMenu extends StatelessWidget {
                                     style: TextStyle(fontSize: 22)),
                                 const SizedBox(width: 8),
                                 Text(
-                                  'Defend!',
+                                  dutch ? 'Verdedig!' : 'Defend!',
                                   style: GoogleFonts.fredoka(fontSize: 22),
                                 ),
                                 const SizedBox(width: 8),
@@ -244,6 +249,7 @@ class DefendTempleGameOver extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dutch = context.watch<LanguageProvider>().isDutch;
     final minutes = gameDuration.inMinutes
         .remainder(60)
         .toString()
@@ -289,7 +295,7 @@ class DefendTempleGameOver extends StatelessWidget {
                         Text('💀', style: TextStyle(fontSize: emojiSize)),
                         SizedBox(height: isTall ? 8 : 4),
                         Text(
-                          'Temple Fallen!',
+                          dutch ? 'Tempel gevallen!' : 'Temple Fallen!',
                           style: GoogleFonts.fredoka(
                             fontSize: headerFontSize,
                             fontWeight: FontWeight.w700,
@@ -319,7 +325,7 @@ class DefendTempleGameOver extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 4),
                                   child: Text(
-                                    '⭐ New High Score! ⭐',
+                                    dutch ? '⭐ Nieuw record! ⭐' : '⭐ New High Score! ⭐',
                                     style: GoogleFonts.fredoka(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
@@ -336,7 +342,7 @@ class DefendTempleGameOver extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                'points',
+                                dutch ? 'punten' : 'points',
                                 style: GoogleFonts.nunito(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
@@ -347,7 +353,7 @@ class DefendTempleGameOver extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.only(top: 4),
                                   child: Text(
-                                    'Best: $highScore',
+                                    dutch ? 'Record: $highScore' : 'Best: $highScore',
                                     style: GoogleFonts.nunito(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w600,
@@ -364,14 +370,14 @@ class DefendTempleGameOver extends StatelessWidget {
                           children: [
                             EmojiStatTile(
                               emoji: '💥',
-                              label: 'Slain',
+                              label: dutch ? 'Verslagen' : 'Slain',
                               value: '$demonsSlain',
                               dark: true,
                             ),
                             const SizedBox(width: 12),
                             EmojiStatTile(
                               emoji: '💀',
-                              label: 'Reached',
+                              label: dutch ? 'Bereikt' : 'Reached',
                               value: '$demonsReached',
                               dark: true,
                             ),
@@ -382,14 +388,14 @@ class DefendTempleGameOver extends StatelessWidget {
                           children: [
                             EmojiStatTile(
                               emoji: '⚔️',
-                              label: 'Best Streak',
+                              label: dutch ? 'Beste reeks' : 'Best Streak',
                               value: '$bestStreak',
                               dark: true,
                             ),
                             const SizedBox(width: 12),
                             EmojiStatTile(
                               emoji: '⏱️',
-                              label: 'Time',
+                              label: dutch ? 'Tijd' : 'Time',
                               value: '$minutes:$seconds',
                               dark: true,
                             ),
@@ -415,7 +421,7 @@ class DefendTempleGameOver extends StatelessWidget {
                                 const Icon(Icons.replay_rounded, size: 24),
                                 const SizedBox(width: 8),
                                 Text(
-                                  'Defend Again',
+                                  dutch ? 'Opnieuw verdedigen' : 'Defend Again',
                                   style: GoogleFonts.fredoka(fontSize: 20),
                                 ),
                                 const SizedBox(width: 8),
@@ -432,7 +438,7 @@ class DefendTempleGameOver extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                'Back to Games',
+                                dutch ? 'Terug naar spellen' : 'Back to Games',
                                 style: GoogleFonts.fredoka(fontSize: 16),
                               ),
                               const SizedBox(width: 6),

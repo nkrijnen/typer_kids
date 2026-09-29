@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/sound_manager.dart';
 import '../../data/word_lists.dart';
+import '../../providers/language_provider.dart';
 import '../../providers/progress_provider.dart';
 import '../../widgets/quit_dialog.dart';
 import 'widgets/defend_temple_models.dart';
@@ -408,14 +409,17 @@ class _DefendTempleScreenState extends State<DefendTempleScreen>
 
   void _showQuitDialog() {
     _ticker.stop();
+    final dutch = context.read<LanguageProvider>().isDutch;
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (ctx) => QuitDialog(
-        title: 'Abandon Temple?',
-        message: 'The demons will overrun the temple if you leave!',
-        stayLabel: 'Stay & Fight',
-        quitLabel: 'Retreat',
+        title: dutch ? 'Tempel verlaten?' : 'Abandon Temple?',
+        message: dutch
+            ? 'De demonen overspoelen de tempel als je nu weggaat!'
+            : 'The demons will overrun the temple if you leave!',
+        stayLabel: dutch ? 'Blijf vechten' : 'Stay & Fight',
+        quitLabel: dutch ? 'Terugtrekken' : 'Retreat',
         stayBadge: 'Esc',
         quitBadge: 'Q',
         stayKey: LogicalKeyboardKey.keyR,
@@ -580,7 +584,7 @@ class _DefendTempleScreenState extends State<DefendTempleScreen>
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
-              '${_difficulty.emoji} ${_difficulty.label}',
+              '${_difficulty.emoji} ${context.watch<LanguageProvider>().isDutch ? _difficulty.dutchLabel : _difficulty.label}',
               style: GoogleFonts.nunito(
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
@@ -637,7 +641,9 @@ class _DefendTempleScreenState extends State<DefendTempleScreen>
               if (_demons.isEmpty && _ghosts.isEmpty)
                 Center(
                   child: Text(
-                    'Demons approaching...',
+                    context.watch<LanguageProvider>().isDutch
+                        ? 'Demonen komen eraan...'
+                        : 'Demons approaching...',
                     style: GoogleFonts.fredoka(
                       fontSize: 24,
                       color: Colors.white24,
@@ -1018,6 +1024,7 @@ class _DefendTempleScreenState extends State<DefendTempleScreen>
   }
 
   Widget _buildInputArea() {
+    final dutch = context.watch<LanguageProvider>().isDutch;
     final hasMatch = _target != null;
     final hasInput = _input.isNotEmpty;
     final noMatch = hasInput && !hasMatch;
@@ -1071,12 +1078,12 @@ class _DefendTempleScreenState extends State<DefendTempleScreen>
           Expanded(
             child: Text(
               _flash == _FlashType.correct
-                  ? '💥 Slain!'
+                  ? (dutch ? '💥 Verslagen!' : '💥 Slain!')
                   : _flash == _FlashType.wrong
-                  ? '✗ No match'
+                  ? (dutch ? '✗ Geen match' : '✗ No match')
                   : hasInput
                   ? _input
-                  : 'Type to attack...',
+                  : (dutch ? 'Typ om aan te vallen...' : 'Type to attack...'),
               style: GoogleFonts.fredoka(
                 fontSize: fontSize,
                 fontWeight: FontWeight.w500,
@@ -1095,7 +1102,7 @@ class _DefendTempleScreenState extends State<DefendTempleScreen>
           if (hasInput && _flash == null) ...[
             if (noMatch)
               Text(
-                'Space',
+                dutch ? 'Spatie' : 'Space',
                 style: GoogleFonts.robotoMono(
                   fontSize: 10,
                   fontWeight: FontWeight.w600,

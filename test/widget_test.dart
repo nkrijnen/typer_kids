@@ -20,6 +20,8 @@ import 'package:typer_kids/data/word_lists.dart';
 import 'package:typer_kids/data/lesson_curriculum_selector.dart' as selected;
 import 'package:typer_kids/screens/games/falling_words_screen.dart';
 import 'package:typer_kids/screens/games/widgets/falling_words_views.dart';
+import 'package:typer_kids/screens/games/defend_temple_screen.dart';
+import 'package:typer_kids/screens/games/widgets/defend_temple_views.dart';
 import 'package:typer_kids/screens/sandbox/sandbox_screen.dart';
 import 'package:typer_kids/widgets/home/activity_card.dart';
 import 'package:typer_kids/widgets/home/stat_card.dart';
@@ -773,6 +775,101 @@ void main() {
       );
       await tester.tap(find.text(difficulty.dutchLabel));
       await tester.tap(find.text('Start spel'));
+      await tester.pump();
+      for (var frame = 0; frame < 20; frame++) {
+        await tester.pump(const Duration(milliseconds: 100));
+      }
+      final words = WordLists.forDifficulty(difficulty);
+      expect(
+        tester
+            .widgetList<Text>(find.byType(Text))
+            .map((text) => text.data)
+            .any((text) => words.contains(text)),
+        isTrue,
+      );
+      await tester.pumpWidget(const MaterialApp(home: SizedBox()));
+      await tester.pump(const Duration(milliseconds: 600));
+    }
+    selected.LessonCurriculum.isDutch = false;
+  });
+  testWidgets('Dutch Defend the Temple records a separate score on game over', (
+    tester,
+  ) async {
+    GoogleFonts.config.allowRuntimeFetching = false;
+    SharedPreferences.setMockInitialValues({});
+    final language = LanguageProvider();
+    await language.init();
+    await language.select('nl');
+    final progress = ProgressProvider();
+    await progress.init(profileId: 'game-child', language: language.language);
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider.value(value: language),
+          ChangeNotifierProvider.value(value: progress),
+        ],
+        child: const MaterialApp(home: DefendTempleScreen()),
+      ),
+    );
+    expect(find.text('Verdedig de Tempel'), findsOneWidget);
+    expect(find.text('Kies een niveau'), findsOneWidget);
+    await tester.tap(find.text('Verdedig!'));
+    await tester.pump();
+    expect(tester.takeException(), isNull);
+    for (var frame = 0; frame < 20; frame++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+    final word = tester
+        .widgetList<Text>(find.byType(Text))
+        .map((text) => text.data)
+        .firstWhere((text) => WordLists.dutchEasy.contains(text));
+    for (final character in word!.split('')) {
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyA, character: character);
+      await tester.pump();
+    }
+    for (
+      var frame = 0;
+      frame < 4000 && find.byType(DefendTempleGameOver).evaluate().isEmpty;
+      frame++
+    ) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+    expect(find.byType(DefendTempleGameOver), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    expect(find.text('Tempel gevallen!'), findsOneWidget);
+    expect(find.text('punten'), findsOneWidget);
+    expect(progress.getHighScore('defend_temple'), word.length * 10);
+    await progress.switchLanguage('en');
+    expect(progress.getHighScore('defend_temple'), 0);
+    await tester.pumpWidget(const MaterialApp(home: SizedBox()));
+    await tester.pump(const Duration(milliseconds: 600));
+    selected.LessonCurriculum.isDutch = false;
+  });
+  testWidgets('Dutch Defend the Temple uses medium and hard selections', (
+    tester,
+  ) async {
+    GoogleFonts.config.allowRuntimeFetching = false;
+    SharedPreferences.setMockInitialValues({});
+    final language = LanguageProvider();
+    await language.init();
+    await language.select('nl');
+    final progress = ProgressProvider();
+    await progress.init(profileId: 'game-child', language: 'nl');
+    for (final difficulty in [
+      ContentDifficulty.medium,
+      ContentDifficulty.hard,
+    ]) {
+      await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider.value(value: language),
+            ChangeNotifierProvider.value(value: progress),
+          ],
+          child: const MaterialApp(home: DefendTempleScreen()),
+        ),
+      );
+      await tester.tap(find.text(difficulty.dutchLabel));
+      await tester.tap(find.text('Verdedig!'));
       await tester.pump();
       for (var frame = 0; frame < 20; frame++) {
         await tester.pump(const Duration(milliseconds: 100));
