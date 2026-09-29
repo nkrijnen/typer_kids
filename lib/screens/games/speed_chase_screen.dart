@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/sound_manager.dart';
 import '../../data/word_lists.dart';
+import '../../providers/language_provider.dart';
 import '../../providers/progress_provider.dart';
 import '../../widgets/quit_dialog.dart';
 import 'widgets/speed_chase_views.dart';
@@ -222,14 +223,15 @@ class _SpeedChaseScreenState extends State<SpeedChaseScreen> {
   void _showQuitDialog() {
     _gameTimer?.cancel();
     _ghostTimer?.cancel();
+    final dutch = context.read<LanguageProvider>().isDutch;
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (ctx) => QuitDialog(
-        title: 'Quit Race?',
-        message: 'Your current score will be lost.',
-        stayLabel: 'Resume',
-        quitLabel: 'Quit',
+        title: dutch ? 'Race verlaten?' : 'Quit Race?',
+        message: dutch ? 'Je huidige score gaat verloren.' : 'Your current score will be lost.',
+        stayLabel: dutch ? 'Verder' : 'Resume',
+        quitLabel: dutch ? 'Verlaten' : 'Quit',
         stayBadge: 'Esc',
         quitBadge: 'Q',
         stayKey: LogicalKeyboardKey.keyR,
@@ -415,7 +417,7 @@ class _SpeedChaseScreenState extends State<SpeedChaseScreen> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
-                              '${_difficulty.emoji} ${_difficulty.label}',
+                              '${_difficulty.emoji} ${context.watch<LanguageProvider>().isDutch ? _difficulty.dutchLabel : _difficulty.label}',
                               style: GoogleFonts.nunito(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w700,
@@ -436,7 +438,9 @@ class _SpeedChaseScreenState extends State<SpeedChaseScreen> {
                     _buildInputArea(inputFontSize),
                     const SizedBox(height: 4),
                     Text(
-                      'Press Space or Enter to submit',
+                      context.watch<LanguageProvider>().isDutch
+                          ? 'Druk op Spatie of Enter om te verzenden'
+                          : 'Press Space or Enter to submit',
                       style: GoogleFonts.nunito(
                         fontSize: 12,
                         color: AppColors.textSecondary,
@@ -457,6 +461,7 @@ class _SpeedChaseScreenState extends State<SpeedChaseScreen> {
   }
 
   Widget _buildRaceTrack(double screenW) {
+    final dutch = context.watch<LanguageProvider>().isDutch;
     final trackPad = screenW > 600 ? 32.0 : 16.0;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: trackPad),
@@ -473,7 +478,7 @@ class _SpeedChaseScreenState extends State<SpeedChaseScreen> {
             // Player track
             _buildTrackLane(
               '🏎️',
-              'You',
+              dutch ? 'Jij' : 'You',
               _playerProgress,
               const Color(0xFF42A5F5),
             ),
@@ -481,7 +486,7 @@ class _SpeedChaseScreenState extends State<SpeedChaseScreen> {
             // Ghost track
             _buildTrackLane(
               '👻',
-              'Ghost',
+              dutch ? 'Spook' : 'Ghost',
               _ghostProgress,
               Colors.grey.shade400,
             ),
@@ -569,10 +574,11 @@ class _SpeedChaseScreenState extends State<SpeedChaseScreen> {
   }
 
   Widget _buildWordArea(double fontSize) {
+    final dutch = context.watch<LanguageProvider>().isDutch;
     if (_currentIndex >= _words.length) {
       return Center(
         child: Text(
-          '🏁 All words completed!',
+          dutch ? '🏁 Alle woorden voltooid!' : '🏁 All words completed!',
           style: GoogleFonts.fredoka(fontSize: 24, color: AppColors.correct),
         ),
       );
@@ -640,7 +646,7 @@ class _SpeedChaseScreenState extends State<SpeedChaseScreen> {
               if (_errors > 0) ...[
                 const SizedBox(height: 16),
                 Text(
-                  'Errors: $_errors',
+                  dutch ? 'Fouten: $_errors' : 'Errors: $_errors',
                   style: GoogleFonts.nunito(
                     fontSize: 14,
                     color: AppColors.incorrect,
@@ -725,7 +731,11 @@ class _SpeedChaseScreenState extends State<SpeedChaseScreen> {
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              hasInput ? _input : 'Type the word...',
+              hasInput
+                  ? _input
+                  : (context.watch<LanguageProvider>().isDutch
+                        ? 'Typ het woord...'
+                        : 'Type the word...'),
               style: GoogleFonts.fredoka(
                 fontSize: fontSize,
                 fontWeight: FontWeight.w500,

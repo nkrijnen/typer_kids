@@ -24,6 +24,8 @@ import 'package:typer_kids/screens/games/defend_temple_screen.dart';
 import 'package:typer_kids/screens/games/widgets/defend_temple_views.dart';
 import 'package:typer_kids/screens/games/word_bubbles_screen.dart';
 import 'package:typer_kids/screens/games/widgets/word_bubbles_views.dart';
+import 'package:typer_kids/screens/games/speed_chase_screen.dart';
+import 'package:typer_kids/screens/games/widgets/speed_chase_views.dart';
 import 'package:typer_kids/screens/sandbox/sandbox_screen.dart';
 import 'package:typer_kids/widgets/home/activity_card.dart';
 import 'package:typer_kids/widgets/home/stat_card.dart';
@@ -978,6 +980,107 @@ void main() {
             .widgetList<Text>(find.byType(Text))
             .map((text) => text.data)
             .any((text) => words.contains(text)),
+        isTrue,
+      );
+      await tester.pumpWidget(const MaterialApp(home: SizedBox()));
+      await tester.pump(const Duration(milliseconds: 600));
+    }
+    selected.LessonCurriculum.isDutch = false;
+  });
+  testWidgets('Dutch Speed Chase records a separate score on game over', (
+    tester,
+  ) async {
+    GoogleFonts.config.allowRuntimeFetching = false;
+    SharedPreferences.setMockInitialValues({});
+    final language = LanguageProvider();
+    await language.init();
+    await language.select('nl');
+    final progress = ProgressProvider();
+    await progress.init(profileId: 'game-child', language: language.language);
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider.value(value: language),
+          ChangeNotifierProvider.value(value: progress),
+        ],
+        child: const MaterialApp(home: SpeedChaseScreen()),
+      ),
+    );
+    expect(find.text('Snelheidsrace'), findsOneWidget);
+    expect(find.text('Kies een niveau'), findsOneWidget);
+    await tester.tap(find.text('Start race'));
+    await tester.pump();
+    expect(tester.takeException(), isNull);
+
+    String currentWord() {
+      return tester
+          .widgetList<RichText>(find.byType(RichText))
+          .map((w) => w.text.toPlainText())
+          .firstWhere((text) => WordLists.dutchEasy.contains(text));
+    }
+
+    for (var i = 0; i < 15; i++) {
+      final word = currentWord();
+      for (final character in word.split('')) {
+        await tester.sendKeyEvent(
+          LogicalKeyboardKey.keyA,
+          character: character,
+        );
+        await tester.pump();
+      }
+      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+      await tester.pump();
+    }
+    for (
+      var frame = 0;
+      frame < 4000 && find.byType(SpeedChaseGameOver).evaluate().isEmpty;
+      frame++
+    ) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+    expect(find.byType(SpeedChaseGameOver), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    expect(find.text('Je hebt gewonnen!'), findsOneWidget);
+    expect(find.text('punten'), findsOneWidget);
+    expect(progress.getHighScore('speed_chase'), greaterThan(0));
+    await progress.switchLanguage('en');
+    expect(progress.getHighScore('speed_chase'), 0);
+    await tester.pumpWidget(const MaterialApp(home: SizedBox()));
+    await tester.pump(const Duration(milliseconds: 600));
+    selected.LessonCurriculum.isDutch = false;
+  });
+  testWidgets('Dutch Speed Chase uses medium and hard selections', (
+    tester,
+  ) async {
+    GoogleFonts.config.allowRuntimeFetching = false;
+    SharedPreferences.setMockInitialValues({});
+    final language = LanguageProvider();
+    await language.init();
+    await language.select('nl');
+    final progress = ProgressProvider();
+    await progress.init(profileId: 'game-child', language: 'nl');
+    for (final difficulty in [
+      ContentDifficulty.medium,
+      ContentDifficulty.hard,
+    ]) {
+      await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider.value(value: language),
+            ChangeNotifierProvider.value(value: progress),
+          ],
+          child: const MaterialApp(home: SpeedChaseScreen()),
+        ),
+      );
+      await tester.tap(find.text(difficulty.dutchLabel));
+      await tester.tap(find.text('Start race'));
+      await tester.pump();
+      final words = WordLists.forDifficulty(difficulty);
+      expect(
+        tester
+            .widgetList<Text>(find.byType(Text))
+            .map((text) => text.data)
+            .any((text) => text != null && words.contains(text)),
         isTrue,
       );
       await tester.pumpWidget(const MaterialApp(home: SizedBox()));
