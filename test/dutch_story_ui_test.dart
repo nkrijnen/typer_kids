@@ -56,6 +56,9 @@ void main() {
     );
     await tester.pumpAndSettle();
     final router = GoRouter.of(tester.element(find.text('Typer Kids')));
+    await tester.sendKeyEvent(LogicalKeyboardKey.keyT);
+    await tester.pumpAndSettle();
+    expect(find.text('Typetest'), findsOneWidget);
 
     for (final difficulty in ContentDifficulty.values) {
       router.go('/');

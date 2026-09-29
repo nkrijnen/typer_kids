@@ -47,6 +47,8 @@ class _HomeScreenState extends State<HomeScreen> {
         _openGames();
       } else if (key == LogicalKeyboardKey.keyF) {
         _openSandbox();
+      } else if (key == LogicalKeyboardKey.keyT) {
+        _openTypingTest();
       }
       return;
     }
@@ -408,15 +410,16 @@ class _HomeScreenState extends State<HomeScreen> {
         color: AppColors.secondary,
         onTap: () => _openSandbox(),
       ),
-      if (!dutch)
-        ActivityCard(
-          emoji: '⏱',
-          title: 'Typing Test',
-          subtitle: 'Test your speed with a time limit',
-          shortcut: 'T',
-          color: AppColors.primary,
-          onTap: () => _openTypingTest(),
-        ),
+      ActivityCard(
+        emoji: '⏱',
+        title: dutch ? 'Typetest' : 'Typing Test',
+        subtitle: dutch
+            ? 'Test je snelheid binnen een vaste tijd'
+            : 'Test your speed with a time limit',
+        shortcut: 'T',
+        color: AppColors.primary,
+        onTap: () => _openTypingTest(),
+      ),
       if (!dutch && trickyKeys.isNotEmpty)
         ActivityCard(
           emoji: '🔧',

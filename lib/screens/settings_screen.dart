@@ -55,9 +55,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
             _buildSectionHeader(dutch ? 'Taal' : 'Language'),
             const SizedBox(height: 12),
             SegmentedButton<String>(
-              segments: const [
-                ButtonSegment(value: 'en', label: Text('English')),
-                ButtonSegment(value: 'nl', label: Text('Nederlands')),
+              segments: [
+                ButtonSegment(
+                  value: 'en',
+                  label: Text(dutch ? 'Engels' : 'English'),
+                ),
+                ButtonSegment(
+                  value: 'nl',
+                  label: Text(dutch ? 'Nederlands' : 'Dutch'),
+                ),
               ],
               selected: {language.language},
               onSelectionChanged: (selection) {
