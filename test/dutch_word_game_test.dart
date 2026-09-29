@@ -25,4 +25,15 @@ void main() {
     curriculum.LessonCurriculum.isDutch = false;
     expect(WordLists.forDifficulty(ContentDifficulty.easy), contains('the'));
   });
+
+  test('Dutch easy pool has exactly 302 unique, typeable, short words', () {
+    expect(WordLists.dutchEasy, hasLength(302));
+    expect(WordLists.dutchEasy.toSet(), hasLength(302));
+    expect(
+      WordLists.dutchEasy.every((word) => RegExp(r'^[a-z]+$').hasMatch(word)),
+      isTrue,
+    );
+    expect(WordLists.dutchEasy.every((word) => word.isNotEmpty), isTrue);
+    expect(WordLists.dutchEasy.every((word) => word.length <= 3), isTrue);
+  });
 }
