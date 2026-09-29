@@ -36,4 +36,19 @@ void main() {
     expect(WordLists.dutchEasy.every((word) => word.isNotEmpty), isTrue);
     expect(WordLists.dutchEasy.every((word) => word.length <= 3), isTrue);
   });
+
+  test('Dutch medium pool has exactly 309 unique, typeable words', () {
+    expect(WordLists.dutchMedium, hasLength(309));
+    expect(WordLists.dutchMedium.toSet(), hasLength(309));
+    expect(
+      WordLists.dutchMedium.every(
+        (word) => RegExp(r'^[a-z]+$').hasMatch(word),
+      ),
+      isTrue,
+    );
+    expect(
+      WordLists.dutchMedium.every((word) => word.length >= 4 && word.length <= 6),
+      isTrue,
+    );
+  });
 }
