@@ -34,7 +34,12 @@ import '../../screens/typing_screen.dart';
 ///   /lesson/:lessonId          → Typing screen (intro + practice)
 ///   /lesson/:lessonId/results  → Results / celebration screen
 ///   /games                   → Game menu
+///   /games/defend-temple      → Defend the Temple game
 ///   /games/falling-words      → Falling words game
+///   /games/word-bubbles       → Word Bubbles game
+///   /games/speed-chase        → Speed Chase game
+///   /games/key-critters       → Key Critters game
+///   /games/story-sprint       → Story Sprint game
 ///   /sandbox                  → Free practice sandbox
 ///   /test                     → Typing test
 ///   /settings                  → Settings
@@ -70,10 +75,7 @@ class AppRouter {
 
       // If no active profile and not already on profile page, redirect there
       if (!hasActive && !onProfilePage) return '/profiles';
-      if (dutch && (state.matchedLocation == '/games' ||
-          (state.matchedLocation.startsWith('/games/') &&
-            state.matchedLocation != '/games/falling-words') ||
-          state.matchedLocation == '/test')) {
+      if (dutch && state.matchedLocation == '/test') {
         return '/';
       }
       // If has active profile and on profile page, go home

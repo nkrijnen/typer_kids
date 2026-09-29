@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import '../../core/theme/app_colors.dart';
+import '../../providers/language_provider.dart';
 import '../../widgets/shortcut_badge.dart';
 
 /// Menu screen listing available typing games.
@@ -45,6 +47,7 @@ class _GameMenuScreenState extends State<GameMenuScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final dutch = context.watch<LanguageProvider>().isDutch;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: KeyboardListener(
@@ -75,8 +78,10 @@ class _GameMenuScreenState extends State<GameMenuScreen> {
               final gameCards = <Widget>[
                 _GameCard(
                   emoji: '🏯',
-                  title: 'Defend the Temple',
-                  description: 'Stop the demons before they reach your temple!',
+                  title: dutch ? 'Verdedig de Tempel' : 'Defend the Temple',
+                  description: dutch
+                      ? 'Stop de demonen voordat ze je tempel bereiken!'
+                      : 'Stop the demons before they reach your temple!',
                   shortcut: '1',
                   color: const Color(0xFF8B0000),
                   compact: !isTall,
@@ -84,8 +89,10 @@ class _GameMenuScreenState extends State<GameMenuScreen> {
                 ),
                 _GameCard(
                   emoji: '⬇',
-                  title: 'Falling Words',
-                  description: 'Type the words before they reach the bottom!',
+                  title: dutch ? 'Vallende woorden' : 'Falling Words',
+                  description: dutch
+                      ? 'Typ de woorden voordat ze de grond raken!'
+                      : 'Type the words before they reach the bottom!',
                   shortcut: '2',
                   color: AppColors.primary,
                   compact: !isTall,
@@ -93,8 +100,10 @@ class _GameMenuScreenState extends State<GameMenuScreen> {
                 ),
                 _GameCard(
                   emoji: '🫧',
-                  title: 'Word Bubbles',
-                  description: 'Pop the floating bubbles by typing the words!',
+                  title: dutch ? 'Woordbubbels' : 'Word Bubbles',
+                  description: dutch
+                      ? 'Knap de zwevende bubbels door de woorden te typen!'
+                      : 'Pop the floating bubbles by typing the words!',
                   shortcut: '3',
                   color: const Color(0xFF26C6DA),
                   compact: !isTall,
@@ -102,8 +111,10 @@ class _GameMenuScreenState extends State<GameMenuScreen> {
                 ),
                 _GameCard(
                   emoji: '🏎',
-                  title: 'Speed Chase',
-                  description: 'Type words faster than the ghost racer!',
+                  title: dutch ? 'Snelheidsrace' : 'Speed Chase',
+                  description: dutch
+                      ? 'Typ woorden sneller dan de spookracer!'
+                      : 'Type words faster than the ghost racer!',
                   shortcut: '4',
                   color: const Color(0xFFE53935),
                   compact: !isTall,
@@ -111,8 +122,10 @@ class _GameMenuScreenState extends State<GameMenuScreen> {
                 ),
                 _GameCard(
                   emoji: '🐹',
-                  title: 'Key Critters',
-                  description: 'Bonk the critters by pressing their keys!',
+                  title: dutch ? 'Toetsbeestjes' : 'Key Critters',
+                  description: dutch
+                      ? 'Bonk de beestjes door op hun toets te drukken!'
+                      : 'Bonk the critters by pressing their keys!',
                   shortcut: '5',
                   color: const Color(0xFF43A047),
                   compact: !isTall,
@@ -120,8 +133,10 @@ class _GameMenuScreenState extends State<GameMenuScreen> {
                 ),
                 _GameCard(
                   emoji: '🏃',
-                  title: 'Story Sprint',
-                  description: 'Type full sentences to sprint down the track!',
+                  title: dutch ? 'Verhaalsprint' : 'Story Sprint',
+                  description: dutch
+                      ? 'Typ hele zinnen om over de baan te sprinten!'
+                      : 'Type full sentences to sprint down the track!',
                   shortcut: '6',
                   color: const Color(0xFFFB8C00),
                   compact: !isTall,
@@ -152,7 +167,7 @@ class _GameMenuScreenState extends State<GameMenuScreen> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  'Back',
+                                  dutch ? 'Terug' : 'Back',
                                   style: GoogleFonts.fredoka(fontSize: 16),
                                 ),
                                 const SizedBox(width: 6),
@@ -169,7 +184,7 @@ class _GameMenuScreenState extends State<GameMenuScreen> {
                         Text('🎮', style: TextStyle(fontSize: emojiSize)),
                         SizedBox(height: isTall ? 8 : 4),
                         Text(
-                          'Typing Games',
+                          dutch ? 'Typspellen' : 'Typing Games',
                           style: GoogleFonts.fredoka(
                             fontSize: headerFontSize,
                             fontWeight: FontWeight.w700,
@@ -178,7 +193,7 @@ class _GameMenuScreenState extends State<GameMenuScreen> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'Have fun while you practice!',
+                          dutch ? 'Veel plezier met oefenen!' : 'Have fun while you practice!',
                           style: GoogleFonts.nunito(
                             fontSize: isWide ? 16.0 : 14.0,
                             color: AppColors.textSecondary,

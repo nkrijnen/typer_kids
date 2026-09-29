@@ -30,6 +30,7 @@ import 'package:typer_kids/screens/games/key_critters_screen.dart';
 import 'package:typer_kids/screens/games/widgets/key_critters_views.dart';
 import 'package:typer_kids/screens/games/story_sprint_screen.dart';
 import 'package:typer_kids/screens/games/widgets/story_sprint_views.dart';
+import 'package:typer_kids/screens/games/game_menu_screen.dart';
 import 'package:typer_kids/data/sentence_lists.dart';
 import 'package:typer_kids/screens/sandbox/sandbox_screen.dart';
 import 'package:typer_kids/widgets/home/activity_card.dart';
@@ -533,7 +534,7 @@ void main() {
       expect(find.text('🐵'), findsOneWidget);
       expect(find.byType(ActivityCard), findsNWidgets(2));
       expect(find.byType(StatCard), findsNWidgets(4));
-      expect(find.text('Vallende woorden'), findsOneWidget);
+      expect(find.text('Typspellen'), findsOneWidget);
       expect(find.text('Vrij oefenen'), findsOneWidget);
       await tester.ensureVisible(find.byType(ActionChip));
       await tester.tap(find.byType(ActionChip));
@@ -1237,6 +1238,49 @@ void main() {
     }
     selected.LessonCurriculum.isDutch = false;
   });
+  testWidgets('Dutch game menu shows all six localized games', (
+    tester,
+  ) async {
+    GoogleFonts.config.allowRuntimeFetching = false;
+    SharedPreferences.setMockInitialValues({});
+    final language = LanguageProvider();
+    await language.init();
+    await language.select('nl');
+    final progress = ProgressProvider();
+    await progress.init(profileId: 'game-child', language: language.language);
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider.value(value: language),
+          ChangeNotifierProvider.value(value: progress),
+        ],
+        child: const MaterialApp(home: GameMenuScreen()),
+      ),
+    );
+    expect(find.text('Typspellen'), findsOneWidget);
+    expect(find.text('Veel plezier met oefenen!'), findsOneWidget);
+    expect(find.text('Verdedig de Tempel'), findsOneWidget);
+    expect(find.text('Vallende woorden'), findsOneWidget);
+    expect(find.text('Woordbubbels'), findsOneWidget);
+    expect(find.text('Snelheidsrace'), findsOneWidget);
+    expect(find.text('Toetsbeestjes'), findsOneWidget);
+    expect(find.text('Verhaalsprint'), findsOneWidget);
+    expect(find.text('Terug'), findsOneWidget);
+    for (final english in [
+      'Defend the Temple',
+      'Falling Words',
+      'Word Bubbles',
+      'Speed Chase',
+      'Key Critters',
+      'Story Sprint',
+      'Typing Games',
+      'Back',
+    ]) {
+      expect(find.text(english), findsNothing, reason: english);
+    }
+    await tester.pumpWidget(const MaterialApp(home: SizedBox()));
+    selected.LessonCurriculum.isDutch = false;
+  });
   testWidgets('Dutch game and story route returns to saved English progress', (
     tester,
   ) async {
@@ -1271,7 +1315,9 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    await tester.ensureVisible(find.text('Vallende woorden'));
+    await tester.ensureVisible(find.text('Typspellen'));
+    await tester.tap(find.text('Typspellen'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Vallende woorden'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Start spel'));

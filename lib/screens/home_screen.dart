@@ -44,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
       } else if (key == LogicalKeyboardKey.keyP) {
         _switchProfile();
       } else if (key == LogicalKeyboardKey.keyG) {
-        context.push('/games/falling-words');
+        _openGames();
       } else if (key == LogicalKeyboardKey.keyF) {
         _openSandbox();
       }
@@ -390,14 +390,13 @@ class _HomeScreenState extends State<HomeScreen> {
     final cards = [
       ActivityCard(
         emoji: '🎮',
-        title: dutch ? 'Vallende woorden' : 'Typing Games',
+        title: dutch ? 'Typspellen' : 'Typing Games',
         subtitle: dutch
-            ? 'Typ de woorden voordat ze vallen'
+            ? 'Veel plezier met oefenen!'
             : 'Have fun while you practice!',
         shortcut: 'G',
         color: AppColors.accent,
-        onTap: () =>
-            dutch ? context.push('/games/falling-words') : _openGames(),
+        onTap: () => _openGames(),
       ),
       ActivityCard(
         emoji: '📖',
