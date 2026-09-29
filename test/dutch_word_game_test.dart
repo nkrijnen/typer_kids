@@ -51,4 +51,14 @@ void main() {
       isTrue,
     );
   });
+
+  test('Dutch hard pool has exactly 279 unique, typeable words', () {
+    expect(WordLists.dutchHard, hasLength(279));
+    expect(WordLists.dutchHard.toSet(), hasLength(279));
+    expect(
+      WordLists.dutchHard.every((word) => RegExp(r'^[a-z]+$').hasMatch(word)),
+      isTrue,
+    );
+    expect(WordLists.dutchHard.every((word) => word.length >= 7), isTrue);
+  });
 }
