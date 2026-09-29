@@ -80,11 +80,7 @@ class ProgressProvider extends ChangeNotifier {
     _prefs = await SharedPreferences.getInstance();
     _language = language == 'nl' ? 'nl' : 'en';
     _profileId = profileId;
-    _progressMap.clear();
-    _lastLessonId = null;
-    _loadProgress();
-    await _migrateLegacyDutchLessonIds();
-    _lastLessonId = _prefs?.getString('${_lessonPrefix}last_lesson_id');
+    await _reloadProgress();
     _isLoaded = true;
     notifyListeners();
   }
@@ -92,22 +88,22 @@ class ProgressProvider extends ChangeNotifier {
   /// Switch to a different profile's data (reloads progress from prefs)
   Future<void> switchProfile(String profileId) async {
     _profileId = profileId;
-    _progressMap.clear();
-    _lastLessonId = null;
-    _loadProgress();
-    await _migrateLegacyDutchLessonIds();
-    _lastLessonId = _prefs?.getString('${_lessonPrefix}last_lesson_id');
+    await _reloadProgress();
     notifyListeners();
   }
 
   Future<void> switchLanguage(String language) async {
     _language = language == 'nl' ? 'nl' : 'en';
+    await _reloadProgress();
+    notifyListeners();
+  }
+
+  Future<void> _reloadProgress() async {
     _progressMap.clear();
     _lastLessonId = null;
     _loadProgress();
     await _migrateLegacyDutchLessonIds();
     _lastLessonId = _prefs?.getString('${_lessonPrefix}last_lesson_id');
-    notifyListeners();
   }
 
   void _loadProgress() {
