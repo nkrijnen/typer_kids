@@ -133,4 +133,70 @@ const List<StoryPassage> dutchHardPassages = [
         'Tijdens de vergadering wegen bewoners kosten, ruimte en opbrengst tegen elkaar af. '
         'Uiteindelijk kiezen ze eerst voor isolatie: die bespaart meteen energie, ook wanneer de zon niet schijnt!',
   ),
+  StoryPassage(
+    title: 'Ruimte voor de rivier',
+    source: 'Origineel verhaal van Typer Kids',
+    difficulty: ContentDifficulty.hard,
+    text:
+        'In een schaalmodel onderzoekt groep acht hoe de wijk droog kan blijven wanneer de rivier stijgt. '
+        'Als ze alleen een hogere dijk bouwen, stroomt het water sneller naar het volgende dorp; dat lost het probleem dus niet op. '
+        'Wat gebeurt er wanneer de rivier meer ruimte krijgt? De leerlingen verplaatsen een kade en graven een nevengeul. '
+        'Bij de tweede proef verspreidt het water zich over een groter gebied (zonder de huizen te bereiken). '
+        'Hun conclusie is helder: veiligheid vraagt soms om ruimte, niet alleen om hogere muren!',
+  ),
+  StoryPassage(
+    title: 'Het masker zonder naam',
+    source: 'Origineel verhaal van Typer Kids',
+    difficulty: ContentDifficulty.hard,
+    text:
+        'In het depot van een museum staat een houten masker waarvan de herkomst onduidelijk is. '
+        'Op een oud kaartje staat slechts gekocht in 1923, maar door wie en waar? '
+        "Meryem vergelijkt inventarislijsten, reisverslagen en foto's uit dezelfde periode; langzaam ontstaat een spoor. "
+        'Een brief noemt een dorp en de naam van de maker. '
+        'Het museum neemt contact op met zijn familie, want een voorwerp verdient een eerlijk en volledig verhaal!',
+  ),
+  StoryPassage(
+    title: 'Een plein voor iedereen',
+    source: 'Origineel verhaal van Typer Kids',
+    difficulty: ContentDifficulty.hard,
+    text:
+        'Bij het ontwerp van een nieuw speelplein merkt Elias dat de hoge randen lastig zijn voor rolstoelen. '
+        'Hij vraagt klasgenoot Puck om mee te kijken; samen testen ze hellingen, ondergronden en de ruimte tussen toestellen. '
+        'Is een aparte ingang voldoende? Puck legt uit dat iedereen liever dezelfde route gebruikt. '
+        'Het team past de tekening aan en voegt een brede helling, voelbare markeringen en rustige zitplekken toe. '
+        'Toegankelijkheid blijkt geen extra onderdeel, maar het begin van een beter ontwerp.',
+  ),
+  StoryPassage(
+    title: 'Overstappen in de nacht',
+    source: 'Origineel verhaal van Typer Kids',
+    difficulty: ContentDifficulty.hard,
+    text:
+        'Tijdens een reis met de nachttrein moet Sofia om 02:15 overstappen op een klein station. '
+        'De aansluiting duurt maar twaalf minuten, terwijl haar wagon helemaal achteraan stopt. '
+        'Ze bestudeert vooraf de plattegrond en markeert de juiste trap; haar vader bewaart de kaartjes offline. '
+        'Dan komt hun trein zeven minuten te laat. Halen ze de aansluiting nog? '
+        'Een medewerker belt vooruit, waarna de tweede trein even wacht!',
+  ),
+  StoryPassage(
+    title: 'Nieuw leven op de zeebodem',
+    source: 'Origineel verhaal van Typer Kids',
+    difficulty: ContentDifficulty.hard,
+    text:
+        'Langs de kust plaatsen onderzoekers blokken met ruwe openingen op een kale zeebodem. '
+        'De vormen lijken eenvoudig, maar elke holte biedt beschutting aan jonge vissen, krabben en schelpdieren. '
+        'Na zes maanden vergelijkt Dani de beelden: op sommige blokken groeit al een dicht tapijt van leven. '
+        'Waarom blijven andere blokken bijna leeg? Stroming, licht en bodemsoort blijken allemaal invloed te hebben. '
+        'Het volgende ontwerp wordt daarom niet groter, maar slimmer verdeeld!',
+  ),
+  StoryPassage(
+    title: 'De zaak van de kapotte ruit',
+    source: 'Origineel verhaal van Typer Kids',
+    difficulty: ContentDifficulty.hard,
+    text:
+        'Tijdens een oefenrechtbank onderzoekt de klas wie verantwoordelijk is voor een kapotte ruit. '
+        'De ene groep verdedigt de voetballer, de andere vertegenwoordigt de eigenaar; getuigen spreken elkaar tegen. '
+        'Was het schot roekeloos, of stond het doel op een verkeerde plek? '
+        'Rechter Aylin vraagt beide kanten om bewijs in plaats van aannames. '
+        'Na het overleg volgt geen straf, maar een gedeelde oplossing: een net achter het doel en hulp bij de reparatie.',
+  ),
 ];
