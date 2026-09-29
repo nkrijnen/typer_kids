@@ -67,4 +67,70 @@ const List<StoryPassage> dutchHardPassages = [
         'Werkt de luidspreker overal even goed? In de verste hoek is de boodschap nauwelijks hoorbaar. '
         'De technicus past het volume aan, waarna de tweede proef zonder problemen verloopt!',
   ),
+  StoryPassage(
+    title: 'Hitte tussen de huizen',
+    source: 'Origineel verhaal van Typer Kids',
+    difficulty: ContentDifficulty.hard,
+    text:
+        'Tijdens een warme week onderzoekt Senna waarom sommige straten veel heter aanvoelen dan andere. '
+        'Met een digitale meter vergelijkt hij drie plekken: een stenen plein, een smalle straat en een park vol bomen. '
+        'Op het plein wijst de meter 38 graden aan; onder de bomen blijft het bijna tien graden koeler. '
+        'Komt dat alleen door de schaduw? Senna ontdekt dat bladeren ook water verdampen. '
+        'In zijn verslag stelt hij meer groen en lichte daken voor!',
+  ),
+  StoryPassage(
+    title: 'De code in het archief',
+    source: 'Origineel verhaal van Typer Kids',
+    difficulty: ContentDifficulty.hard,
+    text:
+        'In het stadsarchief vindt Lian een brief waarin sommige woorden door cijfers zijn vervangen. '
+        'De archivaris denkt dat het een oude handelscode is, maar niemand heeft de sleutel bewaard. '
+        'Lian telt hoe vaak elk cijfer voorkomt en vergelijkt de patronen met korte woorden. '
+        'Zou 12 misschien voor de staan? Na drie pogingen ontstaat een leesbare zin: het schip vertrekt bij dageraad. '
+        'Haar oplossing wordt naast de brief bewaard!',
+  ),
+  StoryPassage(
+    title: 'Een brug van papier',
+    source: 'Origineel verhaal van Typer Kids',
+    difficulty: ContentDifficulty.hard,
+    text:
+        'Voor een techniekwedstrijd moet een brug van papier vijftig boeken dragen. '
+        'Nora vouwt stroken tot driehoeken, omdat die vorm nauwelijks vervormt; haar teamgenoot maakt ondertussen stevige pijlers. '
+        'Bij de eerste proef zakt het midden toch langzaam door. Waar verdwijnt de kracht? '
+        'Ze voegen dwarsverbindingen toe (zonder extra lijm) en proberen het opnieuw. '
+        'Boek na boek blijft de aangepaste brug overeind!',
+  ),
+  StoryPassage(
+    title: 'Klopt dat verhaal wel',
+    source: 'Origineel verhaal van Typer Kids',
+    difficulty: ContentDifficulty.hard,
+    text:
+        'Voor hun podcast bespreekt Adam een spectaculair bericht dat online snel wordt gedeeld. '
+        'Volgens het bericht zou een zeldzame haai in een stadsgracht zwemmen, maar de foto lijkt vreemd. '
+        'Faye zoekt de oudste versie op; daar staat dezelfde haai naast een tropisch eiland. '
+        'Wie heeft het beeld veranderd, en waarom? Ze bellen een bioloog en vergelijken betrouwbare bronnen. '
+        "In de aflevering leggen ze stap voor stap uit hoe je zo'n verhaal controleert.",
+  ),
+  StoryPassage(
+    title: 'Ringen voor de trekvogels',
+    source: 'Origineel verhaal van Typer Kids',
+    difficulty: ContentDifficulty.hard,
+    text:
+        'Bij een vogelstation helpt Zahra onderzoekers die de jaarlijkse trek volgen. '
+        'Een ervaren medewerker meet elke vogel, noteert het gewicht en bevestigt een lichte ring met een uniek nummer. '
+        'Waarom vliegen sommige dieren duizenden kilometers? De route biedt voedsel, veiligheid en een geschikte plek om jongen groot te brengen. '
+        'Zodra alle gegevens zijn opgeslagen, opent Zahra voorzichtig haar handen. '
+        'De kleine zanger verdwijnt meteen boven het riet!',
+  ),
+  StoryPassage(
+    title: 'Stroom voor de hele buurt',
+    source: 'Origineel verhaal van Typer Kids',
+    difficulty: ContentDifficulty.hard,
+    text:
+        'De buurt wil minder energie verspillen, daarom onderzoekt een werkgroep verschillende plannen. '
+        "Yassin berekent hoeveel stroom zonnepanelen op het buurthuis kunnen leveren; anderen bekijken isolatie en deelauto's. "
+        'Een grote batterij klinkt handig, maar waar kan die veilig staan? '
+        'Tijdens de vergadering wegen bewoners kosten, ruimte en opbrengst tegen elkaar af. '
+        'Uiteindelijk kiezen ze eerst voor isolatie: die bespaart meteen energie, ook wanneer de zon niet schijnt!',
+  ),
 ];

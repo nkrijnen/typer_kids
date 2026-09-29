@@ -58,14 +58,14 @@ void main() {
     },
   );
 
-  test('Dutch hard has six unique originals with broad punctuation', () {
+  test('Dutch hard has twelve unique originals with broad punctuation', () {
     selected.LessonCurriculum.isDutch = true;
 
     final passages = StoryContent.forDifficulty(ContentDifficulty.hard);
-    expect(passages, hasLength(6));
+    expect(passages, hasLength(12));
     expect(passages, StoryContent.dutchHard);
-    expect(passages.map((passage) => passage.title).toSet(), hasLength(6));
-    expect(passages.map((passage) => passage.text).toSet(), hasLength(6));
+    expect(passages.map((passage) => passage.title).toSet(), hasLength(12));
+    expect(passages.map((passage) => passage.text).toSet(), hasLength(12));
     expect(
       passages.every(
         (passage) =>
