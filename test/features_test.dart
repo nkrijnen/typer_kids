@@ -108,7 +108,12 @@ void main() {
             ContentDifficulty.medium => word.length >= 4 && word.length <= 6,
             ContentDifficulty.hard => word.length >= 7,
           }), true);
-          expect(StoryContent.forDifficulty(difficulty), [StoryContent.dutch]);
+          expect(
+            StoryContent.forDifficulty(difficulty),
+            difficulty == ContentDifficulty.easy
+                ? [StoryContent.dutch]
+                : isEmpty,
+          );
           expect(words, isNot(contains('the')));
         }
         expect(StoryContent.dutch.difficulty, ContentDifficulty.easy);

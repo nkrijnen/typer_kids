@@ -1,7 +1,10 @@
 import 'dart:math';
 
 import 'word_lists.dart';
-import 'lesson_curriculum_selector.dart';
+
+part 'dutch_story_easy.dart';
+part 'dutch_story_medium.dart';
+part 'dutch_story_hard.dart';
 
 /// A single passage of text for sandbox / typing test modes.
 class StoryPassage {
@@ -26,17 +29,10 @@ class StoryPassage {
 class StoryContent {
   StoryContent._();
 
-  static const dutch = StoryPassage(
-    title: 'De jas in de boom',
-    source: 'Origineel verhaal van Typer Kids',
-    difficulty: ContentDifficulty.easy,
-    text: 'Sam ziet een jas in de boom. De wind waait hard. '
-        'Hij roept Noor. Samen zoeken ze een lange stok in de schuur. '
-        'Sam houdt de stok omhoog, maar de jas zit nog vast. '
-        'Noor heeft een idee. Ze trekken de tak zacht naar beneden. '
-        'De jas valt op het gras. Het is de jas van Noor! '
-        'Ze kloppen de blaadjes eraf en lopen samen naar huis.',
-  );
+  static const dutch = retainedDutchStory;
+  static const dutchEasy = dutchEasyPassages;
+  static const dutchMedium = dutchMediumPassages;
+  static const dutchHard = dutchHardPassages;
 
   // ── Easy passages ───────────────────────────────────────────────────────
 
@@ -600,11 +596,14 @@ class StoryContent {
   ];
 
   static List<StoryPassage> forDifficulty(ContentDifficulty d) =>
-      LessonCurriculum.isDutch ? [dutch] : switch (d) {
-    ContentDifficulty.easy => easy,
-    ContentDifficulty.medium => medium,
-    ContentDifficulty.hard => hard,
-  };
+      d.selectLocalized(
+        englishEasy: easy,
+        englishMedium: medium,
+        englishHard: hard,
+        dutchEasy: dutchEasy,
+        dutchMedium: dutchMedium,
+        dutchHard: dutchHard,
+      );
 
   static final _random = Random();
 
