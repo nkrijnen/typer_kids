@@ -9,6 +9,57 @@ import 'package:typer_kids/providers/typing_provider.dart';
 import 'package:typer_kids/widgets/typing_display.dart';
 
 void main() {
+  testWidgets('separate word chunks can show multiple incorrect spaces', (
+    tester,
+  ) async {
+    GoogleFonts.config.allowRuntimeFetching = false;
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: TypingDisplay(
+          text: 'a b c d',
+          charStates: [
+            CharState.correct,
+            CharState.incorrect,
+            CharState.correct,
+            CharState.incorrect,
+            CharState.correct,
+            CharState.current,
+            CharState.pending,
+          ],
+          cursorPosition: 5,
+        ),
+      ),
+    );
+    await tester.runAsync(GoogleFonts.pendingFonts);
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    expect(find.byKey(const ValueKey('space-cue-incorrect-0')), findsOneWidget);
+    expect(find.byKey(const ValueKey('space-cue-incorrect-2')), findsOneWidget);
+    expect(find.byKey(const ValueKey('space-cue-current-4')), findsOneWidget);
+
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: TypingDisplay(
+          text: 'a b c',
+          charStates: [
+            CharState.correct,
+            CharState.current,
+            CharState.correct,
+            CharState.current,
+            CharState.pending,
+          ],
+          cursorPosition: 3,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    expect(find.byKey(const ValueKey('space-cue-current-0')), findsOneWidget);
+    expect(find.byKey(const ValueKey('space-cue-current-2')), findsOneWidget);
+  });
+
   for (final fontSize in [22.0, 28.0, 31.0, 48.0]) {
     testWidgets('space feedback keeps lesson text in place at $fontSize', (
       tester,
@@ -53,14 +104,14 @@ void main() {
         positions.add(tester.getRect(followingCharacter).left);
         chunkBounds.add(tester.getRect(find.byType(RichText).first));
 
-        final spaceCue = find.byKey(ValueKey('space-cue-${states[1].name}'));
+        final spaceCue = find.byKey(ValueKey('space-cue-${states[1].name}-0'));
         if (states[1] == CharState.current ||
             states[1] == CharState.incorrect) {
           expect(spaceCue, findsOneWidget);
         } else {
-          expect(find.byKey(const ValueKey('space-cue-current')), findsNothing);
+          expect(find.byKey(const ValueKey('space-cue-current-0')), findsNothing);
           expect(
-            find.byKey(const ValueKey('space-cue-incorrect')),
+            find.byKey(const ValueKey('space-cue-incorrect-0')),
             findsNothing,
           );
         }

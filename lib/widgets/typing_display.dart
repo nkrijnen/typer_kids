@@ -117,7 +117,7 @@ class TypingDisplay extends StatelessWidget {
     );
     if (cues.isEmpty) return paragraph;
     return CustomPaint(
-      key: ValueKey('space-cue-${cues.first.$2.name}'),
+      key: ValueKey('space-cue-${cues.first.$2.name}-$start'),
       foregroundPainter: _SpaceCuePainter(
         paragraphKey: paragraphKey,
         cues: cues,
