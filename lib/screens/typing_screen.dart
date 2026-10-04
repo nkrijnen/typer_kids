@@ -441,7 +441,15 @@ class _TypingScreenState extends State<TypingScreen> {
                     ),
                     // Finger guide (compact on short screens)
                     if (!isShort)
-                      FingerGuide(currentKey: _typingProvider.currentChar),
+                      SizedBox(
+                        height: 114,
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: FingerGuide(
+                            currentKey: _typingProvider.currentChar,
+                          ),
+                        ),
+                      ),
                     SizedBox(height: isShort ? 2 : 8),
                     // Text to type — takes available remaining space
                     Expanded(

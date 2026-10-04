@@ -34,6 +34,7 @@ import 'package:typer_kids/screens/games/widgets/story_sprint_views.dart';
 import 'package:typer_kids/screens/games/game_menu_screen.dart';
 import 'package:typer_kids/data/sentence_lists.dart';
 import 'package:typer_kids/screens/sandbox/sandbox_screen.dart';
+import 'package:typer_kids/screens/typing_screen.dart';
 import 'package:typer_kids/widgets/home/activity_card.dart';
 import 'package:typer_kids/widgets/home/stat_card.dart';
 import 'package:typer_kids/widgets/profile/profile_card.dart';
@@ -155,6 +156,120 @@ void main() {
     semantics.dispose();
     selected.LessonCurriculum.isDutch = false;
   });
+
+  testWidgets(
+    'lesson prompt stays positioned through finger guide transitions',
+    (tester) async {
+      GoogleFonts.config.allowRuntimeFetching = false;
+      tester.view.devicePixelRatio = 1;
+      tester.view.physicalSize = const Size(1000, 900);
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+      SharedPreferences.setMockInitialValues({});
+
+      final language = LanguageProvider();
+      await language.init();
+      final progress = ProgressProvider();
+      await progress.init();
+      const lesson = Lesson(
+        id: 'prompt-position-test',
+        title: 'Prompt position',
+        description: '',
+        category: LessonCategory.homeRow,
+        difficulty: LessonDifficulty.beginner,
+        orderIndex: 1,
+        focusKeys: ['f'],
+        exercises: ['f é', 'f'],
+      );
+
+      Future<void> startLesson() async {
+        await tester.pumpWidget(
+          MultiProvider(
+            providers: [
+              ChangeNotifierProvider.value(value: language),
+              ChangeNotifierProvider.value(value: progress),
+            ],
+            child: MaterialApp(home: TypingScreen(lesson: lesson)),
+          ),
+        );
+        await tester.pumpAndSettle();
+        await tester.ensureVisible(find.text("Let's Go!"));
+        await tester.tap(find.text("Let's Go!"));
+        await tester.pumpAndSettle();
+      }
+
+      Future<void> typeCharacter(String character) async {
+        await tester.sendKeyEvent(
+          character == ' ' ? LogicalKeyboardKey.space : LogicalKeyboardKey.keyF,
+          character: character,
+        );
+        await tester.pump();
+      }
+
+      final prompt = find.byType(TypingDisplay);
+      void expectPromptAt(double y) {
+        expect(tester.getCenter(prompt).dy, closeTo(y, 0.1));
+      }
+
+      await startLesson();
+      expect(find.byType(FingerGuide), findsOneWidget);
+      final tallPromptY = tester.getCenter(prompt).dy;
+      await typeCharacter('f');
+      expectPromptAt(tallPromptY);
+      expect(
+        tester.widget<FingerGuide>(find.byType(FingerGuide)).currentKey,
+        ' ',
+      );
+      await typeCharacter(' ');
+      expectPromptAt(tallPromptY);
+      expect(
+        tester.widget<FingerGuide>(find.byType(FingerGuide)).currentKey,
+        'é',
+      );
+      expect(KeyboardData.keyToFinger['é'], isNull);
+      await typeCharacter('é');
+      expectPromptAt(tallPromptY);
+      expect(
+        tester.widget<TypingDisplay>(prompt).charStates.last.name,
+        'correct',
+      );
+      await tester.pump(const Duration(milliseconds: 499));
+      expectPromptAt(tallPromptY);
+      await tester.pump(const Duration(milliseconds: 1));
+      expectPromptAt(tallPromptY);
+      await typeCharacter('f');
+      expectPromptAt(tallPromptY);
+      expect(
+        tester.widget<TypingDisplay>(prompt).charStates.last.name,
+        'correct',
+      );
+      await tester.pump(const Duration(milliseconds: 299));
+      expectPromptAt(tallPromptY);
+      await tester.pumpWidget(const SizedBox());
+      await tester.pump(const Duration(milliseconds: 1));
+
+      tester.view.physicalSize = const Size(640, 480);
+      await startLesson();
+      expect(find.byType(FingerGuide), findsNothing);
+      final shortPromptY = tester.getCenter(prompt).dy;
+      await typeCharacter('f');
+      expectPromptAt(shortPromptY);
+      await typeCharacter(' ');
+      expectPromptAt(shortPromptY);
+      await typeCharacter('é');
+      expectPromptAt(shortPromptY);
+      await tester.pump(const Duration(milliseconds: 499));
+      expectPromptAt(shortPromptY);
+      await tester.pump(const Duration(milliseconds: 1));
+      expectPromptAt(shortPromptY);
+      await tester.pumpWidget(const SizedBox());
+      await tester.pump(const Duration(milliseconds: 1));
+      progress.dispose();
+      language.dispose();
+    },
+  );
 
   testWidgets('Dutch lesson keyboard fits a narrow typing viewport', (
     tester,
