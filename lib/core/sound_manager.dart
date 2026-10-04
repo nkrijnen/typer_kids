@@ -17,30 +17,45 @@ class SoundManager {
   /// Set to false if audio subsystem is unavailable (e.g. missing VC++ runtime).
   bool _audioAvailable = true;
 
-  // Pool of players so overlapping sounds work
-  final List<AudioPlayer> _pool = [];
-  static const _poolSize = 6;
+  /// Players per sound, so the same effect can overlap with itself.
+  static const int _voicesPerSound = 2;
 
-  AudioPlayer _getPlayer() {
-    // Reuse a stopped player or create a new one
-    for (final p in _pool) {
-      if (p.state != PlayerState.playing) return p;
+  // Each sound keeps its own preloaded players. Re-setting the source on an
+  // in-flight player leaks the native load continuation on macOS/iOS and wedges
+  // that player permanently, so the source is set exactly once per player.
+  final Map<String, Future<List<AudioPlayer>>> _voices = {};
+  final Map<String, int> _nextVoice = {};
+
+  Future<List<AudioPlayer>> _loadVoices(String asset) async {
+    final players = <AudioPlayer>[];
+    for (var i = 0; i < _voicesPerSound; i++) {
+      final player = AudioPlayer();
+      await player.setReleaseMode(ReleaseMode.stop);
+      await player.setSource(AssetSource('sounds/$asset'));
+      players.add(player);
     }
-    if (_pool.length < _poolSize) {
-      final p = AudioPlayer();
-      _pool.add(p);
-      return p;
-    }
-    // All busy — reuse the first
-    return _pool.first;
+    return players;
   }
 
   Future<void> _play(String asset, {double volume = 0.5}) async {
     if (!enabled || !_audioAvailable) return;
+    final List<AudioPlayer> players;
     try {
-      final player = _getPlayer();
+      players = await (_voices[asset] ??= _loadVoices(asset));
+    } catch (e) {
+      // One asset failing to load says nothing about the others, so drop it and
+      // let the next play retry instead of silencing the whole app.
+      _voices.remove(asset);
+      debugPrint('Audio load failed ($asset): $e');
+      return;
+    }
+    try {
+      final index = (_nextVoice[asset] ?? 0) % players.length;
+      _nextVoice[asset] = index + 1;
+      final player = players[index];
       await player.setVolume(volume);
-      await player.play(AssetSource('sounds/$asset'));
+      await player.stop();
+      await player.resume();
     } catch (e) {
       debugPrint('Audio error ($asset): $e');
       // Disable audio to prevent repeated failures / native crashes
@@ -79,9 +94,15 @@ class SoundManager {
   Future<void> playStarEarned() => playCelebration();
 
   void dispose() {
-    for (final p in _pool) {
-      p.dispose();
+    for (final pending in _voices.values) {
+      pending.then((players) {
+        for (final player in players) {
+          player.dispose();
+        }
+      }).ignore();
     }
-    _pool.clear();
+    _voices.clear();
+    _nextVoice.clear();
+    _audioAvailable = true;
   }
 }

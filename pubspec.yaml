@@ -21,6 +21,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  # Lets sound_manager_test.dart swap in a fake audio platform.
+  audioplayers_platform_interface: ^7.1.0
   flutter_lints: ^6.0.0
   image: ^4.8.0
   flutter_launcher_icons: ^0.14.4
