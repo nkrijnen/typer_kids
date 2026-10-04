@@ -3,7 +3,7 @@ title: 'Keep multiple lesson space cues keyed uniquely'
 type: 'bugfix'
 ticket: '6'
 created: '2026-10-04'
-status: 'built'
+status: done
 route: 'oneshot'
 route_source: 'auto'
 baseline_revision: '9ee74cab56fa60d1ca27a9c6650c89248222e7e8'
