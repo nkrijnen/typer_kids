@@ -9,6 +9,7 @@ import '../../models/typing_stats.dart';
 import '../../providers/profile_provider.dart';
 import '../../providers/language_provider.dart';
 import '../../providers/progress_provider.dart';
+import '../diagnostics.dart';
 import '../../screens/games/defend_temple_screen.dart';
 import '../../screens/games/falling_words_screen.dart';
 import '../../screens/games/game_menu_screen.dart';
@@ -66,6 +67,7 @@ class AppRouter {
   static GoRouter router(ProfileProvider profileProvider) => GoRouter(
     navigatorKey: _rootNavigatorKey,
     initialLocation: '/',
+    observers: [InputDiagnostics.routeObserver],
     refreshListenable: profileProvider,
     redirect: (context, state) {
       final profileProv = Provider.of<ProfileProvider>(context, listen: false);

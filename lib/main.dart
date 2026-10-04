@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'core/diagnostics.dart';
 import 'core/router/app_router.dart';
 import 'core/sound_manager.dart';
 import 'core/theme/app_theme.dart';
@@ -16,6 +17,7 @@ import 'providers/progress_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  InputDiagnostics.install();
   GoogleFonts.config.allowRuntimeFetching = false;
   LicenseRegistry.addLicense(() async* {
     for (final (family, file) in [
@@ -96,14 +98,16 @@ class _TyperKidsAppState extends State<TyperKidsApp> {
         ChangeNotifierProvider.value(value: widget.languageProvider),
       ],
       child: Builder(
-        builder: (context) => MaterialApp.router(
-          title: 'Typer Kids',
-          locale: context.watch<LanguageProvider>().locale,
-          supportedLocales: const [Locale('en'), Locale('nl')],
-          localizationsDelegates: GlobalMaterialLocalizations.delegates,
-          debugShowCheckedModeBanner: false,
-          theme: AppTheme.theme,
-          routerConfig: _router,
+        builder: (context) => InputDiagnostics.wrap(
+          MaterialApp.router(
+            title: 'Typer Kids',
+            locale: context.watch<LanguageProvider>().locale,
+            supportedLocales: const [Locale('en'), Locale('nl')],
+            localizationsDelegates: GlobalMaterialLocalizations.delegates,
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.theme,
+            routerConfig: _router,
+          ),
         ),
       ),
     );
