@@ -28,3 +28,10 @@ after = [
   { epic = 2, needs = "all six Dutch games" },
   { epic = 3, needs = "all 54 Dutch passages" },
 ]
+
+[[epic]]
+id = 5
+slug = "epic-dutch-full-keyboard-curriculum"
+title = "Extend the Dutch course across the full keyboard"
+covers = ["DP-8", "DP-11", "DP-12", "DP-13", "DP-14", "DP-15"]
+after = [{ epic = 4, needs = "the verified 16-lesson Dutch letter foundation and production route" }]

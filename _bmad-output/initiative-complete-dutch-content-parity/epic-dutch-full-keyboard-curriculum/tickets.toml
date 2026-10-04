@@ -1,0 +1,98 @@
+[[entry]]
+id = 1
+type = "story"
+title = "Set the full-keyboard curriculum and ship the first Shift lesson"
+description = "After the existing course verification, write `full-keyboard-curriculum-outline.md` with the ordered stages, stable IDs, category mapping, cumulative key scope, practice types, and checkpoints, then deliver its first uppercase lesson to prove matrix-based Shift guidance, input, unlock, and progress work together."
+verify = "`full-keyboard-curriculum-outline.md` maps every core and optional stage to matrix characters and lesson categories, defines the core/optional marker and the stage where each modifier is introduced, and a routed learner can complete the 16-letter foundation, pass the first uppercase lesson with correct keyboard and finger-guide cues, and resume progress after restart."
+covers = ["FC-1", "FC-2", "FC-3", "FC-5", "FC-6"]
+after = ["4.5"]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 2
+type = "story"
+title = "Complete uppercase and Shift practice"
+description = "Implement the remaining uppercase introduction, mixing, and review lessons from entry 1's `full-keyboard-curriculum-outline.md`, keeping the original letter lessons and IDs unchanged."
+verify = "Curriculum tests prove the uppercase sequence follows the approved outline, uses the mapped physical letter keys and correct Shift guidance, and introduces no character before its prerequisite lesson."
+covers = ["FC-1", "FC-2", "FC-3", "FC-6"]
+after = [1]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 3
+type = "story"
+title = "Teach the digit row"
+description = "Following entry 1's `full-keyboard-curriculum-outline.md`, add cumulative lessons for digits 0 through 9 with mapped physical finger guidance, number-row drills, mixed retrieval, and review checkpoints."
+verify = "Every digit lesson matches the approved stage order and Dutch keyboard matrix, and its exercises contain only previously taught keys, current keys, and allowed spacing."
+covers = ["FC-2", "FC-3", "FC-6"]
+after = [2]
+hitl = false
+risk = "low"
+
+[[entry]]
+id = 4
+type = "story"
+title = "Teach everyday Dutch punctuation"
+description = "Following entry 1's `full-keyboard-curriculum-outline.md`, add the punctuation lessons selected for ordinary Dutch writing, including the required Shift combinations and cumulative punctuation drills."
+verify = "Each core punctuation character is introduced in the approved order, maps to its documented physical key and modifier, and appears only after its lesson prerequisite."
+covers = ["FC-2", "FC-3", "FC-6"]
+after = [3]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 5
+type = "story"
+title = "Build cumulative Dutch text practice"
+description = "Following entry 1's `full-keyboard-curriculum-outline.md`, add progressively longer original Dutch words, sentences, and review checkpoints that combine taught letters, uppercase, digits, and everyday punctuation without introducing unmapped characters."
+verify = "All integrated exercises are natural Netherlands Dutch for ages 10-12, satisfy the approved cumulative key contract, and exercise the full required core skill set."
+covers = ["FC-2", "FC-3", "FC-6"]
+after = [4]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 6
+type = "story"
+title = "Add optional advanced symbols and euro"
+description = "Following entry 1's `full-keyboard-curriculum-outline.md`, add a separate advanced optional lesson path for the remaining printable symbols in the Dutch ISO QWERTY matrix and `€` through AltGr+2, without making it a prerequisite for core completion."
+verify = "Every remaining matrix symbol and euro has mapped key and modifier guidance, the optional path unlocks separately from core completion, and no dead key or accented character is introduced."
+covers = ["FC-4", "FC-6"]
+after = [5]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 7
+type = "story"
+title = "Integrate cross-category course progress"
+description = "Localize the expanded Dutch lesson categories and make core lessons unlock in one global order across categories while recommendations, progress totals, restart behavior, and optional completion remain distinct."
+verify = "Provider and widget tests prove no core category starts unlocked early, the core recommendation crosses each category boundary, restart restores progress, optional completion is not required for core completion, and English progression is unchanged."
+covers = ["FC-1", "FC-5", "FC-6"]
+after = [5, 6]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 8
+type = "story"
+title = "Refactor sweep for the expanded Dutch course"
+description = "Resolve maintainability findings from entries 1-7 without moving missing curriculum content, progress behavior, or tests out of their owning stories."
+verify = "Every recorded course cleanup finding is resolved or retained with a reason, and focused Dutch and English curriculum tests pass."
+covers = ["FC-3", "FC-5", "FC-6"]
+after = [7]
+hitl = false
+risk = "low"
+
+[[entry]]
+id = 9
+type = "story"
+title = "Verify the full Dutch keyboard course"
+description = "Add a routed tracer test that completes the letter foundation and required full-keyboard course, checks the optional advanced path separately, restarts, and verifies Dutch and English progress isolation."
+verify = "The routed required course completes through integrated Dutch text, the optional symbol/euro path remains optional, restart preserves recommendations and completion, and the full Flutter suite plus `flutter analyze` pass."
+covers = ["FC-1", "FC-2", "FC-3", "FC-4", "FC-5", "FC-6"]
+after = [8]
+hitl = false
+risk = "medium"
