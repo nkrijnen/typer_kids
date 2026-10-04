@@ -3,7 +3,7 @@ title: "Lesson text jumps when finger guidance disappears"
 type: bugfix
 ticket: 7
 created: "2026-10-04"
-status: built
+status: blocked
 baseline_revision: 125a2432a9791197192bdf6723a59b0b3cbf5a27
 route: oneshot
 route_source: auto
@@ -15,6 +15,8 @@ followup_review_recommended: false
 context: []
 warnings: []
 deferred: []
+blocked_at: "2026-10-04"
+blocked_reason: "finalization left repository dirty because unrelated concurrent initiative and passage-space files remain modified or untracked"
 ---
 
 <intent-contract>
@@ -62,7 +64,7 @@ Oneshot is appropriate because the layout correction and focused regression test
 
 ## Auto Run Result
 
-Status: built.
+Status: blocked at finalization; implementation is built.
 
 Summary: Reserved the finger-guide area on tall lesson screens so guidance disappearing for unmapped or completed characters no longer shifts the typing prompt.
 
@@ -76,3 +78,5 @@ Review findings: one medium finding patched; no items deferred or rejected. Patc
 Verification: focused Flutter widget test passed; `flutter analyze` passed; macOS app built and hot reload succeeded. The app window could not be foregrounded in this environment, so no separate manual visual check was performed.
 
 Residual risks: none known beyond the lack of a manual macOS visual check.
+
+Finalization blocker: unrelated concurrent initiative and passage-space files remain modified or untracked, so the required clean-worktree gate cannot pass without changing work outside ticket 7.
