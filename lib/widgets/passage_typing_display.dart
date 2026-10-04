@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../core/theme/app_colors.dart';
 import '../core/theme/app_theme.dart';
 import '../providers/typing_provider.dart';
+import 'space_cue_text.dart';
 
 /// Book-style typing surface for long passages (Free Practice, Typing Test).
 ///
@@ -10,8 +11,8 @@ import '../providers/typing_provider.dart';
 /// - Words never break across lines (text wraps at word boundaries).
 /// - The view automatically scrolls to keep the cursor in sight.
 /// - Higher-contrast colors and a fixed-width font so text never shifts.
-/// - Spaces render normally and only show the ␣ symbol when they're the
-///   current target or were mistyped.
+/// - Spaces always render as a real space; the ␣ cue for the current or
+///   mistyped space is painted over it, so feedback never changes its width.
 class PassageTypingDisplay extends StatefulWidget {
   final String text;
   final List<CharState> charStates;
@@ -84,38 +85,33 @@ class _PassageTypingDisplayState extends State<PassageTypingDisplay> {
     final state = index < widget.charStates.length
         ? widget.charStates[index]
         : CharState.pending;
-
+    // Spaces keep one weight in every state so no font can give them a
+    // different advance width than the space beside them.
     final isSpace = char == ' ';
-    // Show the ␣ glyph only where the kid needs to notice the space.
-    final display = switch (state) {
-      CharState.current when isSpace => '␣',
-      CharState.incorrect when isSpace => '␣',
-      _ => char,
-    };
 
     return switch (state) {
       CharState.correct => TextSpan(
-        text: display,
+        text: char,
         style: AppTheme.typingTextStyle(
           fontSize: widget.fontSize,
           color: AppColors.correct,
         ),
       ),
       CharState.incorrect => TextSpan(
-        text: display,
+        text: char,
         style: AppTheme.typingTextStyle(
           fontSize: widget.fontSize,
-          fontWeight: FontWeight.w600,
+          fontWeight: isSpace ? FontWeight.w500 : FontWeight.w600,
           color: AppColors.incorrect,
         ).copyWith(
           backgroundColor: AppColors.incorrect.withValues(alpha: 0.15),
         ),
       ),
       CharState.current => TextSpan(
-        text: display,
+        text: char,
         style: AppTheme.typingTextStyle(
           fontSize: widget.fontSize,
-          fontWeight: FontWeight.w700,
+          fontWeight: isSpace ? FontWeight.w500 : FontWeight.w700,
           color: AppColors.textPrimary,
           decoration: TextDecoration.underline,
           decorationColor: widget.accentColor,
@@ -125,13 +121,38 @@ class _PassageTypingDisplayState extends State<PassageTypingDisplay> {
         ),
       ),
       CharState.pending => TextSpan(
-        text: display,
+        text: char,
         style: AppTheme.typingTextStyle(
           fontSize: widget.fontSize,
           color: Colors.grey.shade600,
         ),
       ),
     };
+  }
+
+  Widget _chunk(int start, int end) {
+    final cues = <(int, CharState)>[];
+    for (var i = start; i < end; i++) {
+      if (widget.text[i] == ' ' && i < widget.charStates.length) {
+        final state = widget.charStates[i];
+        if (state == CharState.current || state == CharState.incorrect) {
+          cues.add((i - start, state));
+        }
+      }
+    }
+    return SpaceCueText(
+      span: TextSpan(
+        children: [for (var i = start; i < end; i++) _charSpan(i)],
+      ),
+      cues: cues,
+      fontSize: widget.fontSize,
+      height: 1.6,
+      currentHighlight: widget.accentColor.withValues(alpha: 0.22),
+      incorrectHighlight: AppColors.incorrect.withValues(alpha: 0.15),
+      cueKey: cues.isEmpty
+          ? null
+          : ValueKey('space-cue-${cues.first.$2.name}-$start'),
+    );
   }
 
   @override
@@ -173,13 +194,7 @@ class _PassageTypingDisplayState extends State<PassageTypingDisplay> {
                         widget.cursorPosition < end
                     ? _cursorKey
                     : null,
-                child: Text.rich(
-                  TextSpan(
-                    children: [
-                      for (var i = start; i < end; i++) _charSpan(i),
-                    ],
-                  ),
-                ),
+                child: _chunk(start, end),
               ),
           ],
         ),

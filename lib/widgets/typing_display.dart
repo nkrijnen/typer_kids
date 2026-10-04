@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 import '../core/theme/app_colors.dart';
 import '../core/theme/app_theme.dart';
 import '../providers/typing_provider.dart';
+import 'space_cue_text.dart';
 
 /// Displays the lesson text to type with color-coded feedback per character.
 ///
@@ -96,8 +96,7 @@ class TypingDisplay extends StatelessWidget {
     };
   }
 
-  Widget _chunk(BuildContext context, int start, int end) {
-    final paragraphKey = GlobalKey();
+  Widget _chunk(int start, int end) {
     final cues = <(int, CharState)>[];
     for (var index = start; index < end; index++) {
       if (text[index] == ' ' && index < charStates.length) {
@@ -107,25 +106,20 @@ class TypingDisplay extends StatelessWidget {
         }
       }
     }
-    final paragraph = Text.rich(
-      TextSpan(
+    return SpaceCueText(
+      span: TextSpan(
         children: [
           for (var index = start; index < end; index++) _charSpan(index),
         ],
       ),
-      key: paragraphKey,
-    );
-    if (cues.isEmpty) return paragraph;
-    return CustomPaint(
-      key: ValueKey('space-cue-${cues.first.$2.name}-$start'),
-      foregroundPainter: _SpaceCuePainter(
-        paragraphKey: paragraphKey,
-        cues: cues,
-        fontSize: fontSize,
-        textDirection: Directionality.of(context),
-        textScaler: MediaQuery.textScalerOf(context),
-      ),
-      child: paragraph,
+      cues: cues,
+      fontSize: fontSize,
+      height: 1.5,
+      currentHighlight: AppColors.secondary.withValues(alpha: 0.25),
+      incorrectHighlight: AppColors.incorrect.withValues(alpha: 0.15),
+      cueKey: cues.isEmpty
+          ? null
+          : ValueKey('space-cue-${cues.first.$2.name}-$start'),
     );
   }
 
@@ -153,78 +147,9 @@ class TypingDisplay extends StatelessWidget {
         alignment: WrapAlignment.center,
         runAlignment: WrapAlignment.center,
         children: [
-          for (final (start, end) in _chunkRanges())
-            _chunk(context, start, end),
+          for (final (start, end) in _chunkRanges()) _chunk(start, end),
         ],
       ),
     );
   }
-}
-
-class _SpaceCuePainter extends CustomPainter {
-  final GlobalKey paragraphKey;
-  final List<(int, CharState)> cues;
-  final double fontSize;
-  final TextDirection textDirection;
-  final TextScaler textScaler;
-
-  _SpaceCuePainter({
-    required this.paragraphKey,
-    required this.cues,
-    required this.fontSize,
-    required this.textDirection,
-    required this.textScaler,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paragraph =
-        paragraphKey.currentContext!.findRenderObject()! as RenderParagraph;
-    for (final (index, state) in cues) {
-      final boxes = paragraph.getBoxesForSelection(
-        TextSelection(baseOffset: index, extentOffset: index + 1),
-      );
-      if (boxes.isEmpty) continue;
-      final box = boxes.first.toRect();
-      final style = AppTheme.typingTextStyle(
-        fontSize: fontSize,
-        fontWeight: state == CharState.current
-            ? FontWeight.w700
-            : FontWeight.w600,
-        color: state == CharState.current
-            ? AppColors.textPrimary
-            : AppColors.incorrect,
-        height: 1.5,
-      );
-      final cue = TextPainter(
-        text: TextSpan(text: '␣', style: style),
-        textDirection: textDirection,
-        textScaler: textScaler,
-      )..layout();
-      final horizontalScale = cue.width > box.width - 2
-          ? ((box.width - 2) / cue.width).clamp(0.0, 1.0)
-          : 1.0;
-      canvas.save();
-      canvas.clipRect(box);
-      canvas.drawRect(
-        box,
-        Paint()
-          ..color = (state == CharState.current
-                  ? AppColors.secondary
-                  : AppColors.incorrect)
-              .withValues(alpha: state == CharState.current ? 0.25 : 0.15),
-      );
-      canvas.translate(
-        box.left + (box.width - cue.width * horizontalScale) / 2,
-        box.top + (box.height - cue.height) / 2,
-      );
-      canvas.scale(horizontalScale, 1);
-      cue.paint(canvas, Offset.zero);
-      canvas.restore();
-      cue.dispose();
-    }
-  }
-
-  @override
-  bool shouldRepaint(_SpaceCuePainter oldDelegate) => true;
 }
