@@ -370,8 +370,12 @@ class _SandboxScreenState extends State<SandboxScreen> {
                   ),
                 ),
                 // Focus prompt
-                if (!_typingFocusNode.hasFocus)
-                  Padding(
+                Visibility(
+                  visible: !_typingFocusNode.hasFocus,
+                  maintainSize: true,
+                  maintainAnimation: true,
+                  maintainState: true,
+                  child: Padding(
                     padding: const EdgeInsets.only(bottom: 8),
                     child: Container(
                       padding: const EdgeInsets.all(10),
@@ -402,6 +406,7 @@ class _SandboxScreenState extends State<SandboxScreen> {
                       ),
                     ),
                   ),
+                ),
                 const SizedBox(height: 12),
               ],
             ),

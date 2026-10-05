@@ -3,13 +3,14 @@ title: 'Keep typing passages steady when hints disappear'
 type: 'bugfix'
 ticket: '13'
 created: '2026-10-05'
-status: 'in-progress'
+status: done
 route: 'oneshot'
 route_source: 'auto'
-review: ''
-review_source: ''
-lenses_ran: []
+review: 'quick'
+review_source: 'pinned'
+lenses_ran: ['quick']
 review_loop_iteration: 0
+baseline_revision: '05045681ae180c6197c49ed92f196d2abca5adf7'
 context: []
 ---
 
@@ -27,6 +28,8 @@ context: []
 
 The two typing screens each place conditional hints beside an `Expanded` region containing a centered `PassageTypingDisplay`. Changing the siblings' height changes the passage's center. This is a small, directly testable layout change (estimated under 100 lines), so the automatic route is oneshot. No coding subagent interface is available in this session; the workflow permits direct implementation for oneshot.
 
+At 1000 x 900 logical pixels, the new tests measured 11.5 pixels of movement in Typing Test and 25 pixels in Free Practice before the fix. `Visibility` with maintained size preserves the original hint slots in both screens; the tests now check the hint's visible state and the passage center across the first character. Changed `lib/screens/test/typing_test_screen.dart`, `lib/screens/sandbox/sandbox_screen.dart`, and `test/widget_test.dart`.
+
 ## Verification
 
 **Commands:**
@@ -39,3 +42,5 @@ The implementation should modify `lib/screens/test/typing_test_screen.dart` and 
 ## Plan Change Log
 
 ## Review Triage Log
+
+- medium, patched: Both new tests originally sent `keyA` for a random passage's first character; when it was an uppercase character other than A, the key event did not represent the passage input and the test could fail. Each test now derives the logical key from the first character (or uses space) and passes that character explicitly. Reviewer reported this as the sole finding; focused tests passed 2/2 and the complete widget test file passed 42/42 after the patch.

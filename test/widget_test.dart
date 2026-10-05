@@ -34,6 +34,8 @@ import 'package:typer_kids/screens/games/widgets/story_sprint_views.dart';
 import 'package:typer_kids/screens/games/game_menu_screen.dart';
 import 'package:typer_kids/data/sentence_lists.dart';
 import 'package:typer_kids/screens/sandbox/sandbox_screen.dart';
+import 'package:typer_kids/screens/test/typing_test_screen.dart';
+import 'package:typer_kids/widgets/passage_typing_display.dart';
 import 'package:typer_kids/screens/typing_screen.dart';
 import 'package:typer_kids/widgets/home/activity_card.dart';
 import 'package:typer_kids/widgets/home/stat_card.dart';
@@ -44,6 +46,99 @@ import 'package:typer_kids/data/lesson_curriculum.dart';
 import 'package:typer_kids/models/lesson.dart';
 
 void main() {
+  testWidgets('Typing Test passage stays centered when start hint disappears', (
+    tester,
+  ) async {
+    GoogleFonts.config.allowRuntimeFetching = false;
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(1000, 900);
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+    SharedPreferences.setMockInitialValues({});
+    final language = LanguageProvider();
+    await language.init();
+    await tester.pumpWidget(
+      ChangeNotifierProvider.value(
+        value: language,
+        child: const MaterialApp(home: TypingTestScreen()),
+      ),
+    );
+    await tester.tap(find.text('Start Test'));
+    await tester.pump();
+    await tester.pump();
+
+    final passage = find.byType(PassageTypingDisplay);
+    final startHint = find.ancestor(
+      of: find.text('Timer starts when you begin typing!'),
+      matching: find.byType(Visibility),
+    );
+    expect(tester.widget<Visibility>(startHint).visible, true);
+    final before = tester.getCenter(passage).dy;
+    final first = tester.widget<PassageTypingDisplay>(passage).text[0];
+    await tester.sendKeyEvent(
+      first == ' '
+          ? LogicalKeyboardKey.space
+          : LogicalKeyboardKey.findKeyByKeyId(first.toLowerCase().codeUnitAt(0))!,
+      character: first,
+    );
+    await tester.pump();
+
+    expect((tester.getCenter(passage).dy - before).abs(), lessThanOrEqualTo(1));
+    expect(tester.widget<Visibility>(startHint).visible, false);
+  });
+
+  testWidgets('Free Practice passage stays centered when focus hint disappears', (
+    tester,
+  ) async {
+    GoogleFonts.config.allowRuntimeFetching = false;
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(1000, 900);
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+    SharedPreferences.setMockInitialValues({});
+    final language = LanguageProvider();
+    await language.init();
+    await tester.pumpWidget(
+      ChangeNotifierProvider.value(
+        value: language,
+        child: const MaterialApp(home: SandboxScreen()),
+      ),
+    );
+    await tester.tap(find.text('Start'));
+    await tester.pump();
+    await tester.pump();
+
+    final passage = find.byType(PassageTypingDisplay);
+    final typingFocus = tester
+        .widget<KeyboardListener>(find.byType(KeyboardListener))
+        .focusNode;
+    typingFocus.unfocus();
+    await tester.pump();
+    final focusHint = find.ancestor(
+      of: find.text('Click here and start typing!'),
+      matching: find.byType(Visibility),
+    );
+    expect(tester.widget<Visibility>(focusHint).visible, true);
+    final before = tester.getCenter(passage).dy;
+    typingFocus.requestFocus();
+    await tester.pump();
+    final first = tester.widget<PassageTypingDisplay>(passage).text[0];
+    await tester.sendKeyEvent(
+      first == ' '
+          ? LogicalKeyboardKey.space
+          : LogicalKeyboardKey.findKeyByKeyId(first.toLowerCase().codeUnitAt(0))!,
+      character: first,
+    );
+    await tester.pump();
+
+    expect((tester.getCenter(passage).dy - before).abs(), lessThanOrEqualTo(1));
+    expect(tester.widget<Visibility>(focusHint).visible, false);
+  });
+
   testWidgets('Dutch finger guide fits lesson slot', (tester) async {
     GoogleFonts.config.allowRuntimeFetching = false;
     SharedPreferences.setMockInitialValues({});

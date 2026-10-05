@@ -395,8 +395,12 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
                 ),
 
                 // ── "Start typing!" prompt before first keypress ──
-                if (!_hasStartedTyping)
-                  Padding(
+                Visibility(
+                  visible: !_hasStartedTyping,
+                  maintainSize: true,
+                  maintainAnimation: true,
+                  maintainState: true,
+                  child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4),
                     child: Text(
                       dutch
@@ -409,6 +413,7 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
                       ),
                     ),
                   ),
+                ),
 
                 // Typing area
                 Expanded(
@@ -429,8 +434,12 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
                 ),
 
                 // Focus prompt
-                if (!_typingFocusNode.hasFocus)
-                  Padding(
+                Visibility(
+                  visible: !_typingFocusNode.hasFocus,
+                  maintainSize: true,
+                  maintainAnimation: true,
+                  maintainState: true,
+                  child: Padding(
                     padding: const EdgeInsets.only(bottom: 8),
                     child: Container(
                       padding: const EdgeInsets.all(10),
@@ -463,6 +472,7 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
                       ),
                     ),
                   ),
+                ),
                 const SizedBox(height: 12),
               ],
             ),
