@@ -130,6 +130,11 @@ flutter build windows   # or macos / linux
 flutter build web --no-web-resources-cdn
 ```
 
+For a macOS debug session with a saved diagnostic log, run
+`bash tool/run_macos.sh` from the repository root. Additional arguments go to `flutter run`.
+Each run writes its console output, including `[diag]` heartbeats, to a new file
+under the gitignored `run-logs/` directory.
+
 ### Generate Assets
 
 ```bash
