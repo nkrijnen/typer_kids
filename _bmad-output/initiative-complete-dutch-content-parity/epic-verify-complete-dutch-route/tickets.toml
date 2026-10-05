@@ -52,3 +52,16 @@ covers = ["DV-1", "DV-2", "DV-3", "DV-4", "DV-5"]
 after = [4]
 hitl = false
 risk = "high"
+
+[[entry]]
+id = 6
+type = "story"
+title = "Close production-route audit and recovery gaps"
+description = "Add a supplemental `test/dutch_route_closure_test.dart` for route-wide semantics and clipping, and compose the existing 16-lesson foundation, games, stories, profile, language, and restart behavior into an additional Dutch-English recovery tracer."
+verify = "`flutter test test/dutch_route_closure_test.dart` audits visible and semantic labels without known English leakage or clipped Dutch text at phone and desktop sizes, and completes the existing 16-lesson foundation, all games, and every story tier before profile/language switches and restart recover the same isolated state; English lesson content, routes, scores, statistics, and saved progress remain unchanged."
+unknown = "Use the existing route, input, and persistence test helpers where possible; the smallest viable composition of game completion and route-wide semantics checks must be established from Flutter test behavior."
+references = ["no-fallback audit — test/dutch_no_fallback_audit_test.dart, production route checks", "responsive product smoke — test/dutch_complete_product_integration_test.dart, phone and desktop coverage", "course recovery — test/dutch_letter_course_integration_test.dart, 16-lesson completion and restart", "game coverage — test/dutch_games_integration_test.dart, difficulty and persistence matrix", "story tiers — test/dutch_story_ui_test.dart, routed story completion"]
+covers = ["DV-1", "DV-2", "DV-3", "DV-4", "DV-5"]
+after = [5]
+hitl = false
+risk = "high"

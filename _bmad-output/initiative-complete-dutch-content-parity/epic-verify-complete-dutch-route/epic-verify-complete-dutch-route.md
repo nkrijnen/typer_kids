@@ -50,3 +50,4 @@ Shared app-shell localization, cross-capability routing, regression, responsive 
 - Decision: known-English absence is checked against the app's English string inventory, not a dictionary, because Dutch and English legitimately share words (2026-09-28).
 - Decision: native-speaker review remains a release gate after autonomous build and is not represented as a blocking leaf (2026-09-28).
 - Decision: tracer is the persisted language/profile regression, followed by the full route audit, cleanup, and one closing integration check (2026-09-28).
+- Decision: the 2026-10-05 closure follow-up supplements, rather than replaces, the original final integration check; its course scope is the existing 16-lesson foundation, not the downstream full-keyboard curriculum.

@@ -53,5 +53,6 @@ This epic owns Dutch lesson content, lesson ordering, key/modifier guidance in t
 - Decision: keep the 16 existing letter lessons as the required foundation, then teach uppercase, digits, everyday writing punctuation, and integrated Dutch text in the required course; put remaining symbols and euro in a separate optional advanced path (2026-10-04).
 - Decision: optional lessons do not block required-course completion; entry 1 defines exact lesson IDs, grouping, and punctuation scope against the matrix before implementation begins (2026-10-04).
 - Decision: use the English comprehensive pack only for varied introduction, mix, and review formats; preserve the Dutch F/J-first movement progression (2026-10-04).
+- Assumption: the optional advanced path is accessible without completing the required core course; its lessons never count toward core completion. Confirm or revise this access timing during entry 1's outline (2026-10-05).
 - Tracer: start with the full-keyboard outline and first Shift lesson, then complete all required categories, optional advanced content, cross-category progress, and the routed course test.
 - Waits on epic-verify-complete-dutch-route because: the expansion builds on the verified 16-lesson foundation and Dutch production route.
