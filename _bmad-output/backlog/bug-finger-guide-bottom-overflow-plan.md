@@ -3,12 +3,13 @@ title: 'Fix Dutch finger guide bottom overflow'
 type: 'bugfix'
 ticket: '12'
 created: '2026-10-05'
-status: 'in-progress'
+status: 'built'
+baseline_revision: 'c47da5d744e3ef0ce8fa0a7664eef0442447b4f3'
 route: 'oneshot'
 route_source: 'auto'
-review: ''
-review_source: ''
-lenses_ran: []
+review: 'quick'
+review_source: 'pinned'
+lenses_ran: ['quick']
 review_loop_iteration: 0
 context: []
 ---
@@ -27,9 +28,13 @@ context: []
 
 One-shot route: expected small widget sizing correction and focused regression in two files. Candidate cause is the fixed 80px diagram plus 4px gap and a padded emoji label exceeding the 114px parent slot; confirm with a failing test before choosing the correction.
 
+The 114px lesson slot is in `lib/screens/typing_screen.dart`; the widget test reproduces a 4px RenderFlex overflow with Dutch thumb guidance at 1.2 text scale. At default test text scale it does not reproduce. The screenshot's reported 600x374 physical pixels do not establish a logical viewport or text scale. `Flexible(fit: FlexFit.loose)` lets the diagrams shrink to the space left by the label while retaining their 80px height when it fits. The regression covers the thumb and Dutch AltGr labels in `test/widget_test.dart`; targeted tests, analyzer, and macOS hot reload passed.
+
 ## Plan Change Log
 
 ## Review Triage Log
+
+- Quick review (independent reviewer): No findings. Implementation matches plan requirements; code and regression test are valid.
 
 ## Verification
 

@@ -44,6 +44,64 @@ import 'package:typer_kids/data/lesson_curriculum.dart';
 import 'package:typer_kids/models/lesson.dart';
 
 void main() {
+  testWidgets('Dutch finger guide fits lesson slot', (tester) async {
+    GoogleFonts.config.allowRuntimeFetching = false;
+    SharedPreferences.setMockInitialValues({});
+    final language = LanguageProvider();
+    await language.init();
+    await language.select('nl');
+
+    for (final (key, label) in [
+      (' ', 'Duim 👍'),
+      ('€', 'Linkerringvinger 💍 + AltGr'),
+    ]) {
+      await tester.pumpWidget(
+        ChangeNotifierProvider.value(
+          value: language,
+          child: MaterialApp(
+            builder: (context, child) => MediaQuery(
+              data: MediaQuery.of(context).copyWith(
+                textScaler: const TextScaler.linear(1.2),
+              ),
+              child: child!,
+            ),
+            home: Scaffold(
+              body: Center(
+                child: SizedBox(
+                  key: const ValueKey('lesson-guide-slot'),
+                  height: 114,
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: FingerGuide(currentKey: key),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+      expect(
+        find.descendant(
+          of: find.byType(FingerGuide),
+          matching: find.byType(CustomPaint),
+        ),
+        findsNWidgets(2),
+      );
+      expect(find.text(label), findsOneWidget);
+      expect(
+        tester.getBottomRight(find.text(label)).dy,
+        lessThanOrEqualTo(
+          tester
+              .getBottomRight(find.byKey(const ValueKey('lesson-guide-slot')))
+              .dy,
+        ),
+      );
+    }
+    selected.LessonCurriculum.isDutch = false;
+  });
+
   testWidgets('Unlisted Dutch accents do not map to a physical key', (
     tester,
   ) async {

@@ -49,21 +49,24 @@ class FingerGuide extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         // Hand diagram showing active finger
-        SizedBox(
-          height: 80,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _HandDiagram(
-                isLeft: true,
-                activeFinger: isLeft ? finger : (isThumb ? 'thumb' : null),
-              ),
-              const SizedBox(width: 12),
-              _HandDiagram(
-                isLeft: false,
-                activeFinger: !isLeft ? finger : (isThumb ? 'thumb' : null),
-              ),
-            ],
+        Flexible(
+          fit: FlexFit.loose,
+          child: SizedBox(
+            height: 80,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _HandDiagram(
+                  isLeft: true,
+                  activeFinger: isLeft ? finger : (isThumb ? 'thumb' : null),
+                ),
+                const SizedBox(width: 12),
+                _HandDiagram(
+                  isLeft: false,
+                  activeFinger: !isLeft ? finger : (isThumb ? 'thumb' : null),
+                ),
+              ],
+            ),
           ),
         ),
         const SizedBox(height: 4),
