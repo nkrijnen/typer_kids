@@ -3,7 +3,7 @@ title: 'Fix Dutch finger guide bottom overflow'
 type: 'bugfix'
 ticket: '12'
 created: '2026-10-05'
-status: 'built'
+status: done
 baseline_revision: 'c47da5d744e3ef0ce8fa0a7664eef0442447b4f3'
 route: 'oneshot'
 route_source: 'auto'
