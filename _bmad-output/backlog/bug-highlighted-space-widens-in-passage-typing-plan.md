@@ -3,7 +3,7 @@ title: 'Highlighted space grows wider in Free Practice, Typing Test, and Story S
 type: 'bugfix'
 ticket: '11'
 created: '2026-10-04'
-status: 'built'
+status: 'in-review'
 baseline_revision: '125a2432a9791197192bdf6723a59b0b3cbf5a27'
 route: 'full'
 route_source: 'auto'
