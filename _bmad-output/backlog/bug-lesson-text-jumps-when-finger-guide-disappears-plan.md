@@ -3,7 +3,7 @@ title: "Lesson text jumps when finger guidance disappears"
 type: bugfix
 ticket: 7
 created: "2026-10-04"
-status: blocked
+status: done
 baseline_revision: 125a2432a9791197192bdf6723a59b0b3cbf5a27
 route: oneshot
 route_source: auto
@@ -15,8 +15,6 @@ followup_review_recommended: false
 context: []
 warnings: []
 deferred: []
-blocked_at: "2026-10-04"
-blocked_reason: "finalization left repository dirty because unrelated concurrent initiative and passage-space files remain modified or untracked"
 ---
 
 <intent-contract>
