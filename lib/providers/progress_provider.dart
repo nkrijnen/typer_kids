@@ -294,6 +294,13 @@ class ProgressProvider extends ChangeNotifier {
     final lesson = LessonCurriculum.byId(lessonId);
     if (lesson == null) return false;
 
+    if (_language == 'nl') {
+      final lessons = LessonCurriculum.allLessons;
+      final index = lessons.indexWhere((candidate) => candidate.id == lessonId);
+      if (index < 0) return false;
+      return index == 0 || getProgress(lessons[index - 1].id).completed;
+    }
+
     // First lesson in any category is always unlocked
     final categoryLessons = LessonCurriculum.byCategory(lesson.category);
     if (categoryLessons.isEmpty) return false;

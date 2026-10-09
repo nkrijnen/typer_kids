@@ -32,7 +32,7 @@ class LessonCurriculum {
       };
 
   static List<LessonCategory> get categoryOrder =>
-      isDutch ? [LessonCategory.homeRow] :
+      isDutch ? [LessonCategory.homeRow, LessonCategory.uppercase] :
       switch (CurriculumConfig.activeVariant) {
         CurriculumVariant.classic => classic.LessonCurriculum.categoryOrder,
         CurriculumVariant.comprehensive =>

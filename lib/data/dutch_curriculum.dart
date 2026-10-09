@@ -8,6 +8,7 @@ class _Stage {
   final String id;
   final String title;
   final String description;
+  final LessonCategory category;
   final LessonDifficulty difficulty;
   final String newKeys;
   final List<String> exercises;
@@ -17,6 +18,7 @@ class _Stage {
     required this.id,
     required this.title,
     required this.description,
+    this.category = LessonCategory.homeRow,
     required this.difficulty,
     required this.newKeys,
     required this.exercises,
@@ -192,6 +194,16 @@ class DutchCurriculum {
       funTip:
           'Mix y met de recente zeldzame letters en herhaal daarna eerdere controlepunten.',
     ),
+    _Stage(
+      id: 'nl-shift-01',
+      title: 'Shift met F en J',
+      description: 'Houd Shift met de andere hand vast en typ F en J.',
+      category: LessonCategory.uppercase,
+      difficulty: LessonDifficulty.beginner,
+      newKeys: 'F J',
+      exercises: ['FF JJ FJ JF', 'Fleur leest', 'Jan fietst'],
+      funTip: 'Gebruik de Shift-toets aan de andere kant van je lettervinger.',
+    ),
   ];
 
   static final List<Lesson> allLessons = List.unmodifiable(_buildLessons());
@@ -210,7 +222,7 @@ class DutchCurriculum {
       id: stage.id,
       title: stage.title,
       description: stage.description,
-      category: LessonCategory.homeRow,
+      category: stage.category,
       difficulty: stage.difficulty,
       orderIndex: orderIndex,
       focusKeys: List.unmodifiable(taught),

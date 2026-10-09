@@ -84,6 +84,7 @@ class _CategorySection extends StatelessWidget {
 
   Color get _categoryColor => switch (category) {
     LessonCategory.homeRow => AppColors.categoryHomeRow,
+    LessonCategory.uppercase => AppColors.categoryTopRow,
     LessonCategory.topRow => AppColors.categoryTopRow,
     LessonCategory.bottomRow => AppColors.categoryBottomRow,
     LessonCategory.numbers => AppColors.categoryNumbers,
@@ -118,7 +119,9 @@ class _CategorySection extends StatelessWidget {
               const SizedBox(width: 8),
               Text(
                 context.watch<LanguageProvider>().isDutch
-                    ? 'Letters'
+                    ? (category == LessonCategory.uppercase
+                        ? 'Hoofdletters'
+                        : 'Letters')
                     : category.displayName,
                 style: GoogleFonts.fredoka(
                   fontSize: 22,

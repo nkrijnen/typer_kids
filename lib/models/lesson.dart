@@ -1,6 +1,7 @@
 /// Represents a category/group of typing lessons
 enum LessonCategory {
   homeRow('Home Row', '🏠'),
+  uppercase('Uppercase', '⬆️'),
   topRow('Top Row', '⬆️'),
   bottomRow('Bottom Row', '⬇️'),
   numbers('Numbers', '🔢'),

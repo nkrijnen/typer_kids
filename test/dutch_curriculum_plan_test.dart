@@ -2,10 +2,15 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:typer_kids/data/dutch_curriculum.dart';
+import 'package:typer_kids/data/keyboard_data.dart';
+import 'package:typer_kids/models/lesson.dart';
 
 const _outlinePath =
     '_bmad-output/specs/spec-dutch-touch-typing-curriculum/'
     'curriculum-outline.md';
+const _fullOutlinePath =
+  '_bmad-output/initiative-complete-dutch-content-parity/'
+  'epic-dutch-full-keyboard-curriculum/full-keyboard-curriculum-outline.md';
 const _alphabet = 'abcdefghijklmnopqrstuvwxyz';
 const _tableHeader =
     '| Order | ID | New keys | Previously taught | Movement | Practice type | Difficulty | Examples | Review checkpoint |';
@@ -94,8 +99,8 @@ void main() {
 
     test('milestone lessons stage the approved home-row keys and words', () {
       final lessons = DutchCurriculum.allLessons;
-      expect(lessons, hasLength(16));
-      expect(lessons.map((lesson) => lesson.id), [
+      expect(lessons, hasLength(17));
+      expect(lessons.take(16).map((lesson) => lesson.id), [
         'nl-letter-01',
         'nl-letter-02',
         'nl-letter-03',
@@ -114,11 +119,11 @@ void main() {
         'nl-letter-16',
       ]);
       expect(
-        lessons.map((lesson) => lesson.orderIndex),
+        lessons.take(16).map((lesson) => lesson.orderIndex),
         List.generate(16, (i) => i),
       );
       final taught = <String>{};
-      for (final lesson in lessons) {
+      for (final lesson in lessons.take(16)) {
         taught.addAll(lesson.focusKeys);
         for (final exercise in lesson.exercises) {
           expect(
@@ -150,7 +155,76 @@ void main() {
       expect(lessons[14].exercises, contains('aq qa'));
       expect(lessons[14].exercises, contains('quiz aqua'));
       expect(lessons[15].exercises, contains('yoga baby pony'));
-      expect(lessons.last.focusKeys.toSet(), _alphabet.split('').toSet());
+      expect(lessons[15].focusKeys.toSet(), _alphabet.split('').toSet());
+      expect(lessons[16].id, 'nl-shift-01');
+      expect(lessons[16].orderIndex, 16);
+      expect(lessons[16].category, LessonCategory.uppercase);
+      expect(lessons[16].focusKeys.toSet(), {
+        ..._alphabet.split(''),
+        'F',
+        'J',
+      });
+      for (final exercise in lessons[16].exercises) {
+        expect(
+          lessons[16].focusKeys.toSet().containsAll(
+            exercise.split('').where((key) => key != ' '),
+          ),
+          isTrue,
+        );
+      }
+    });
+
+    test('full-keyboard outline covers ordered core and optional matrix keys', () {
+      final outline = File(_fullOutlinePath).readAsStringSync();
+      final rows = outline
+          .split('\n')
+          .where((line) => RegExp(r'^\| (?:[1-9][0-9]*) \| nl-').hasMatch(line))
+          .map((line) => line.substring(1, line.length - 1).split('|')
+              .map((cell) => cell.trim()).toList())
+          .toList();
+      expect(rows, hasLength(30));
+      expect(rows.map((row) => int.parse(row[0])), List.generate(30, (i) => i + 17));
+      expect(rows.map((row) => row[1]), [
+        for (final (prefix, count) in [
+          ('shift', 9),
+          ('digit', 4),
+          ('punct', 6),
+          ('text', 5),
+          ('symbol', 6),
+        ])
+          for (var number = 1; number <= count; number++)
+            'nl-$prefix-${number.toString().padLeft(2, '0')}',
+      ]);
+      expect(rows.first[2], 'uppercase');
+      expect(rows.first[3], 'F J');
+      expect(rows.first[4], contains('opposite Shift'));
+      expect(rows[24][2], 'advancedSymbols');
+      expect(rows.last[4], contains('AltGr'));
+      expect(outline, contains('isOptional: false'));
+      expect(outline, contains('isOptional: true'));
+
+      final introduced = <String>{};
+      for (final row in rows) {
+        expect(row, hasLength(7));
+        expect(row[5], isNotEmpty, reason: row[1]);
+        expect(row[6], isNotEmpty, reason: row[1]);
+        final keys = row[3] == 'none'
+            ? <String>[]
+            : row[3] == 'backslash, pipe'
+            ? ['\\', '|']
+            : row[3].split(' ');
+        for (final key in keys) {
+          expect(KeyboardData.dutchBaseKey(key), isNotNull, reason: row[1]);
+          expect(introduced.add(key), isTrue, reason: row[1]);
+        }
+      }
+      final mapped = {
+        ...KeyboardData.dutchRows.expand((row) => row),
+        ..._alphabet.toUpperCase().split(''),
+        ...'± ! @ # \$ % ^ & * ( ) _ + { } : " | ~ < > ?'.split(' '),
+        '€',
+      }..removeAll({..._alphabet.split(''), ' '});
+      expect(introduced, mapped);
     });
 
     test('aggregates actionable errors for malformed stage data', () {

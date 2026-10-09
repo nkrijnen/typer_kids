@@ -51,19 +51,27 @@ void main() {
       expect(progress.getProgress('nl-letter-01').completed, true);
       expect(progress.getProgress('nl-letter-02').completed, true);
 
-      // Complete every one of the 16 stages through Y.
-      for (final lesson in DutchCurriculum.allLessons) {
+      expect(progress.isLessonUnlocked('nl-shift-01'), false);
+
+      // Complete every one of the 16 original stages through Y.
+      for (final lesson in DutchCurriculum.allLessons.take(16)) {
         await progress.recordAttempt(lesson, passingStats);
       }
-      for (final lesson in DutchCurriculum.allLessons) {
+      for (final lesson in DutchCurriculum.allLessons.take(16)) {
         expect(progress.getProgress(lesson.id).completed, true, reason: lesson.id);
       }
+      expect(progress.isLessonUnlocked('nl-shift-01'), true);
+      expect(progress.recommendedLesson.id, 'nl-shift-01');
+      expect(progress.allCompleted, false);
+
+      await progress.recordAttempt(DutchCurriculum.allLessons[16], passingStats);
       expect(progress.allCompleted, true);
 
       // Restart: fresh ProgressProvider re-reads persisted state.
       final restarted = ProgressProvider();
       await restarted.init(profileId: profileId, language: 'nl');
       expect(restarted.allCompleted, true);
+      expect(restarted.getProgress('nl-shift-01').completed, true);
       expect(
         restarted.recommendedLesson.id,
         DutchCurriculum.allLessons.first.id,
@@ -74,6 +82,7 @@ void main() {
       await restarted.switchProfile(otherProfileId);
       expect(restarted.hasStarted, false);
       expect(restarted.getProgress('nl-letter-16').completed, false);
+      expect(restarted.isLessonUnlocked('nl-shift-01'), false);
 
       // Switch to English and back: Dutch progress is untouched by the trip.
       await restarted.switchProfile(profileId);

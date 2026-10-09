@@ -19,11 +19,12 @@ void main() {
   test('complete Dutch product has every exact content contract', () {
     selected.LessonCurriculum.isDutch = true;
 
-    expect(DutchCurriculum.allLessons, hasLength(16));
+    expect(DutchCurriculum.allLessons, hasLength(17));
     expect(
       DutchCurriculum.allLessons.map((lesson) => lesson.id).toSet(),
-      hasLength(16),
+      hasLength(17),
     );
+    expect(DutchCurriculum.allLessons[16].id, 'nl-shift-01');
     expect(WordLists.dutchEasy, hasLength(302));
     expect(WordLists.dutchMedium, hasLength(309));
     expect(WordLists.dutchHard, hasLength(279));
