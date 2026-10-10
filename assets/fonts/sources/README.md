@@ -13,8 +13,10 @@ Original variable TTFs and OFL license texts: `google/fonts`,
 Flutter Web's 12 Noto Color Emoji and six Noto Sans Symbols 2 WOFF2 subsets are
 bundled under `fallback/` using the paths in Flutter's
 `font_fallback_data.dart`. They were retrieved from `fonts.gstatic.com` on
-2026-09-27 and use the bundled Noto OFL license. The custom web bootstrap points
-Flutter's fallback service at these local assets.
+2026-09-27 and use their respective bundled OFL licenses (`notoemoji-OFL.txt`
+and `notosanssymbols2-OFL.txt`). The Symbols 2 license comes from
+`https://github.com/google/fonts/tree/main/ofl/notosanssymbols2`. The custom
+web bootstrap points Flutter's fallback service at these local assets.
 
 `Nunito-Italic.ttf` is the canonical GoogleFonts w400 italic asset retrieved
 from `fonts.gstatic.com/s/a/df3c491d67e881e1b0c6265a7a8364f07e38d7a25893e9b2beac1439e1c2efd9.ttf`;
