@@ -2,6 +2,7 @@
 type: epic
 title: "Complete the Dutch letter curriculum"
 parent: initiative-complete-dutch-content-parity
+status: done
 covers: [DP-1, DP-2, DP-3, DP-8, DP-9]
 risk: medium
 ---

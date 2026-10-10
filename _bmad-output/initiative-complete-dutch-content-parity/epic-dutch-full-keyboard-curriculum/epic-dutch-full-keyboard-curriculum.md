@@ -2,6 +2,7 @@
 type: epic
 title: "Extend the Dutch course across the full keyboard"
 parent: initiative-complete-dutch-content-parity
+status: done
 covers: [DP-8, DP-11, DP-12, DP-13, DP-14, DP-15]
 after: []
 risk: medium

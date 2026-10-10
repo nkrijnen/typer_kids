@@ -2,6 +2,7 @@
 type: epic
 title: "Give every game complete Dutch content"
 parent: initiative-complete-dutch-content-parity
+status: done
 covers: [DP-4, DP-5, DP-7, DP-8, DP-9]
 after: [epic-complete-dutch-curriculum]
 risk: medium

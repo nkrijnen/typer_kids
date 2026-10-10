@@ -2,6 +2,7 @@
 type: epic
 title: "Build the complete Dutch story library"
 parent: initiative-complete-dutch-content-parity
+status: done
 covers: [DP-6, DP-7, DP-8, DP-9]
 after: [epic-dutch-game-parity]
 risk: medium

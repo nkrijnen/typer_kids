@@ -2,6 +2,7 @@
 type: epic
 title: "Verify the complete Dutch product route"
 parent: initiative-complete-dutch-content-parity
+status: done
 covers: [DP-3, DP-4, DP-6, DP-7, DP-8, DP-10]
 after: [epic-complete-dutch-curriculum, epic-dutch-game-parity, epic-dutch-story-library-parity]
 risk: medium
