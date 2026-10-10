@@ -3,7 +3,7 @@ title: 'Teach everyday Dutch punctuation'
 type: 'feature'
 ticket: '4'
 created: '2026-10-06'
-status: ready-for-dev
+status: done
 route: 'full'
 route_source: 'auto'
 review: ''
@@ -59,6 +59,8 @@ context: []
 - Given the expanded lessons, when switching to English or restarting, then Dutch punctuation progress remains isolated and English behavior unchanged.
 
 ## Implementation Notes
+
+- 2026-10-10: Added six punctuation stages and Dutch category. Scope, mapping, routed typing and full Flutter suite (138 tests), analyzer, and macOS hot restart pass.
 
 ## Plan Change Log
 

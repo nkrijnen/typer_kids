@@ -41,7 +41,9 @@ class ProgressProvider extends ChangeNotifier {
   /// The lesson the user should practice next (recommended flow)
   Lesson get recommendedLesson {
     // If there's a last lesson that isn't completed, resume it
-    if (_lastLessonId != null) {
+    if (_lastLessonId != null &&
+        !(_language == 'nl' &&
+            (LessonCurriculum.byId(_lastLessonId!)?.isOptional ?? false))) {
       final lastProgress = getProgress(_lastLessonId!);
       if (!lastProgress.completed) {
         final lesson = LessonCurriculum.byId(_lastLessonId!);
@@ -53,7 +55,9 @@ class ProgressProvider extends ChangeNotifier {
     }
 
     // Otherwise find the first incomplete lesson in order
-    for (final lesson in LessonCurriculum.allLessons) {
+    for (final lesson in LessonCurriculum.allLessons.where(
+      (lesson) => _language != 'nl' || !lesson.isOptional,
+    )) {
       final progress = getProgress(lesson.id);
       if (!progress.completed) return lesson;
     }
@@ -66,8 +70,7 @@ class ProgressProvider extends ChangeNotifier {
   bool get hasStarted => _progressMap.values.any((p) => p.attempts > 0);
 
   /// Whether every lesson is completed
-  bool get allCompleted =>
-      completedLessons >= LessonCurriculum.allLessons.length;
+  bool get allCompleted => completedLessons >= totalLessons;
 
   /// Save which lesson the user last practiced
   Future<void> setLastLesson(String lessonId) async {
@@ -298,6 +301,19 @@ class ProgressProvider extends ChangeNotifier {
       final lessons = LessonCurriculum.allLessons;
       final index = lessons.indexWhere((candidate) => candidate.id == lessonId);
       if (index < 0) return false;
+      if (lesson.isOptional) {
+        final optionalLessons = lessons
+            .where((candidate) => candidate.isOptional)
+            .toList();
+        final optionalIndex = optionalLessons.indexWhere(
+          (candidate) => candidate.id == lessonId,
+        );
+        return getProgress(
+          optionalIndex == 0
+              ? 'nl-letter-16'
+              : optionalLessons[optionalIndex - 1].id,
+        ).completed;
+      }
       return index == 0 || getProgress(lessons[index - 1].id).completed;
     }
 
@@ -325,19 +341,45 @@ class ProgressProvider extends ChangeNotifier {
 
   /// Total stars earned
   int get totalStars {
-    return _curriculumProgress.fold(0, (sum, p) => sum + p.bestStarRating);
+    final coreIds = LessonCurriculum.allLessons
+        .where((lesson) => _language != 'nl' || !lesson.isOptional)
+        .map((lesson) => lesson.id)
+        .toSet();
+    return _curriculumProgress
+        .where((progress) => coreIds.contains(progress.lessonId))
+        .fold(0, (sum, progress) => sum + progress.bestStarRating);
   }
 
   /// Maximum possible stars
-  int get maxStars => LessonCurriculum.allLessons.length * 5;
+  int get maxStars => totalLessons * 5;
 
   /// Total lessons completed
   int get completedLessons {
-    return _curriculumProgress.where((p) => p.completed).length;
+    final coreIds = LessonCurriculum.allLessons
+        .where((lesson) => _language != 'nl' || !lesson.isOptional)
+        .map((lesson) => lesson.id)
+        .toSet();
+    return _curriculumProgress
+        .where((p) => p.completed && coreIds.contains(p.lessonId))
+        .length;
   }
 
   /// Total lessons available
-  int get totalLessons => LessonCurriculum.allLessons.length;
+  int get totalLessons => LessonCurriculum.allLessons
+      .where((lesson) => _language != 'nl' || !lesson.isOptional)
+      .length;
+
+  int get optionalLessons => _language == 'nl'
+      ? LessonCurriculum.allLessons.where((lesson) => lesson.isOptional).length
+      : 0;
+
+  int get completedOptionalLessons => _language == 'nl'
+      ? LessonCurriculum.allLessons
+            .where(
+              (lesson) => lesson.isOptional && getProgress(lesson.id).completed,
+            )
+            .length
+      : 0;
 
   /// Overall completion percentage
   double get completionPercentage {
@@ -347,7 +389,14 @@ class ProgressProvider extends ChangeNotifier {
 
   /// Average accuracy across all attempted lessons
   double get averageAccuracy {
-    final attempted = _curriculumProgress.where((p) => p.attempts > 0);
+    final coreIds = LessonCurriculum.allLessons
+        .where((lesson) => _language != 'nl' || !lesson.isOptional)
+        .map((lesson) => lesson.id)
+        .toSet();
+    final attempted = _curriculumProgress.where(
+      (progress) =>
+          progress.attempts > 0 && coreIds.contains(progress.lessonId),
+    );
     if (attempted.isEmpty) return 0;
     return attempted.fold(0.0, (sum, p) => sum + p.bestAccuracy) /
         attempted.length;
@@ -355,7 +404,14 @@ class ProgressProvider extends ChangeNotifier {
 
   /// Average WPM across all attempted lessons
   double get averageWpm {
-    final attempted = _curriculumProgress.where((p) => p.attempts > 0);
+    final coreIds = LessonCurriculum.allLessons
+        .where((lesson) => _language != 'nl' || !lesson.isOptional)
+        .map((lesson) => lesson.id)
+        .toSet();
+    final attempted = _curriculumProgress.where(
+      (progress) =>
+          progress.attempts > 0 && coreIds.contains(progress.lessonId),
+    );
     if (attempted.isEmpty) return 0;
     return attempted.fold(0.0, (sum, p) => sum + p.bestWpm) / attempted.length;
   }

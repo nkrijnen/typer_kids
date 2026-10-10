@@ -3,7 +3,7 @@ title: 'Complete uppercase and Shift practice'
 type: 'feature'
 ticket: '2'
 created: '2026-10-06'
-status: ready-for-dev
+status: done
 route: 'full'
 route_source: 'auto'
 review: ''
@@ -59,6 +59,8 @@ context: []
 - Given the English curriculum, when these Dutch lessons are added, then its lessons, unlocks and saved progress remain unchanged.
 
 ## Implementation Notes
+
+- 2026-10-10: Added `nl-shift-02` through `nl-shift-09` in the approved order. Cumulative key and routed progression tests pass; full Flutter suite (138 tests), analyzer, and macOS hot restart pass.
 
 ## Plan Change Log
 

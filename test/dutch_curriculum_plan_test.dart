@@ -9,8 +9,8 @@ const _outlinePath =
     '_bmad-output/specs/spec-dutch-touch-typing-curriculum/'
     'curriculum-outline.md';
 const _fullOutlinePath =
-  '_bmad-output/initiative-complete-dutch-content-parity/'
-  'epic-dutch-full-keyboard-curriculum/full-keyboard-curriculum-outline.md';
+    '_bmad-output/initiative-complete-dutch-content-parity/'
+    'epic-dutch-full-keyboard-curriculum/full-keyboard-curriculum-outline.md';
 const _alphabet = 'abcdefghijklmnopqrstuvwxyz';
 const _tableHeader =
     '| Order | ID | New keys | Previously taught | Movement | Practice type | Difficulty | Examples | Review checkpoint |';
@@ -99,7 +99,7 @@ void main() {
 
     test('milestone lessons stage the approved home-row keys and words', () {
       final lessons = DutchCurriculum.allLessons;
-      expect(lessons, hasLength(17));
+      expect(lessons, hasLength(46));
       expect(lessons.take(16).map((lesson) => lesson.id), [
         'nl-letter-01',
         'nl-letter-02',
@@ -159,11 +159,7 @@ void main() {
       expect(lessons[16].id, 'nl-shift-01');
       expect(lessons[16].orderIndex, 16);
       expect(lessons[16].category, LessonCategory.uppercase);
-      expect(lessons[16].focusKeys.toSet(), {
-        ..._alphabet.split(''),
-        'F',
-        'J',
-      });
+      expect(lessons[16].focusKeys.toSet(), {..._alphabet.split(''), 'F', 'J'});
       for (final exercise in lessons[16].exercises) {
         expect(
           lessons[16].focusKeys.toSet().containsAll(
@@ -174,58 +170,237 @@ void main() {
       }
     });
 
-    test('full-keyboard outline covers ordered core and optional matrix keys', () {
-      final outline = File(_fullOutlinePath).readAsStringSync();
-      final rows = outline
-          .split('\n')
-          .where((line) => RegExp(r'^\| (?:[1-9][0-9]*) \| nl-').hasMatch(line))
-          .map((line) => line.substring(1, line.length - 1).split('|')
-              .map((cell) => cell.trim()).toList())
-          .toList();
-      expect(rows, hasLength(30));
-      expect(rows.map((row) => int.parse(row[0])), List.generate(30, (i) => i + 17));
-      expect(rows.map((row) => row[1]), [
-        for (final (prefix, count) in [
-          ('shift', 9),
-          ('digit', 4),
-          ('punct', 6),
-          ('text', 5),
-          ('symbol', 6),
-        ])
-          for (var number = 1; number <= count; number++)
-            'nl-$prefix-${number.toString().padLeft(2, '0')}',
-      ]);
-      expect(rows.first[2], 'uppercase');
-      expect(rows.first[3], 'F J');
-      expect(rows.first[4], contains('opposite Shift'));
-      expect(rows[24][2], 'advancedSymbols');
-      expect(rows.last[4], contains('AltGr'));
-      expect(outline, contains('isOptional: false'));
-      expect(outline, contains('isOptional: true'));
-
-      final introduced = <String>{};
-      for (final row in rows) {
-        expect(row, hasLength(7));
-        expect(row[5], isNotEmpty, reason: row[1]);
-        expect(row[6], isNotEmpty, reason: row[1]);
-        final keys = row[3] == 'none'
-            ? <String>[]
-            : row[3] == 'backslash, pipe'
-            ? ['\\', '|']
-            : row[3].split(' ');
-        for (final key in keys) {
-          expect(KeyboardData.dutchBaseKey(key), isNotNull, reason: row[1]);
-          expect(introduced.add(key), isTrue, reason: row[1]);
+    test('uppercase stages introduce all capitals once and review them', () {
+      final lessons = DutchCurriculum.allLessons;
+      final groups = [
+        'D K',
+        'S L A',
+        'G H E I',
+        'R U T N',
+        'O W M C',
+        'V B P Z',
+        'X Q Y',
+        '',
+      ];
+      for (var index = 0; index < groups.length; index++) {
+        final lesson = lessons[17 + index];
+        final previous = lessons[16 + index].focusKeys.toSet();
+        expect(lesson.id, 'nl-shift-${(index + 2).toString().padLeft(2, '0')}');
+        expect(lesson.category, LessonCategory.uppercase);
+        expect(
+          lesson.focusKeys.toSet().difference(previous),
+          groups[index].split(' ').where((key) => key.isNotEmpty).toSet(),
+        );
+        for (final exercise in lesson.exercises) {
+          expect(
+            lesson.focusKeys.toSet().containsAll(
+              exercise.split('').where((key) => key != ' '),
+            ),
+            isTrue,
+            reason: lesson.id,
+          );
         }
       }
-      final mapped = {
-        ...KeyboardData.dutchRows.expand((row) => row),
-        ..._alphabet.toUpperCase().split(''),
-        ...'± ! @ # \$ % ^ & * ( ) _ + { } : " | ~ < > ?'.split(' '),
-        '€',
-      }..removeAll({..._alphabet.split(''), ' '});
-      expect(introduced, mapped);
+      expect(
+        lessons[24].focusKeys.toSet().difference(_alphabet.split('').toSet()),
+        _alphabet.toUpperCase().split('').toSet(),
+      );
     });
+
+    test('digit row introduces ten unshifted digits before its review', () {
+      final lessons = DutchCurriculum.allLessons;
+      final groups = ['1 2 3', '4 5 6', '7 8 9 0', ''];
+      for (var index = 0; index < groups.length; index++) {
+        final lesson = lessons[25 + index];
+        expect(lesson.id, 'nl-digit-${(index + 1).toString().padLeft(2, '0')}');
+        expect(lesson.category, LessonCategory.numbers);
+        expect(
+          lesson.focusKeys.toSet().difference(
+            lessons[24 + index].focusKeys.toSet(),
+          ),
+          groups[index].split(' ').where((key) => key.isNotEmpty).toSet(),
+        );
+        for (final exercise in lesson.exercises) {
+          expect(
+            lesson.focusKeys.toSet().containsAll(
+              exercise.split('').where((key) => key != ' '),
+            ),
+            isTrue,
+            reason: lesson.id,
+          );
+        }
+      }
+    });
+
+    test('everyday punctuation introduces mapped marks before two reviews', () {
+      final lessons = DutchCurriculum.allLessons;
+      final groups = ['. ,', '? !', ': ; \' "', '- ( )', '', ''];
+      for (var index = 0; index < groups.length; index++) {
+        final lesson = lessons[29 + index];
+        expect(lesson.id, 'nl-punct-${(index + 1).toString().padLeft(2, '0')}');
+        expect(lesson.category, LessonCategory.punctuation);
+        expect(
+          lesson.focusKeys.toSet().difference(
+            lessons[28 + index].focusKeys.toSet(),
+          ),
+          groups[index].split(' ').where((key) => key.isNotEmpty).toSet(),
+        );
+        for (final exercise in lesson.exercises) {
+          expect(
+            lesson.focusKeys.toSet().containsAll(
+              exercise.split('').where((key) => key != ' '),
+            ),
+            isTrue,
+            reason: lesson.id,
+          );
+          for (final key in exercise.split('').where((key) => key != ' ')) {
+            expect(
+              KeyboardData.dutchBaseKey(key),
+              isNotNull,
+              reason: lesson.id,
+            );
+          }
+        }
+      }
+    });
+
+    test('applied text adds no characters and combines core skills', () {
+      final lessons = DutchCurriculum.allLessons;
+      for (var index = 35; index < 40; index++) {
+        final lesson = lessons[index];
+        expect(lesson.id, 'nl-text-${(index - 34).toString().padLeft(2, '0')}');
+        expect(
+          lesson.category,
+          index < 37 ? LessonCategory.commonWords : LessonCategory.sentences,
+        );
+        expect(lesson.focusKeys, lessons[index - 1].focusKeys);
+        for (final exercise in lesson.exercises) {
+          expect(
+            lesson.focusKeys.toSet().containsAll(
+              exercise.split('').where((key) => key != ' '),
+            ),
+            isTrue,
+            reason: lesson.id,
+          );
+        }
+      }
+    });
+
+    test(
+      'optional symbols use foundation keys and their own introductions',
+      () {
+        final lessons = DutchCurriculum.allLessons;
+        final groups = [
+          '§ ± ` ~',
+          '= _ + [ { ] }',
+          r'\ |',
+          r'@ # $ % ^ & *',
+          '/ < >',
+          '€',
+        ];
+        final foundation = lessons[15].focusKeys.toSet();
+        expect(lessons.take(40).every((lesson) => !lesson.isOptional), isTrue);
+        for (var index = 0; index < groups.length; index++) {
+          final lesson = lessons[40 + index];
+          final previous = index == 0
+              ? foundation
+              : lessons[39 + index].focusKeys.toSet();
+          expect(
+            lesson.id,
+            'nl-symbol-${(index + 1).toString().padLeft(2, '0')}',
+          );
+          expect(lesson.isOptional, isTrue);
+          expect(lesson.category, LessonCategory.advancedSymbols);
+          expect(
+            lesson.focusKeys.toSet().difference(previous),
+            groups[index].split(' ').toSet(),
+          );
+          for (final exercise in lesson.exercises) {
+            for (final character
+                in exercise.split('').where((key) => key != ' ')) {
+              expect(lesson.focusKeys, contains(character), reason: lesson.id);
+              expect(
+                KeyboardData.dutchBaseKey(character),
+                isNotNull,
+                reason: lesson.id,
+              );
+            }
+          }
+        }
+        expect(
+          lessons[40].focusKeys.toSet().intersection(
+            lessons[39].focusKeys.toSet(),
+          ),
+          foundation,
+        );
+      },
+    );
+
+    test(
+      'full-keyboard outline covers ordered core and optional matrix keys',
+      () {
+        final outline = File(_fullOutlinePath).readAsStringSync();
+        final rows = outline
+            .split('\n')
+            .where(
+              (line) => RegExp(r'^\| (?:[1-9][0-9]*) \| nl-').hasMatch(line),
+            )
+            .map(
+              (line) => line
+                  .substring(1, line.length - 1)
+                  .split('|')
+                  .map((cell) => cell.trim())
+                  .toList(),
+            )
+            .toList();
+        expect(rows, hasLength(30));
+        expect(
+          rows.map((row) => int.parse(row[0])),
+          List.generate(30, (i) => i + 17),
+        );
+        expect(rows.map((row) => row[1]), [
+          for (final (prefix, count) in [
+            ('shift', 9),
+            ('digit', 4),
+            ('punct', 6),
+            ('text', 5),
+            ('symbol', 6),
+          ])
+            for (var number = 1; number <= count; number++)
+              'nl-$prefix-${number.toString().padLeft(2, '0')}',
+        ]);
+        expect(rows.first[2], 'uppercase');
+        expect(rows.first[3], 'F J');
+        expect(rows.first[4], contains('opposite Shift'));
+        expect(rows[24][2], 'advancedSymbols');
+        expect(rows.last[4], contains('AltGr'));
+        expect(outline, contains('isOptional: false'));
+        expect(outline, contains('isOptional: true'));
+
+        final introduced = <String>{};
+        for (final row in rows) {
+          expect(row, hasLength(7));
+          expect(row[5], isNotEmpty, reason: row[1]);
+          expect(row[6], isNotEmpty, reason: row[1]);
+          final keys = row[3] == 'none'
+              ? <String>[]
+              : row[3] == 'backslash, pipe'
+              ? ['\\', '|']
+              : row[3].split(' ');
+          for (final key in keys) {
+            expect(KeyboardData.dutchBaseKey(key), isNotNull, reason: row[1]);
+            expect(introduced.add(key), isTrue, reason: row[1]);
+          }
+        }
+        final mapped = {
+          ...KeyboardData.dutchRows.expand((row) => row),
+          ..._alphabet.toUpperCase().split(''),
+          ...'± ! @ # \$ % ^ & * ( ) _ + { } : " | ~ < > ?'.split(' '),
+          '€',
+        }..removeAll({..._alphabet.split(''), ' '});
+        expect(introduced, mapped);
+      },
+    );
 
     test('aggregates actionable errors for malformed stage data', () {
       const malformed =

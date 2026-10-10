@@ -3,7 +3,7 @@ title: 'Refactor sweep for the expanded Dutch course'
 type: 'refactor'
 ticket: '8'
 created: '2026-10-06'
-status: ready-for-dev
+status: done
 route: 'full'
 route_source: 'auto'
 review: ''
@@ -48,6 +48,8 @@ context: []
 - Given no actionable finding, when this story is verified, then the absence of unnecessary edits is the result and all focused checks still pass.
 
 ## Implementation Notes
+
+- 2026-10-10: Reviewed 5.1's triage (the only actionable finding was already patched), 5.2-5.7's empty logs, and the umbrella review's patched findings. No remaining nonfunctional cleanup justified a refactor. Full Flutter suite (138 tests), analyzer, and macOS hot restart pass.
 
 ## Plan Change Log
 

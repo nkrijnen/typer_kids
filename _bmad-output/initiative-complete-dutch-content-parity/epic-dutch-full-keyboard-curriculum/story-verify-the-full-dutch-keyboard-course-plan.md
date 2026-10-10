@@ -3,7 +3,7 @@ title: 'Verify the full Dutch keyboard course'
 type: 'feature'
 ticket: '9'
 created: '2026-10-06'
-status: ready-for-dev
+status: done
 route: 'full'
 route_source: 'auto'
 review: ''
@@ -59,6 +59,8 @@ context: []
 - Given the final route, when all automated checks and a connected hot restart run, then the Flutter suite, analyzer and runtime checks pass.
 
 ## Implementation Notes
+
+- 2026-10-10: Routed widget tests type all 40 required and all six optional stages, enter advanced immediately after the foundation, and verify completion and restart. Provider tests cover separate progress and English isolation. Full Flutter suite (138 tests), analyzer, and macOS hot restart pass. Native-speaker release review remains outside scope.
 
 ## Plan Change Log
 

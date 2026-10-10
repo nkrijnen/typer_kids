@@ -3,7 +3,7 @@ title: 'Integrate cross-category course progress'
 type: 'feature'
 ticket: '7'
 created: '2026-10-06'
-status: ready-for-dev
+status: done
 route: 'full'
 route_source: 'auto'
 review: ''
@@ -60,6 +60,8 @@ context: []
 - Given English progress, when switching languages and profiles, then English unlocks, totals and saves remain unchanged.
 
 ## Implementation Notes
+
+- 2026-10-10: Integrated global required unlocks/recommendations with independent optional progress and core-only totals, averages and stars. Restart and English isolation checks, full Flutter suite (138 tests), analyzer, and macOS hot restart pass.
 
 ## Plan Change Log
 

@@ -3,7 +3,7 @@ title: 'Build cumulative Dutch text practice'
 type: 'feature'
 ticket: '5'
 created: '2026-10-06'
-status: ready-for-dev
+status: done
 route: 'full'
 route_source: 'auto'
 review: ''
@@ -59,6 +59,8 @@ context: []
 - Given an English profile or route, when Dutch text is added, then English content and saved results are unaffected.
 
 ## Implementation Notes
+
+- 2026-10-10: Added five words/sentences stages without new characters. Routed core completion, persistence, full Flutter suite (138 tests), analyzer, and macOS hot restart pass.
 
 ## Plan Change Log
 

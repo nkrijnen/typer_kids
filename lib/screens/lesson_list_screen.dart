@@ -39,7 +39,11 @@ class _LessonListScreenState extends State<LessonListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(context.watch<LanguageProvider>().isDutch ? 'Kies een les' : 'Choose a Lesson'),
+        title: Text(
+          context.watch<LanguageProvider>().isDutch
+              ? 'Kies een les'
+              : 'Choose a Lesson',
+        ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_rounded),
           onPressed: () => context.pop(),
@@ -77,10 +81,7 @@ class _CategorySection extends StatelessWidget {
   final LessonCategory category;
   final int crossAxisCount;
 
-  const _CategorySection({
-    required this.category,
-    this.crossAxisCount = 1,
-  });
+  const _CategorySection({required this.category, this.crossAxisCount = 1});
 
   Color get _categoryColor => switch (category) {
     LessonCategory.homeRow => AppColors.categoryHomeRow,
@@ -88,8 +89,10 @@ class _CategorySection extends StatelessWidget {
     LessonCategory.topRow => AppColors.categoryTopRow,
     LessonCategory.bottomRow => AppColors.categoryBottomRow,
     LessonCategory.numbers => AppColors.categoryNumbers,
+    LessonCategory.punctuation => AppColors.categorySentences,
     LessonCategory.commonWords => AppColors.categoryWords,
     LessonCategory.sentences => AppColors.categorySentences,
+    LessonCategory.advancedSymbols => AppColors.categoryBottomRow,
   };
 
   @override
@@ -119,9 +122,16 @@ class _CategorySection extends StatelessWidget {
               const SizedBox(width: 8),
               Text(
                 context.watch<LanguageProvider>().isDutch
-                    ? (category == LessonCategory.uppercase
-                        ? 'Hoofdletters'
-                        : 'Letters')
+                    ? switch (category) {
+                        LessonCategory.uppercase => 'Hoofdletters',
+                        LessonCategory.numbers => 'Cijfers',
+                        LessonCategory.punctuation => 'Leestekens',
+                        LessonCategory.commonWords => 'Woorden',
+                        LessonCategory.sentences => 'Zinnen',
+                        LessonCategory.advancedSymbols =>
+                          'Extra tekens (optioneel)',
+                        _ => 'Letters',
+                      }
                     : category.displayName,
                 style: GoogleFonts.fredoka(
                   fontSize: 22,

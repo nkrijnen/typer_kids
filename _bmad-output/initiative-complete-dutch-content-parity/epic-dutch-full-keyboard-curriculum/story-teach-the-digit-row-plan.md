@@ -3,7 +3,7 @@ title: 'Teach the digit row'
 type: 'feature'
 ticket: '3'
 created: '2026-10-06'
-status: ready-for-dev
+status: done
 route: 'full'
 route_source: 'auto'
 review: ''
@@ -60,6 +60,8 @@ context: []
 - Given the new lessons, when the data contract runs, then every exercise stays within the outline's cumulative scope and English content is unchanged.
 
 ## Implementation Notes
+
+- 2026-10-10: Added four digit stages with unshifted number-row practice and globally ordered unlock. Focused and full Flutter suite (138 tests), analyzer, and macOS hot restart pass.
 
 ## Plan Change Log
 

@@ -67,7 +67,10 @@ void main() {
         expect(progress.isLessonUnlocked('nl-letter-02'), true);
         expect(progress.isLessonUnlocked('nl-letter-03'), false);
         expect(progress.recommendedLesson.id, 'nl-letter-02');
-        await progress.recordAttempt(selected.LessonCurriculum.allLessons[1], stats);
+        await progress.recordAttempt(
+          selected.LessonCurriculum.allLessons[1],
+          stats,
+        );
         expect(progress.isLessonUnlocked('nl-letter-03'), true);
         await progress.switchProfile('two');
         expect(progress.getProgress(dutch.id).completed, false);
@@ -90,6 +93,67 @@ void main() {
     );
 
     test(
+      'optional branch unlocks after foundation without affecting core',
+      () async {
+        SharedPreferences.setMockInitialValues({});
+        selected.LessonCurriculum.isDutch = true;
+        final progress = ProgressProvider();
+        await progress.init(profileId: 'optional', language: 'nl');
+        final stats = TypingStats(
+          totalCharacters: 10,
+          correctCharacters: 10,
+          incorrectCharacters: 0,
+          elapsed: Duration(seconds: 30),
+          completedAt: DateTime.now(),
+        );
+        expect(progress.totalLessons, 40);
+        expect(progress.optionalLessons, 6);
+        expect(progress.isLessonUnlocked('nl-symbol-01'), isFalse);
+        for (final lesson in selected.LessonCurriculum.allLessons.take(16)) {
+          await progress.recordAttempt(lesson, stats);
+        }
+        expect(progress.isLessonUnlocked('nl-symbol-01'), isTrue);
+        expect(progress.isLessonUnlocked('nl-symbol-02'), isFalse);
+        expect(progress.isLessonUnlocked('nl-digit-01'), isFalse);
+        await progress.recordAttempt(
+          selected.LessonCurriculum.byId('nl-symbol-01')!,
+          TypingStats(
+            totalCharacters: 10,
+            correctCharacters: 9,
+            incorrectCharacters: 1,
+            elapsed: const Duration(seconds: 30),
+            completedAt: DateTime.now(),
+          ),
+        );
+        expect(progress.completedOptionalLessons, 1);
+        expect(progress.completedLessons, 16);
+        expect(progress.totalStars, 16 * 5);
+        expect(progress.averageAccuracy, 100);
+        expect(selected.LessonCurriculum.nextLesson('nl-text-05'), isNull);
+        expect(
+          selected.LessonCurriculum.nextLesson('nl-symbol-01')?.id,
+          'nl-symbol-02',
+        );
+        expect(progress.recommendedLesson.id, 'nl-shift-01');
+        final restarted = ProgressProvider();
+        await restarted.init(profileId: 'optional', language: 'nl');
+        expect(restarted.isLessonUnlocked('nl-symbol-02'), isTrue);
+        expect(restarted.recommendedLesson.id, 'nl-shift-01');
+        for (final lesson
+            in selected.LessonCurriculum.allLessons.skip(16).take(24)) {
+          await restarted.recordAttempt(lesson, stats);
+        }
+        expect(restarted.allCompleted, isTrue);
+        expect(restarted.completedLessons, 40);
+        expect(restarted.completedOptionalLessons, 1);
+        final completedAgain = ProgressProvider();
+        await completedAgain.init(profileId: 'optional', language: 'nl');
+        expect(completedAgain.allCompleted, isTrue);
+        expect(completedAgain.completedOptionalLessons, 1);
+      },
+    );
+
+    test(
       'Dutch game and story use authored content and keep English scores',
       () async {
         SharedPreferences.setMockInitialValues({});
@@ -102,20 +166,26 @@ void main() {
           final words = WordLists.forDifficulty(difficulty);
           expect(words.length, greaterThanOrEqualTo(12));
           expect(words.toSet(), hasLength(words.length));
-          expect(words.every((word) => RegExp(r'^[a-z]+$').hasMatch(word)), true);
-          expect(words.every((word) => switch (difficulty) {
-            ContentDifficulty.easy => word.length <= 3,
-            ContentDifficulty.medium => word.length >= 4 && word.length <= 6,
-            ContentDifficulty.hard => word.length >= 7,
-          }), true);
           expect(
-            StoryContent.forDifficulty(difficulty),
-            switch (difficulty) {
-              ContentDifficulty.easy => StoryContent.dutchEasy,
-              ContentDifficulty.medium => StoryContent.dutchMedium,
-              ContentDifficulty.hard => StoryContent.dutchHard,
-            },
+            words.every((word) => RegExp(r'^[a-z]+$').hasMatch(word)),
+            true,
           );
+          expect(
+            words.every(
+              (word) => switch (difficulty) {
+                ContentDifficulty.easy => word.length <= 3,
+                ContentDifficulty.medium =>
+                  word.length >= 4 && word.length <= 6,
+                ContentDifficulty.hard => word.length >= 7,
+              },
+            ),
+            true,
+          );
+          expect(StoryContent.forDifficulty(difficulty), switch (difficulty) {
+            ContentDifficulty.easy => StoryContent.dutchEasy,
+            ContentDifficulty.medium => StoryContent.dutchMedium,
+            ContentDifficulty.hard => StoryContent.dutchHard,
+          });
           expect(words, isNot(contains('the')));
         }
         expect(StoryContent.dutch.difficulty, ContentDifficulty.easy);

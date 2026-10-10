@@ -80,7 +80,9 @@ void main() {
     await tester.sendKeyEvent(
       first == ' '
           ? LogicalKeyboardKey.space
-          : LogicalKeyboardKey.findKeyByKeyId(first.toLowerCase().codeUnitAt(0))!,
+          : LogicalKeyboardKey.findKeyByKeyId(
+              first.toLowerCase().codeUnitAt(0),
+            )!,
       character: first,
     );
     await tester.pump();
@@ -89,55 +91,61 @@ void main() {
     expect(tester.widget<Visibility>(startHint).visible, false);
   });
 
-  testWidgets('Free Practice passage stays centered when focus hint disappears', (
-    tester,
-  ) async {
-    GoogleFonts.config.allowRuntimeFetching = false;
-    tester.view.devicePixelRatio = 1;
-    tester.view.physicalSize = const Size(1000, 900);
-    addTearDown(() {
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
-    });
-    SharedPreferences.setMockInitialValues({});
-    final language = LanguageProvider();
-    await language.init();
-    await tester.pumpWidget(
-      ChangeNotifierProvider.value(
-        value: language,
-        child: const MaterialApp(home: SandboxScreen()),
-      ),
-    );
-    await tester.tap(find.text('Start'));
-    await tester.pump();
-    await tester.pump();
+  testWidgets(
+    'Free Practice passage stays centered when focus hint disappears',
+    (tester) async {
+      GoogleFonts.config.allowRuntimeFetching = false;
+      tester.view.devicePixelRatio = 1;
+      tester.view.physicalSize = const Size(1000, 900);
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+      SharedPreferences.setMockInitialValues({});
+      final language = LanguageProvider();
+      await language.init();
+      await tester.pumpWidget(
+        ChangeNotifierProvider.value(
+          value: language,
+          child: const MaterialApp(home: SandboxScreen()),
+        ),
+      );
+      await tester.tap(find.text('Start'));
+      await tester.pump();
+      await tester.pump();
 
-    final passage = find.byType(PassageTypingDisplay);
-    final typingFocus = tester
-        .widget<KeyboardListener>(find.byType(KeyboardListener))
-        .focusNode;
-    typingFocus.unfocus();
-    await tester.pump();
-    final focusHint = find.ancestor(
-      of: find.text('Click here and start typing!'),
-      matching: find.byType(Visibility),
-    );
-    expect(tester.widget<Visibility>(focusHint).visible, true);
-    final before = tester.getCenter(passage).dy;
-    typingFocus.requestFocus();
-    await tester.pump();
-    final first = tester.widget<PassageTypingDisplay>(passage).text[0];
-    await tester.sendKeyEvent(
-      first == ' '
-          ? LogicalKeyboardKey.space
-          : LogicalKeyboardKey.findKeyByKeyId(first.toLowerCase().codeUnitAt(0))!,
-      character: first,
-    );
-    await tester.pump();
+      final passage = find.byType(PassageTypingDisplay);
+      final typingFocus = tester
+          .widget<KeyboardListener>(find.byType(KeyboardListener))
+          .focusNode;
+      typingFocus.unfocus();
+      await tester.pump();
+      final focusHint = find.ancestor(
+        of: find.text('Click here and start typing!'),
+        matching: find.byType(Visibility),
+      );
+      expect(tester.widget<Visibility>(focusHint).visible, true);
+      final before = tester.getCenter(passage).dy;
+      typingFocus.requestFocus();
+      await tester.pump();
+      final first = tester.widget<PassageTypingDisplay>(passage).text[0];
+      await tester.sendKeyEvent(
+        first == ' '
+            ? LogicalKeyboardKey.space
+            : LogicalKeyboardKey.findKeyByKeyId(
+                first.toLowerCase().codeUnitAt(0),
+              )!,
+        character: first,
+      );
+      await tester.pump();
 
-    expect((tester.getCenter(passage).dy - before).abs(), lessThanOrEqualTo(1));
-    expect(tester.widget<Visibility>(focusHint).visible, false);
-  });
+      expect(
+        (tester.getCenter(passage).dy - before).abs(),
+        lessThanOrEqualTo(1),
+      );
+      expect(tester.widget<Visibility>(focusHint).visible, false);
+    },
+  );
 
   testWidgets('Dutch finger guide fits lesson slot', (tester) async {
     GoogleFonts.config.allowRuntimeFetching = false;
@@ -155,9 +163,9 @@ void main() {
           value: language,
           child: MaterialApp(
             builder: (context, child) => MediaQuery(
-              data: MediaQuery.of(context).copyWith(
-                textScaler: const TextScaler.linear(1.2),
-              ),
+              data: MediaQuery.of(
+                context,
+              ).copyWith(textScaler: const TextScaler.linear(1.2)),
               child: child!,
             ),
             home: Scaffold(
@@ -344,8 +352,12 @@ void main() {
       );
       expect(find.textContaining('$finger 👆 + Shift'), findsOneWidget);
       expect(
-        tester.getSemantics(find.bySemanticsLabel(shift))
-            .getSemanticsData().flagsCollection.isSelected.toBoolOrNull(),
+        tester
+            .getSemantics(find.bySemanticsLabel(shift))
+            .getSemanticsData()
+            .flagsCollection
+            .isSelected
+            .toBoolOrNull(),
         isTrue,
       );
     }
@@ -624,17 +636,66 @@ void main() {
         300,
         scrollable: find.byType(Scrollable).first,
       );
-      expect(find.text(titles.last), findsOneWidget);
+      expect(find.text(titles[16]), findsOneWidget);
       final shiftCard = find.ancestor(
-        of: find.text(titles.last),
+        of: find.text(titles[16]),
         matching: find.byType(InkWell),
       );
       expect(tester.widget<InkWell>(shiftCard).onTap, isNull);
-      await tester.tap(find.text(titles.last));
+      await tester.tap(find.text(titles[16]));
       await tester.pumpAndSettle();
       expect(find.text('Kies een les'), findsOneWidget);
       await tester.pumpWidget(const MaterialApp(home: SizedBox()));
       selected.LessonCurriculum.isDutch = false;
+    },
+  );
+
+  testWidgets(
+    'Dutch optional category opens after letters before core completion',
+    (tester) async {
+      GoogleFonts.config.allowRuntimeFetching = false;
+      SharedPreferences.setMockInitialValues({});
+      final profile = ProfileProvider();
+      await profile.init();
+      final child = await profile.createProfile(name: 'Noor', emoji: '🌱');
+      final language = LanguageProvider();
+      await language.init();
+      await language.select('nl');
+      final progress = ProgressProvider();
+      await progress.init(profileId: child.id, language: 'nl');
+      final stats = TypingStats(
+        totalCharacters: 10,
+        correctCharacters: 10,
+        incorrectCharacters: 0,
+        elapsed: const Duration(seconds: 30),
+        completedAt: DateTime(2026, 10, 10),
+      );
+      for (final lesson in DutchCurriculum.allLessons.take(16)) {
+        await progress.recordAttempt(lesson, stats);
+      }
+      await tester.pumpWidget(
+        startup.TyperKidsApp(
+          profileProvider: profile,
+          progressProvider: progress,
+          languageProvider: language,
+        ),
+      );
+      await tester.pumpAndSettle();
+      GoRouter.of(tester.element(find.text('Typer Kids'))).go('/lessons');
+      await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(
+        find.text('Extra tekens (optioneel)'),
+        400,
+        scrollable: find.byType(Scrollable).first,
+      );
+      final optionalTitle = DutchCurriculum.allLessons[40].title;
+      await tester.ensureVisible(find.text(optionalTitle));
+      await tester.tap(find.text(optionalTitle));
+      await tester.pumpAndSettle();
+      expect(find.text('Begin!'), findsOneWidget);
+      expect(progress.recommendedLesson.id, 'nl-shift-01');
+      expect(progress.allCompleted, isFalse);
+      await tester.pumpWidget(const MaterialApp(home: SizedBox()));
     },
   );
 
@@ -941,7 +1002,7 @@ void main() {
       expect(progress.getProgress('nl-letter-01').completed, true);
       expect(find.text('Goed gedaan!'), findsOneWidget);
       expect(progress.isLessonUnlocked('nl-shift-01'), false);
-      for (final lesson in DutchCurriculum.allLessons.skip(1)) {
+      for (final lesson in DutchCurriculum.allLessons.skip(1).take(39)) {
         expect(find.textContaining('Volgende:'), findsOneWidget);
         await tester.ensureVisible(find.textContaining('Volgende:'));
         await tester.tap(find.textContaining('Volgende:'));
@@ -953,17 +1014,23 @@ void main() {
         await tester.tap(find.text('Begin!'));
         await tester.pump();
         if (lesson.id == 'nl-shift-01') {
-          expect(find.textContaining('Linkerwijsvinger 👆 + Shift rechts'), findsOneWidget);
-          expect(tester.widget<KeyboardWidget>(find.byType(KeyboardWidget)).activeKey, 'F');
+          expect(
+            find.textContaining('Linkerwijsvinger 👆 + Shift rechts'),
+            findsOneWidget,
+          );
+          expect(
+            tester
+                .widget<KeyboardWidget>(find.byType(KeyboardWidget))
+                .activeKey,
+            'F',
+          );
         }
         for (final exercise in lesson.exercises) {
           for (final character in exercise.split('')) {
             await tester.sendKeyEvent(
               character == ' '
                   ? LogicalKeyboardKey.space
-                  : LogicalKeyboardKey.findKeyByKeyId(
-                      character.toLowerCase().codeUnitAt(0),
-                    )!,
+                  : LogicalKeyboardKey.keyA,
               character: character,
             );
             await tester.pump();
@@ -976,13 +1043,59 @@ void main() {
         expect(find.text('Goed gedaan!'), findsOneWidget);
       }
       expect(find.textContaining('Volgende:'), findsNothing);
+      GoRouter.of(tester.element(find.text('Goed gedaan!'))).go('/lessons');
+      await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(
+        find.text('Extra tekens (optioneel)'),
+        400,
+        scrollable: find.byType(Scrollable).first,
+      );
+      final firstOptional = DutchCurriculum.allLessons[40];
+      await tester.ensureVisible(find.text(firstOptional.title));
+      await tester.tap(find.text(firstOptional.title));
+      await tester.pumpAndSettle();
+      for (final lesson in DutchCurriculum.allLessons.skip(40)) {
+        if (lesson != firstOptional) {
+          expect(find.textContaining('Volgende:'), findsOneWidget);
+          await tester.ensureVisible(find.textContaining('Volgende:'));
+          await tester.tap(find.textContaining('Volgende:'));
+          await tester.pumpAndSettle();
+        }
+        expect(find.text('Begin!'), findsOneWidget);
+        await tester.tap(find.text('Begin!'));
+        await tester.pump();
+        for (final exercise in lesson.exercises) {
+          for (final character in exercise.split('')) {
+            await tester.sendKeyEvent(
+              character == ' '
+                  ? LogicalKeyboardKey.space
+                  : LogicalKeyboardKey.keyA,
+              character: character,
+            );
+            await tester.pump();
+          }
+          await tester.pump(const Duration(milliseconds: 600));
+        }
+        await tester.pump(const Duration(milliseconds: 400));
+        await tester.pump(const Duration(seconds: 4));
+        expect(
+          progress.getProgress(lesson.id).completed,
+          true,
+          reason: lesson.id,
+        );
+      }
+      expect(progress.completedOptionalLessons, 6);
+      expect(progress.allCompleted, isTrue);
+      expect(find.textContaining('Volgende:'), findsNothing);
       final restarted = LanguageProvider();
       await restarted.init();
       final loaded = ProgressProvider();
       await loaded.init(profileId: child.id, language: restarted.language);
       expect(loaded.getProgress('nl-letter-01').completed, true);
       expect(loaded.getProgress('nl-shift-01').completed, true);
-      expect(loaded.completedLessons, 17);
+      expect(loaded.completedLessons, 40);
+      expect(loaded.completedOptionalLessons, 6);
+      expect(loaded.allCompleted, isTrue);
       await tester.pumpWidget(const MaterialApp(home: SizedBox()));
       selected.LessonCurriculum.isDutch = false;
     },
@@ -1031,7 +1144,7 @@ void main() {
     );
     expect(tester.takeException(), isNull);
     expect(find.text('Leer typen met plezier! 🎮'), findsOneWidget);
-    expect(find.text('1/17'), findsOneWidget);
+    expect(find.text('1/40'), findsOneWidget);
     expect(find.text('🐵'), findsOneWidget);
     expect(find.text('Mijn badges'), findsOneWidget);
     await tester.pumpWidget(const MaterialApp(home: SizedBox()));

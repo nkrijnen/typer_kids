@@ -3,7 +3,7 @@ title: 'Add optional advanced symbols and euro'
 type: 'feature'
 ticket: '6'
 created: '2026-10-06'
-status: ready-for-dev
+status: done
 route: 'full'
 route_source: 'auto'
 review: ''
@@ -60,6 +60,8 @@ context: []
 - Given English lessons, when advanced Dutch content is added, then English lesson IDs, unlocks and saved progress are unchanged.
 
 ## Implementation Notes
+
+- 2026-10-10: Added six separately scoped optional symbol stages, including AltGr+2 euro, and routed access immediately after the foundation. Full Flutter suite (138 tests), analyzer, and macOS hot restart pass.
 
 ## Plan Change Log
 

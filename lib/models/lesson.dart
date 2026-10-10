@@ -5,8 +5,10 @@ enum LessonCategory {
   topRow('Top Row', '⬆️'),
   bottomRow('Bottom Row', '⬇️'),
   numbers('Numbers', '🔢'),
+  punctuation('Punctuation', '✍️'),
   commonWords('Words', '📝'),
-  sentences('Sentences', '📖');
+  sentences('Sentences', '📖'),
+  advancedSymbols('Advanced Symbols', '⌨️');
 
   const LessonCategory(this.displayName, this.emoji);
   final String displayName;
@@ -32,6 +34,7 @@ class Lesson {
   final LessonCategory category;
   final LessonDifficulty difficulty;
   final int orderIndex;
+  final bool isOptional;
 
   /// The characters/keys this lesson focuses on
   final List<String> focusKeys;
@@ -52,6 +55,7 @@ class Lesson {
     required this.category,
     required this.difficulty,
     required this.orderIndex,
+    this.isOptional = false,
     required this.focusKeys,
     required this.exercises,
     this.funTip = '',
